@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register Form</title>
+    <link rel="stylesheet" href="CSS/login.css">
+    <script src="js/login.js" defer></script>
+    <style>
+        /* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    background-blend-mode: darken;
+    background-image: url('assets/hotel-image.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+#auth_section {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    min-height: 500px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.user {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.6s ease-in-out;
+}
+
+.user.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 2;
+}
+
+.formBx {
+    flex: 1;
+    padding: 40px;
+    width: 100%;
+}
+
+.signupBx .formBx {
+    max-height: 100%; /* Ensure it doesn't exceed container height */
+    overflow-y: auto; /* Add vertical scroll bar if content overflows */
+}
+
+.signupBx .formBx::-webkit-scrollbar {
+    width: 8px; /* Customize scrollbar width */
+}
+
+.signupBx .formBx::-webkit-scrollbar-thumb {
+    background: #81c408; /* Customize scrollbar thumb color */
+    border-radius: 4px;
+}
+
+.signupBx .formBx::-webkit-scrollbar-thumb:hover {
+    background: #81c408; /* Change color on hover */
+}
+
+.signupBx .formBx::-webkit-scrollbar-track {
+    background: #ecf0f1; /* Customize scrollbar track color */
+}
+
+h2 {
+    color: #2c3e50;
+    font-size: 2em;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    padding: 12px 20px;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #81c408;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+input[type="submit"] {
+    background: #81c408;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+    background: #81c408;
+}
+
+.signup {
+    text-align: center;
+    margin-top: 20px;
+    color: #7f8c8d;
+    line-height: 1.5; /* Added for better spacing */
+}
+
+.signup a {
+    color: #81c408;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    display: inline-block; /* Ensures proper alignment */
+    margin-top: 5px; /* Added for spacing */
+}
+
+/* Forgot Password Form */
+.forgot-password-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.forgot-password-form.active {
+    display: flex;
+}
+
+.forgot-password-form .formBx {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.forgot-password-form p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%;
+        min-height: auto;
+    }
+
+    .formBx {
+        padding: 30px;
+    }
+
+    h2 {
+        font-size: 1.75em;
+    }
+}
+
+@media (max-width: 480px) {
+    .formBx {
+        padding: 20px;
+    }
+
+    input {
+        padding: 10px 15px;
+    }
+
+    input[type="submit"] {
+        padding: 12px;
+    }
+    
+    .forgot-password-form .formBx {
+        padding: 30px;
+    }
+}
+    </style>
+</head>
+<body>
+    <section id="auth_section">
+            <div class="container">
+            
+          
+              <!-- Login Form -->
+              <div class="user signinBx">
+                <div class="formBx">
+                  <form action="" onsubmit="return false;">
+                    <h2>Log In</h2>
+                    <input type="email" placeholder="Email" />
+                    <input type="password" placeholder="Password" />
+                    <input type="submit" value="Login" />
+                    <p class="signup">
+                      Don't have an account? <a href="#" onclick="showRegisterForm();">Register</a>
+                    </p>
+                    <!-- Forgot Password Link -->
+                    <!-- <p class="signup">
+                      <a href="#" onclick="showForgotPasswordForm();">Forgot Password?</a>
+                    </p> -->
+                  </form>
+                </div>
+              </div>
+          
+              <!-- Register Form -->
+              <div class="user signupBx">
+                <div class="formBx">
+                  <form action="" onsubmit="return false;">
+                    <h2>Create an account</h2>
+                    <input type="text" placeholder="Full Name" />
+                    <input type="email" placeholder="Email " />
+                    <input type="text" placeholder="Phone Number" />
+                    <input type="password" placeholder=" Password" />
+                    <input type="password" placeholder="Confirm Password" />
+                    <input type="submit" value="Sign Up" />
+                    <p class="signup">
+                      Already have an account? <a href="#" onclick="showLoginForm();">Log In</a>
+                    </p>
+                  </form>
+                </div>
+              </div>
+            </div>
+          
+            <!-- Forgot Password Form -->
+            <!-- <div class="forgot-password-form">
+              <div class="formBx">
+              <h2>Forgot Password</h2>
+              <form action="" onsubmit="return false;">
+               
+                    <input type="email" placeholder="Email " />
+                    <input type="password" placeholder=" New Password" />
+                    <input type="password" placeholder="Confirm New Password" />
+                    <input type="submit" value="Submit" />
+              </form>
+          
+              
+              <p><a href="#" onclick="hideForgotPasswordForm();">Cancel</a></p>
+            </div>
+            </div> -->
+    </section>
+</body>
+
+</html>
