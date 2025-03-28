@@ -1,8 +1,36 @@
-// let API_URL = "https://lealavatechnologies.org"; // Replace with your actual Flask API URL
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.querySelector(".signinBx form");
     const registerForm = document.querySelector(".signupBx form");
-    const forgotPasswordForm = document.querySelector(".forgot-password-form form");
+    const API_URL = "http://127.0.0.1:1000"; // Ensure this matches your Flask API URL
+
+    // Check if the backend server is reachable
+    async function checkServerStatus() {
+        try {
+            const response = await fetch(`${API_URL}/`, { method: "GET" });
+            if (!response.ok) {
+                throw new Error("Server is not reachable");
+            }
+        } catch (error) {
+            alert("Unable to connect to the server. Please ensure the backend is running.");
+            console.error("Server connection error:", error.message);
+        }
+    }
+
+    // Check if the user is already logged in
+    function checkLoginStatus() {
+        const userEmail = sessionStorage.getItem("userEmail");
+        if (userEmail) {
+            showGreeting(userEmail);
+        }
+    }
+
+    // Show greeting message
+    function showGreeting(email) {
+        const loginButton = document.querySelector("a[href='Login.html']");
+        if (loginButton) {
+            loginButton.outerHTML = `<span class="text-white">Hi, ${email.split('@')[0]}</span>`;
+        }
+    }
 
     // Login form submission handler
     loginForm.addEventListener("submit", async (event) => {
@@ -12,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const password = loginForm.querySelector("input[type='password']").value;
 
         try {
-            const response = await fetch(`${API_URL}/admin/login`, {
+            const response = await fetch(`${API_URL}/user/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -20,12 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await response.json();
 
             if (response.ok) {
-                window.location.href = result.redirect || "frontpage.html";
+                alert(result.message || "Login successful");
+                sessionStorage.setItem("userEmail", email); // Save user email in session storage
+                showGreeting(email); // Replace login button with greeting
+                window.location.href = result.redirect || "dashboard.html"; // Redirect to dashboard
             } else {
-                showAlert(result.error || "Login failed");
+                alert(result.error || "Login failed");
             }
         } catch (error) {
-            showAlert("An error occurred: " + error.message);
+            alert("An error occurred: " + error.message);
         }
     });
 
@@ -33,142 +64,54 @@ document.addEventListener("DOMContentLoaded", () => {
     registerForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        const name = registerForm.querySelector("input[placeholder='Full Name']").value;
         const email = registerForm.querySelector("input[placeholder='Email ']").value;
+        const mobile_no = registerForm.querySelector("input[placeholder='Phone Number']").value;
         const password = registerForm.querySelector("input[placeholder=' Password']").value;
         const confirmPassword = registerForm.querySelector("input[placeholder='Confirm Password']").value;
 
         try {
-            const response = await fetch(`${API_URL}/admin/register`, {
+            const response = await fetch(`${API_URL}/user/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password, confirm_password: confirmPassword })
+                body: JSON.stringify({ name, email, mobile_no, password, confirm_password: confirmPassword })
             });
-            const result = await response.json();
 
-            if (response.ok) {
-                showAlert(result.message || "Registration successful");
-                showLoginForm(); // Show login form after successful registration
-            } else {
-                showAlert(result.error || "Registration failed");
+            if (!response.ok) {
+                const errorResult = await response.json();
+                throw new Error(errorResult.error || "Registration failed");
             }
+
+            const result = await response.json();
+            alert(result.message || "Registration successful");
+            showLoginForm(); // Show login form after successful registration
         } catch (error) {
-            showAlert("An error occurred: " + error.message);
+            alert("An error occurred: " + error.message);
         }
     });
 
-    // Forgot password form submission handler
-    // forgotPasswordForm.addEventListener("submit", async (event) => {
-    //     event.preventDefault();
-
-    //     const email = forgotPasswordForm.querySelector("input[placeholder='Email ']").value;
-    //     const newPassword = forgotPasswordForm.querySelector("input[placeholder=' New Password']").value;
-    //     const confirmPassword = forgotPasswordForm.querySelector("input[placeholder='Confirm New Password']").value;
-
-    //     try {
-    //         const response = await fetch(`${API_URL}/admin/forgot-password`, {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ email, new_password: newPassword, confirm_password: confirmPassword })
-    //         });
-    //         const result = await response.json();
-
-    //         if (response.ok) {
-    //             showAlert(result.message || "Password reset successful");
-    //             showLoginForm();
-    //         } else {
-    //             showAlert(result.error || "Password reset failed");
-    //         }
-    //     } catch (error) {
-    //         showAlert("An error occurred: " + error.message);
-    //     }
-    // });
-
-    // Utility function to show alert modal
-    function showAlert(message) {
-        const alertOverlay = document.createElement("div");
-        const alertBox = document.createElement("div");
-        const alertMessage = document.createElement("p");
-        const closeButton = document.createElement("button");
-
-        alertOverlay.style.position = "fixed";
-        alertOverlay.style.top = 0;
-        alertOverlay.style.left = 0;
-        alertOverlay.style.width = "100%";
-        alertOverlay.style.height = "100%";
-        alertOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-        alertOverlay.style.display = "flex";
-        alertOverlay.style.alignItems = "center";
-        alertOverlay.style.justifyContent = "center";
-        alertOverlay.style.zIndex = 1000;
-
-        alertBox.style.backgroundColor = "#fff";
-        alertBox.style.padding = "20px";
-        alertBox.style.borderRadius = "8px";
-        alertBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-        alertBox.style.textAlign = "center";
-
-        alertMessage.textContent = message;
-        alertMessage.style.marginBottom = "20px";
-
-        closeButton.textContent = "OK";
-        closeButton.style.padding = "10px 20px";
-        closeButton.style.backgroundColor = "#007bff";
-        closeButton.style.color = "#fff";
-        closeButton.style.border = "none";
-        closeButton.style.borderRadius = "5px";
-        closeButton.style.cursor = "pointer";
-
-        closeButton.addEventListener("click", () => {
-            document.body.removeChild(alertOverlay);
-        });
-
-        alertBox.appendChild(alertMessage);
-        alertBox.appendChild(closeButton);
-        alertOverlay.appendChild(alertBox);
-
-        document.body.appendChild(alertOverlay);
-    }
-
-    // Utility function to show the login form (if required)
+    // Utility function to show the login form
     function showLoginForm() {
-        document.querySelector(".signinBx").style.display = "block";
-        document.querySelector(".signupBx").style.display = "none";
-        document.querySelector(".forgot-password-form").style.display = "none";
+        const loginForm = document.querySelector('.signinBx');
+        const registerForm = document.querySelector('.signupBx');
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
     }
+
+    // Utility function to show the register form
+    function showRegisterForm() {
+        const loginForm = document.querySelector('.signinBx');
+        const registerForm = document.querySelector('.signupBx');
+        registerForm.classList.add('active');
+        loginForm.classList.remove('active');
+    }
+
+    // Attach event listeners for toggling forms
+    document.querySelector(".signinBx .signup a").addEventListener("click", showRegisterForm);
+    document.querySelector(".signupBx .signup a").addEventListener("click", showLoginForm);
+
+    // Initialize with login form visible, check server status, and check login status
+    showLoginForm();
+    checkServerStatus();
+    checkLoginStatus();
 });
-
-     // Function to show the login form
-  function showLoginForm() {
-    const loginForm = document.querySelector('.signinBx');
-    const registerForm = document.querySelector('.signupBx');
-    loginForm.classList.add('active');
-    registerForm.classList.remove('active');
-    hideForgotPasswordForm();
-  }
-
-  // Function to show the register form
-  function showRegisterForm() {
-    const loginForm = document.querySelector('.signinBx');
-    const registerForm = document.querySelector('.signupBx');
-    registerForm.classList.add('active');
-    loginForm.classList.remove('active');
-    hideForgotPasswordForm();
-  }
-
-  // Function to show the Forgot Password form
-  function showForgotPasswordForm() {
-    const forgotPasswordForm = document.querySelector('.forgot-password-form');
-    forgotPasswordForm.style.display = 'block';
-    const container = document.querySelector('.container');
-    container.style.display = 'none';
-  }
-
-  // Function to hide the Forgot Password form
-  function hideForgotPasswordForm() {
-    const forgotPasswordForm = document.querySelector('.forgot-password-form');
-    forgotPasswordForm.style.display = 'none';
-    const container = document.querySelector('.container');
-    container.style.display = 'flex';
-  }
-
-  showLoginForm();

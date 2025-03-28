@@ -76,7 +76,7 @@
         <!-- Fruits Shop Start-->
         <div class="container-fluid fruite py-5">
             <div class="container py-5">
-                <h1 class="mb-4">Fresh fruits shop</h1>
+                <h1 class="mb-4">Fresh shopping</h1>
                 <div class="row g-4">
                     <div class="col-lg-12">
                         <div class="row g-4">
@@ -119,89 +119,6 @@
                                     <div class="col-lg-12">
                                         <div class="mb-3">
                                             <h4>Additional</h4>
-                                            <div class="mb-2">
-                                                <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                                                <label for="Categories-1"> Organic</label>
-                                            </div>
-                                            <div class="mb-2">
-                                                <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                                                <label for="Categories-2"> Fresh</label>
-                                            </div>
-                                            <div class="mb-2">
-                                                <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                                                <label for="Categories-3"> Sales</label>
-                                            </div>
-                                            <div class="mb-2">
-                                                <input type="radio" class="me-2" id="Categories-4" name="Categories-1" value="Beverages">
-                                                <label for="Categories-4"> Discount</label>
-                                            </div>
-                                            <div class="mb-2">
-                                                <input type="radio" class="me-2" id="Categories-5" name="Categories-1" value="Beverages">
-                                                <label for="Categories-5"> Expired</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <h4 class="mb-3">Featured products</h4>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="img/featur-1.jpg" class="img-fluid rounded" alt="">
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-2">Big Banana</h6>
-                                                <div class="d-flex mb-2">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                                <div class="d-flex mb-2">
-                                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="img/featur-2.jpg" class="img-fluid rounded" alt="">
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-2">Big Banana</h6>
-                                                <div class="d-flex mb-2">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                                <div class="d-flex mb-2">
-                                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                                <img src="img/featur-3.jpg" class="img-fluid rounded" alt="">
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-2">Big Banana</h6>
-                                                <div class="d-flex mb-2">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                                <div class="d-flex mb-2">
-                                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-center my-4">
-                                            <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
@@ -252,7 +169,7 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
 
-        <script src="js/include.js"></script>      
+        <script src ="js/include.js"></script>      
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -263,6 +180,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/shop.js"></script>
     <script>
         const API_BASE_URL = 'http://127.0.0.1:1000'; // Ensure this matches your backend API URL
 
@@ -322,7 +240,20 @@
                                     <h4>${product.name}</h4>
                                     <p>${product.description}</p>
                                     <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0">$${product.price}</p>
+                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                         <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                         </a>
@@ -357,6 +288,95 @@
                         <div class="col-md-6 col-lg-6 col-xl-4">
                             <div class="rounded position-relative fruite-item">
                                 <div class="fruite-img">
+                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                    ${product.category_name}
+                                </div>
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4>${product.name}</h4>
+                                    <p>${product.description || "No description available."}</p>
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                handleQuantityButtons(); // Attach event listeners for quantity buttons
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        // Fetch and display product tags for filtering
+        async function fetchProductTags() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-product-tags`);
+                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch product tags`);
+
+                const data = await response.json();
+                const additionalFilterContainer = document.querySelector('.col-lg-12 .mb-3');
+
+                additionalFilterContainer.innerHTML = `
+                    <h4>Additional</h4>
+                    ${data.tags.map((tag, index) => `
+                        <div class="mb-2">
+                            <input type="radio" class="me-2" id="Tag-${index}" name="product-tags" value="${tag}">
+                            <label for="Tag-${index}">${tag}</label>
+                        </div>
+                    `).join('')}
+                `;
+
+                // Add event listener to filter products by tag
+                document.querySelectorAll('input[name="product-tags"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        fetchProductsByTag(e.target.value);
+                    });
+                });
+            } catch (error) {
+                console.error('Error fetching product tags:', error);
+            }
+        }
+
+        // Fetch and display products by tag
+        async function fetchProductsByTag(tag) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products?tag=${tag}`);
+                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products by tag`);
+
+                const data = await response.json();
+                const productContainer = document.querySelector('.row.g-4.justify-content-center');
+                productContainer.innerHTML = ''; // Clear previous products
+
+                if (data.products.length === 0) {
+                    productContainer.innerHTML = `<p class="text-center">No products found for this tag.</p>`;
+                    return;
+                }
+
+                data.products.forEach(product => {
+                    productContainer.innerHTML += `
+                        <div class="col-md-6 col-lg-6 col-xl-4">
+                            <div class="rounded position-relative fruite-item">
+                                <div class="fruite-img">
                                     <img src="${product.image_url}" class="img-fluid w-100 rounded-top" alt="${product.name}">
                                 </div>
                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
@@ -366,7 +386,20 @@
                                     <h4>${product.name}</h4>
                                     <p>${product.description}</p>
                                     <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0">$${product.price}</p>
+                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                         <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                         </a>
@@ -377,14 +410,170 @@
                     `;
                 });
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching products by tag:', error);
             }
+        }
+
+        // Fetch and display products filtered by price
+        async function fetchProductsByPrice(maxPrice) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products?max_price=${maxPrice}`);
+                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products by price`);
+
+                const data = await response.json();
+                const productContainer = document.querySelector('.row.g-4.justify-content-center');
+                productContainer.innerHTML = ''; // Clear previous products
+
+                if (data.products.length === 0) {
+                    productContainer.innerHTML = `<p class="text-center">No products found under ₹${maxPrice}.</p>`;
+                    return;
+                }
+
+                data.products.forEach(product => {
+                    productContainer.innerHTML += `
+                        <div class="col-md-6 col-lg-6 col-xl-4">
+                            <div class="rounded position-relative fruite-item">
+                                <div class="fruite-img">
+                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                    ${product.category_name}
+                                </div>
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4>${product.name}</h4>
+                                    <p>${product.description || "No description available."}</p>
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching products by price:', error);
+            }
+        }
+
+        // Search products by keyword
+        async function searchProducts(keyword) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products?search=${encodeURIComponent(keyword)}`);
+                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products`);
+
+                const data = await response.json();
+                const productContainer = document.querySelector('.row.g-4.justify-content-center');
+                productContainer.innerHTML = ''; // Clear previous products
+
+                if (data.products.length === 0) {
+                    productContainer.innerHTML = `<p class="text-center">No products found for "${keyword}".</p>`;
+                    return;
+                }
+
+                data.products.forEach(product => {
+                    productContainer.innerHTML += `
+                        <div class="col-md-6 col-lg-6 col-xl-4">
+                            <div class="rounded position-relative fruite-item">
+                                <div class="fruite-img">
+                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                    ${product.category_name}
+                                </div>
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4>${product.name}</h4>
+                                    <p>${product.description || "No description available."}</p>
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error searching products:', error);
+            }
+        }
+
+        // Function to handle quantity increment, decrement, and price calculation
+        function handleQuantityButtons() {
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-minus')) {
+                    const input = e.target.closest('.quantity').querySelector('input');
+                    const priceElement = e.target.closest('.fruite-item').querySelector('.product-price');
+                    const basePrice = parseFloat(priceElement.dataset.basePrice);
+                    const currentValue = parseInt(input.value, 10);
+                    if (currentValue > 1) {
+                        input.value = currentValue - 1;
+                        priceElement.textContent = `₹${(basePrice * (currentValue - 1)).toFixed(2)}`;
+                    }
+                } else if (e.target.closest('.btn-plus')) {
+                    const input = e.target.closest('.quantity').querySelector('input');
+                    const priceElement = e.target.closest('.fruite-item').querySelector('.product-price');
+                    const basePrice = parseFloat(priceElement.dataset.basePrice);
+                    const currentValue = parseInt(input.value, 10);
+                    input.value = currentValue + 1;
+                    priceElement.textContent = `₹${(basePrice * (currentValue + 1)).toFixed(2)}`;
+                }
+            });
         }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             fetchCategories();
             fetchAllProducts();
+            fetchProductTags();
+
+            // Add event listener for search input
+            const searchInput = document.querySelector('input[type="search"]');
+            searchInput.addEventListener('input', (e) => {
+                const keyword = e.target.value.trim();
+                if (keyword.length > 2) {
+                    searchProducts(keyword);
+                } else if (keyword.length === 0) {
+                    fetchAllProducts(); // Reset to all products if search is cleared
+                }
+            });
+
+            // Add event listener for price range input
+            const priceRangeInput = document.getElementById('rangeInput');
+            priceRangeInput.addEventListener('input', (e) => {
+                const maxPrice = e.target.value;
+                fetchProductsByPrice(maxPrice);
+            });
         });
     </script>
     </body>
