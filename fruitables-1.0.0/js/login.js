@@ -3,32 +3,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const registerForm = document.querySelector(".signupBx form");
     const API_URL = "http://127.0.0.1:1000"; // Ensure this matches your Flask API URL
 
-    // Check if the backend server is reachable
-    async function checkServerStatus() {
-        try {
-            const response = await fetch(`${API_URL}/`, { method: "GET" });
-            if (!response.ok) {
-                throw new Error("Server is not reachable");
-            }
-        } catch (error) {
-            alert("Unable to connect to the server. Please ensure the backend is running.");
-            console.error("Server connection error:", error.message);
-        }
-    }
-
     // Check if the user is already logged in
     function checkLoginStatus() {
-        const userEmail = sessionStorage.getItem("userEmail");
-        if (userEmail) {
-            showGreeting(userEmail);
+        const userName = sessionStorage.getItem("userName");
+        console.log("Checking login status. UserName:", userName); // Debugging
+        if (userName) {
+            showGreeting(userName);
         }
     }
 
     // Show greeting message
-    function showGreeting(email) {
+    function showGreeting(userName) {
         const loginButton = document.querySelector("a[href='Login.html']");
         if (loginButton) {
-            loginButton.outerHTML = `<span class="text-white">Hi, ${email.split('@')[0]}</span>`;
+            loginButton.outerHTML = `<span class="text-white">Hi, ${userName}</span>`;
+            console.log("Login button replaced with greeting."); // Debugging
+        } else {
+            console.log("Login button not found."); // Debugging
         }
     }
 
@@ -49,14 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 alert(result.message || "Login successful");
-                sessionStorage.setItem("userEmail", email); // Save user email in session storage
-                showGreeting(email); // Replace login button with greeting
-                window.location.href = result.redirect || "dashboard.html"; // Redirect to dashboard
+                const userName = result.message.split(",")[1].trim();
+                sessionStorage.setItem("userName", userName); // Save user name in session storage
+                sessionStorage.setItem("userId", result.user_id); // Save user ID in session storage
+                console.log("User logged in. UserName saved:", userName); // Debugging
+                showGreeting(userName); // Replace login button with greeting
+                window.location.href = result.redirect || "index.html"; // Redirect to index
             } else {
                 alert(result.error || "Login failed");
+                console.error("Login failed:", result.error); // Debugging
             }
         } catch (error) {
             alert("An error occurred: " + error.message);
+            console.error("Error during login:", error); // Debugging
         }
     });
 
@@ -76,17 +72,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, mobile_no, password, confirm_password: confirmPassword })
             });
-
-            if (!response.ok) {
-                const errorResult = await response.json();
-                throw new Error(errorResult.error || "Registration failed");
-            }
-
             const result = await response.json();
-            alert(result.message || "Registration successful");
-            showLoginForm(); // Show login form after successful registration
+
+            if (response.ok) {
+                alert(result.message || "Registration successful");
+                showLoginForm(); // Show login form after successful registration
+            } else {
+                alert(result.error || "Registration failed");
+                console.error("Registration failed:", result.error); // Debugging
+            }
         } catch (error) {
             alert("An error occurred: " + error.message);
+            console.error("Error during registration:", error); // Debugging
         }
     });
 
@@ -110,8 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".signinBx .signup a").addEventListener("click", showRegisterForm);
     document.querySelector(".signupBx .signup a").addEventListener("click", showLoginForm);
 
-    // Initialize with login form visible, check server status, and check login status
+    // Initialize with login form visible and check login status
     showLoginForm();
-    checkServerStatus();
     checkLoginStatus();
 });

@@ -7,13 +7,25 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     mobile_no VARCHAR(15) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    confirm_password VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login DATETIME,
     is_blocked BOOLEAN DEFAULT FALSE
 );
+
+SHOW COLUMNS FROM Users LIKE 'confirm_password';
+SELECT * 
+FROM information_schema.KEY_COLUMN_USAGE 
+WHERE TABLE_NAME = 'Users' 
+AND COLUMN_NAME = 'confirm_password';
+SELECT * 
+FROM information_schema.CHECK_CONSTRAINTS 
+WHERE CONSTRAINT_NAME LIKE '%confirm_password%'; 
+SELECT DATABASE();
+SHOW COLUMNS FROM Users;
+
 describe Users;
 ALTER TABLE Users DROP COLUMN confirm_password;
+DROP TABLE Users;
 ALTER TABLE Users 
 ADD COLUMN mobile_no VARCHAR(15) NOT NULL AFTER email,
 ADD COLUMN confirm_password VARCHAR(255) NOT NULL AFTER password_hash;

@@ -668,7 +668,6 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script src="js/checkout.js"></script>
     <script src="js/location.js"></script>
     <script>
         // Ensure location request is triggered on page load
@@ -842,6 +841,44 @@
                 }
             });
         }
+
+        // Function to add product to cart
+        async function addToCart(productId, quantity = 1) {
+            try {
+                const userId = sessionStorage.getItem("userId"); // Ensure user is logged in
+                if (!userId) {
+                    alert("Please log in to add products to the cart.");
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/add-to-cart`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: userId, product_id: productId, quantity })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message || "Product added to cart!");
+                    window.location.href = "cart.html"; // Redirect to cart page
+                } else {
+                    alert(result.error || "Failed to add product to cart.");
+                }
+            } catch (error) {
+                console.error("Error adding product to cart:", error);
+                alert("An error occurred while adding the product to the cart.");
+            }
+        }
+
+        // Event listener for "Add to Cart" buttons
+        document.addEventListener("click", (e) => {
+            if (e.target.classList.contains("add-to-cart")) {
+                const productElement = e.target.closest(".product-item");
+                const productId = productElement.dataset.id;
+                const quantity = parseInt(productElement.querySelector(".quantity input").value) || 1;
+                addToCart(productId, quantity);
+            }
+        });
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
