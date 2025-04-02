@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login and Register Form</title>
-    <script src="js/login.js" defer></script>
+    <script src="js/auth.js"></script>
     <style>
         /* Base Styles */
 * {
@@ -218,15 +218,16 @@ input[type="submit"]:hover {
     </style>
 </head>
 <body>
+    <!-- <div id="login-button-container"></div> -->
     <section id="auth_section">
         <div class="container">
             <!-- Login Form -->
             <div class="user signinBx active">
                 <div class="formBx">
-                    <form>
+                    <form id="login-form">
                         <h2>Log In</h2>
-                        <input type="email" placeholder="Email" required />
-                        <input type="password" placeholder="Password" required />
+                        <input type="email" id="login-email" placeholder="Email" required />
+                        <input type="password" id="login-password" placeholder="Password" required />
                         <input type="submit" value="Login" />
                         <p class="signup">
                             Don't have an account? <a href="#" onclick="showRegisterForm();">Register</a>
@@ -238,13 +239,13 @@ input[type="submit"]:hover {
             <!-- Register Form -->
             <div class="user signupBx">
                 <div class="formBx">
-                    <form>
+                    <form id="register-form">
                         <h2>Create an account</h2>
-                        <input type="text" placeholder="Full Name" required />
-                        <input type="email" placeholder="Email " required />
-                        <input type="text" placeholder="Phone Number" required />
-                        <input type="password" placeholder=" Password" required />
-                        <input type="password" placeholder="Confirm Password" required />
+                        <input type="text" id="register-name" placeholder="Full Name" required />
+                        <input type="email" id="register-email" placeholder="Email" required />
+                        <input type="text" id="register-mobile" placeholder="Phone Number" required />
+                        <input type="password" id="register-password" placeholder="Password" required />
+                        <input type="password" id="register-confirm-password" placeholder="Confirm Password" required />
                         <input type="submit" value="Sign Up" />
                         <p class="signup">
                             Already have an account? <a href="#" onclick="showLoginForm();">Log In</a>
@@ -254,6 +255,17 @@ input[type="submit"]:hover {
             </div>
         </div>
     </section>
+    <script>
+        function showRegisterForm() {
+            document.querySelector(".signinBx").classList.remove("active");
+            document.querySelector(".signupBx").classList.add("active");
+        }
+
+        function showLoginForm() {
+            document.querySelector(".signupBx").classList.remove("active");
+            document.querySelector(".signinBx").classList.add("active");
+        }
+    </script>
 </body>
 
 </html>

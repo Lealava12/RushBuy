@@ -146,10 +146,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-item">
+                            <!-- <div class="form-item">
                                 <label class="form-label my-3">Company Name<sup>*</sup></label>
                                 <input type="text" class="form-control">
-                            </div>
+                            </div> -->
                             <div class="form-item">
                                 <label class="form-label my-3">Address <sup>*</sup></label>
                                 <input type="text" class="form-control" placeholder="House Number Street Name">
@@ -174,15 +174,15 @@
                                 <label class="form-label my-3">Email Address<sup>*</sup></label>
                                 <input type="email" class="form-control">
                             </div>
-                            <div class="form-check my-3">
+                            <!-- <div class="form-check my-3">
                                 <input type="checkbox" class="form-check-input" id="Account-1" name="Accounts" value="Accounts">
                                 <label class="form-check-label" for="Account-1">Create an account?</label>
-                            </div>
+                            </div> -->
                             <hr>
-                            <div class="form-check my-3">
+                            <!-- <div class="form-check my-3">
                                 <input class="form-check-input" type="checkbox" id="Address-1" name="Address" value="Address">
                                 <label class="form-check-label" for="Address-1">Ship to a different address?</label>
-                            </div>
+                            </div> -->
                             <div class="form-item">
                                 <textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
                             </div>
@@ -203,15 +203,6 @@
                                     <tbody id="checkout-table-body">
                                         <!-- Checkout items will be dynamically rendered here -->
                                     </tbody>
-                                    <script>
-                                        // Ensure "Remove" button works in the checkout page
-                                        document.addEventListener('click', function (e) {
-                                            if (e.target.classList.contains('remove-from-cart')) {
-                                                const productId = e.target.dataset.id;
-                                                removeFromCart(productId);
-                                            }
-                                        });
-                                    </script>
                                 </table>
                             </div>
                             <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
@@ -227,7 +218,7 @@
                                 <div class="col-12">
                                     <div class="form-check text-start my-3">
                                         <input type="checkbox" class="form-check-input bg-primary border-0" id="Payments-1" name="Payments" value="Payments">
-                                        <label class="form-check-label" for="Payments-1">Check Payments</label>
+                                        <label class="form-check-label" for="Payments-1">UPI</label>
                                     </div>
                                 </div>
                             </div>
@@ -248,8 +239,16 @@
                                 </div>
                             </div>
                             <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                                <p class="mb-0 text-dark">$<span id="checkout-total">0.00</span></p>
-                                <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="text-dark mb-0">Total Amount:</h5>
+                                        <h4 class="text-primary mb-0"><span id="checkout-total"></span></h4>
+                                    </div>
+                                    <button type="button" class="btn btn-primary py-3 px-4 text-uppercase w-100" 
+                                            onclick="placeOrder()">
+                                        Place Order <i class="fas fa-shopping-cart ms-2"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -368,6 +367,75 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script src="js/checkout.js"></script>
+    <script>
+    //     const API_BASE_URL = 'http://127.0.0.1:1000';
+    //   // This script will be executed when the checkout page loads
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     loadCheckoutData();
+    // });
+
+    // // Function to load cart items from sessionStorage and render them in the checkout table
+    // function loadCheckoutData() {
+    //     const cartItems = JSON.parse(sessionStorage.getItem('cartItems'));
+    //     const cartTotal = sessionStorage.getItem('cartTotal');
+
+    //     if (!cartItems || cartItems.length === 0) {
+    //         document.getElementById("checkout-table-body").innerHTML = "<tr><td colspan='6' class='text-center'>Your cart is empty.</td></tr>";
+    //         document.getElementById("checkout-total").textContent = `₹${cartTotal}`;
+    //         return;
+    //     }
+
+    //     let tableBody = "";
+    //     cartItems.forEach(item => {
+    //         const itemTotal = item.price * item.quantity;
+    //         tableBody += `
+    //             <tr>
+    //                 <td><img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}" class="img-fluid" style="max-width: 50px;"></td>
+    //                 <td>${item.name}</td>
+    //                 <td>₹${item.price}</td>
+    //                 <td>${item.quantity}</td>
+    //                 <td>₹${itemTotal}</td>
+    //                 <td><button class="btn btn-sm btn-danger remove-from-cart" data-id="${item.product_id}">Remove</button></td>
+    //             </tr>
+    //         `;
+    //     });
+
+    //     document.getElementById("checkout-table-body").innerHTML = tableBody;
+    //     document.getElementById("checkout-total").textContent = `₹${cartTotal}`;
+    // }
+
+    // // Function to remove an item from the cart (this could be triggered when clicking on the remove button)
+    // function removeFromCart(productId) {
+    //     fetch(`${API_BASE_URL}/remove-from-cart`, {
+    //         method: "POST",
+    //         credentials: "include",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({ product_id: productId })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.error) {
+    //             alert(data.error);
+    //         } else {
+    //             loadCheckoutData(); // Refresh the checkout data after removal
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error("Error removing item:", error);
+    //         alert("Failed to remove item. Please try again.");
+    //     });
+    // }
+//     function loadCheckoutData() {
+//     // ...existing code...
+
+//     document.getElementById("checkout-table-body").innerHTML = tableBody;
+//     // Remove the ₹ symbol if present and update the total
+//     const totalAmount = cartTotal.replace('₹', '').trim();
+//     document.getElementById("checkout-total").textContent = totalAmount;
+// }
+    </script>
     </body>
 
 </html>

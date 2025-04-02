@@ -147,6 +147,7 @@
                             <form action="" class="">
                                 <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Name">
                                 <input type="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Email">
+                                <input type="number" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Phone no.">
                                 <textarea class="w-100 form-control border-0 mb-4" rows="5" cols="10" placeholder="Your Message"></textarea>
                                 <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary " type="submit">Submit</button>
                             </form>
@@ -292,6 +293,59 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+      // const apiBaseUrl = "http://127.0.0.1:5000"; // Adjust the port if necessary
+
+// Function to handle form submission
+const apiBaseUrl = "http://127.0.0.1:1000"; // Adjust the port if necessary
+
+// Function to handle form submission
+document.addEventListener("DOMContentLoaded", function () {
+    const contactForm = document.querySelector("form");
+
+    contactForm.addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get input values using name attributes
+        const name = document.querySelector("input[placeholder='Your Name']").value.trim();
+        const email = document.querySelector("input[placeholder='Enter Your Email']").value.trim();
+        const phone = document.querySelector("input[placeholder='Enter Your Phone no.']").value.trim();
+        const message = document.querySelector("textarea[placeholder='Your Message']").value.trim();
+
+        // Ensure required fields are filled
+        if (!name || !email || !phone) {
+            alert("Please fill in all required fields: Name, Email, and Phone.");
+            return;
+        }
+
+        // Prepare the contact data
+        const contactData = { name, email, phone, message };
+
+        try {
+            const response = await fetch(`${apiBaseUrl}/contacts`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(contactData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("Contact added successfully!");
+                contactForm.reset(); // Reset form fields after successful submission
+            } else {
+                alert(`Error: ${result.error}`);
+            }
+        } catch (error) {
+            alert("Error: Unable to connect to the server.");
+            console.error("Error submitting form:", error);
+        }
+    });
+});
+
+    </script>
     </body>
 
 </html>
