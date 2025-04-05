@@ -5,6 +5,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+async function getUserId() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/status`, {
+            method: "GET",
+            credentials: "include"
+        });
+        
+        const data = await response.json();
+        
+        if (data.username) { // Updated to match backend response
+            sessionStorage.setItem("user_id", data.username);
+            return data.username;
+        } else {
+            alert("Session expired. Please log in again.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching user status:", error);
+        alert("Failed to check user authentication. Please try again.");
+        return null;
+    }
+}
+
 function proceedToCheckout() {
     fetch(`${API_BASE_URL}/get-cart`, {
         method: "GET",
@@ -17,7 +40,7 @@ function proceedToCheckout() {
     .then(data => {
         if (!data.error && data.cartItems.length > 0) {
             sessionStorage.setItem("checkoutItems", JSON.stringify(data.cartItems));
-            window.location.href = "checkout.html";
+            window.location.href = "chackout.html";
         } else {
             alert("Your cart is empty.");
         }
@@ -74,218 +97,94 @@ function removeFromCheckout(productId) {
     sessionStorage.setItem("checkoutItems", JSON.stringify(cartItems));
     loadCheckoutItems();
 }
-// function placeOrder() {
-
-//     const userId = sessionStorage.getItem("user_id"); 
-//     if (!userId) {
-//         alert("User not authenticated. Please log in first.");
-//         return;
-//     }
-//     // Get all required form fields
-//     const firstName = document.querySelector('input[placeholder="First Name"]')?.value.trim();
-//     const lastName = document.querySelector('input[placeholder="Last Name"]')?.value.trim();
-//     // const companyName = document.querySelector('input[placeholder="Company Name"]')?.value.trim();
-//     const address = document.querySelector('input[placeholder="House Number Street Name"]')?.value.trim();
-//     const city = document.querySelector('input[placeholder="Town/City"]')?.value.trim();
-//     const country = document.querySelector('input[placeholder="Country"]')?.value.trim();
-//     const postcode = document.querySelector('input[placeholder="Postcode/Zip"]')?.value.trim();
-//     const mobile = document.querySelector('input[type="tel"]')?.value.trim();
-//     const email = document.querySelector('input[type="email"]')?.value.trim();
-//     const orderNotes = document.querySelector('textarea[name="text"]')?.value.trim();
-
-//     // Validate that all required fields are filled
-//     if (!firstName || !lastName || !address || !city || !country || !postcode || !mobile || !email) {
-//         alert("Please fill in all required fields before placing your order.");
-//         return;
-//     }
-
-//     // Get all payment method checkboxes
-//     const paymentMethods = document.querySelectorAll('input[name="Transfer"], input[name="Payments"], input[name="Delivery"], input[name="Paypal"]');
-
-//     let selectedMethod = null;
-
-//     // Check if at least one payment method is selected
-//     paymentMethods.forEach(method => {
-//         if (method.checked) {
-//             selectedMethod = method.value;
-//         }
-//     });
-
-// //     if (!selectedMethod) {
-// //         alert("Please select a payment method before placing the order.");
-// //         return;
-// //     }
-
-// //     // Get the order button
-// //     const placeOrderButton = document.querySelector("button[onclick='placeOrder()']");
-
-// //     if (selectedMethod === "Delivery") { // Cash on Delivery
-// //         placeOrderButton.disabled = false;
-
-// //         // Get total amount
-// //         const totalAmount = document.getElementById("checkout-total").textContent;
-
-// //         // Simulating order placement (Replace with actual backend logic)
-// //         alert(`Order placed successfully!\nPayment Method: ${selectedMethod}\nTotal Amount: ₹${totalAmount}`);
-
-// //         // Clear checkout session
-// //         sessionStorage.removeItem("checkoutItems");
-
-// //         // Redirect to homepage or order confirmation page
-// //         window.location.href = "index.html"; // Change to an order confirmation page if needed
-// //     } else {
-// //         placeOrderButton.disabled = true;
-// //         alert(`The selected payment method (${selectedMethod}) is not available at the moment.`);
-// //     }
-// // }
-// if (!selectedMethod) {
-//     alert("Please select a payment method before placing the order.");
-//     return;
-// }
-
-// // Get the order button
-// const placeOrderButton = document.querySelector("button[onclick='placeOrder()']");
-
-// if (selectedMethod === "Delivery") { // Cash on Delivery
-//     placeOrderButton.disabled = false;
-
-//     // Get total amount
-//     const totalAmount = document.getElementById("checkout-total").textContent;
-
-//     // Prepare data for backend
-//     const billingData = {
-//         user_id: userId,// Change this to the actual user ID from session or authentication
-//         first_name: firstName,
-//         last_name: lastName,
-//         address: address,
-//         city: city,
-//         country: country,
-//         postcode: postcode,
-//         mobile: mobile,
-//         email: email,
-//         order_notes: orderNotes
-//     };
-
-//     // Send data to backend
-//     try {
-//         const response = await fetch('/billing', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(billingData)
-//       });
-//     // .then(response => response.json())
-//     // .then(data => {
-//         const result = await response.json();
-//         if (data.message) {
-//             alert(`Order placed successfully!\nPayment Method: ${selectedMethod}\nTotal Amount: ₹${totalAmount}`);
-//             sessionStorage.removeItem("checkoutItems");
-//             window.location.href = "index.html"; // Change to order confirmation page if needed
-//         } else {
-//             alert("Error placing order: " + data.error);
-//         }
-//     }
-//     catch (error) {
-//         alert("Failed to place order. Please try again.");
-//         console.error(error);
-//     }
-
-// } else {
-//     placeOrderButton.disabled = true;
-//     alert(`The selected payment method (${selectedMethod}) is not available at the moment.`);
-// }
-// }
 
 async function placeOrder() {
-    // Get user ID from session storage (change this to match your auth mechanism)
-    const userId = sessionStorage.getItem("user_id"); 
-    if (!userId) {
-        alert("User not authenticated. Please log in first.");
-        return;
-    }
+    try {
+        const userId = await getUserId();
+        if (!userId) return;
 
-    // Get all required form fields
-    const firstName = document.querySelector('input[placeholder="First Name"]')?.value.trim();
-    const lastName = document.querySelector('input[placeholder="Last Name"]')?.value.trim();
-    const address = document.querySelector('input[placeholder="House Number Street Name"]')?.value.trim();
-    const city = document.querySelector('input[placeholder="Town/City"]')?.value.trim();
-    const country = document.querySelector('input[placeholder="Country"]')?.value.trim();
-    const postcode = document.querySelector('input[placeholder="Postcode/Zip"]')?.value.trim();
-    const mobile = document.querySelector('input[type="tel"]')?.value.trim();
-    const email = document.querySelector('input[type="email"]')?.value.trim();
-    const orderNotes = document.querySelector('textarea[name="text"]')?.value.trim();
-
-    // Validate that all required fields are filled
-    if (!firstName || !lastName || !address || !city || !country || !postcode || !mobile || !email) {
-        alert("Please fill in all required fields before placing your order.");
-        return;
-    }
-
-    // Get all payment method checkboxes
-    const paymentMethods = document.querySelectorAll('input[name="Transfer"], input[name="Payments"], input[name="Delivery"], input[name="Paypal"]');
-
-    let selectedMethod = null;
-
-    // Check if at least one payment method is selected
-    paymentMethods.forEach(method => {
-        if (method.checked) {
-            selectedMethod = method.value;
-        }
-    });
-
-    if (!selectedMethod) {
-        alert("Please select a payment method before placing the order.");
-        return;
-    }
-
-    // Get the order button
-    const placeOrderButton = document.querySelector("button[onclick='placeOrder()']");
-
-    if (selectedMethod === "Delivery") { // Cash on Delivery
-        placeOrderButton.disabled = false;
-
-        // Get total amount
-        const totalAmount = document.getElementById("checkout-total").textContent;
-
-        // Prepare data for backend
-        const billingData = {
-            user_id: userId, 
-            first_name: firstName,
-            last_name: lastName,
-            address: address,
-            city: city,
-            country: country,
-            postcode: postcode,
-            mobile: mobile,
-            email: email,
-            order_notes: orderNotes
+        // Use correct name selectors instead of placeholders (more reliable)
+        const inputs = {
+            first_name: document.querySelector('input[name="first_name"]'),
+            last_name: document.querySelector('input[name="last_name"]'),
+            address: document.querySelector('input[name="address"]'),
+            city: document.querySelector('input[name="city"]'),
+            country: document.querySelector('input[name="country"]'),
+            postcode: document.querySelector('input[name="postcode"]'),
+            mobile: document.querySelector('input[name="mobile"]'),
+            email: document.querySelector('input[name="email"]'),
+            order_notes: document.querySelector('textarea[name="order_notes"]')
         };
 
-        try {
-            const response = await fetch('/billing', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(billingData)
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert(`Order placed successfully!\nPayment Method: ${selectedMethod}\nTotal Amount: ₹${totalAmount}`);
-                sessionStorage.removeItem("checkoutItems"); // Clear checkout session
-                window.location.href = "index.html"; // Redirect to confirmation page
-            } else {
-                alert(`Error placing order: ${result.error}`);
+        // Check for missing required fields
+        for (const key in inputs) {
+            if (key !== "order_notes" && (!inputs[key] || !inputs[key].value.trim())) {
+                alert(`Please fill in the ${key.replace("_", " ")} field.`);
+                return;
             }
-        } catch (error) {
-            alert("Failed to place order. Please try again.");
-            console.error(error);
         }
-    } else {
+
+        const paymentMethodInput = document.querySelector('input[name="payment_method"]:checked');
+        const paymentMethod = paymentMethodInput ? paymentMethodInput.value : null;
+
+        if (!paymentMethod) {
+            alert("Please select a payment method before placing the order.");
+            return;
+        }
+
+        const placeOrderButton = document.querySelector("button[onclick='placeOrder()']");
         placeOrderButton.disabled = true;
-        alert(`The selected payment method (${selectedMethod}) is not available at the moment.`);
+
+        const totalAmount = parseFloat(document.getElementById("checkout-total").textContent.replace(/[^\d.]/g, ''));
+        const cartItems = JSON.parse(sessionStorage.getItem("checkoutItems") || "[]");
+
+        if (cartItems.length === 0) {
+            alert("Your cart is empty. Please add items before placing an order.");
+            placeOrderButton.disabled = false;
+            return;
+        }
+
+        const orderData = {
+            user_id: userId,
+            total_amount: totalAmount,
+            delivery_time_preference: "No preference",
+            cart_items: cartItems,
+            payment_method: paymentMethod,
+            first_name: inputs.first_name.value.trim(),
+            last_name: inputs.last_name.value.trim(),
+            address: inputs.address.value.trim(),
+            city: inputs.city.value.trim(),
+            country: inputs.country.value.trim(),
+            postcode: inputs.postcode.value.trim(),
+            mobile: inputs.mobile.value.trim(),
+            email: inputs.email.value.trim(),
+            order_notes: inputs.order_notes ? inputs.order_notes.value.trim() : ""
+        };
+
+        console.log("Sending order data:", orderData); // Debug log
+
+        const response = await fetch(`${API_BASE_URL}/users/checkout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(orderData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(`Order placed successfully!\nOrder ID: ${String(result.order_id).padStart(5, '0')}\nPayment Method: ${paymentMethod}\nTotal Amount: ₹${totalAmount}`);
+            sessionStorage.removeItem("checkoutItems");
+            window.location.href = "index.html";
+        } else {
+            console.error("Server returned error:", result); // Debug
+            alert(`Error placing order: ${result.error || "Unknown error"}`);
+        }
+    } catch (error) {
+        alert("An error occurred. Please try again.");
+        console.error(error);
+    } finally {
+        const placeOrderButton = document.querySelector("button[onclick='placeOrder()']");
+        if (placeOrderButton) placeOrderButton.disabled = false;
     }
 }

@@ -39,13 +39,15 @@
 
 
         <!-- Navbar start -->
-        <div id="sidebar-container"></div>
-        <!-- <div class="container-fluid fixed-top">
+        <!-- <div id="sidebar-container"></div> -->
+        <div class="container-fluid fixed-top">
             <div class="container topbar bg-primary d-none d-lg-block">
                 <div class="d-flex justify-content-between">
                     <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">123 Street, New York</a></small>
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Email@Example.com</a></small>
+                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <span
+                                class="user-location">Fetching location...</span></small>
+                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                                class="text-white">Email@Example.com</a></small>
                     </div>
                     <div class="top-link pe-2">
                         <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
@@ -56,40 +58,200 @@
             </div>
             <div class="container px-0">
                 <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Fruitables</h1></a>
-                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <a href="index.html" class="navbar-brand">
+                        <h1 class="text-primary display-6">BLINKIT</h1>
+                    </a>
+                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
                         <span class="fa fa-bars text-primary"></span>
                     </button>
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                         <div class="navbar-nav mx-auto">
                             <a href="index.html" class="nav-item nav-link">Home</a>
                             <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Pages</a>
-                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="cart.html" class="dropdown-item">Cart</a>
-                                    <a href="chackout.html" class="dropdown-item">Chackout</a>
-                                    <a href="testimonial.html" class="dropdown-item active">Testimonial</a>
-                                    <a href="404.html" class="dropdown-item">404 Page</a>
-                                </div>
-                            </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <!-- <a href="chackout.html" class="nav-item nav-link">Checkout</a> -->
+                            <a href="testimonial.html" class="nav-item nav-link">Orders</a>
+                            <a href="contact.html" class="nav-item nav-link active">Contact</a>
                         </div>
-                        <div class="d-flex m-3 me-0">
-                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                            <a href="#" class="position-relative me-4 my-auto">
+                        <div class="d-flex m-3 me-1">
+                            <button
+                                class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
+                                data-bs-toggle="modal" data-bs-target="#searchModal"><i
+                                    class="fas fa-search text-primary"></i></button>
+                            <a href="cart.html" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                                <span
+                                    class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                             </a>
-                            <a href="#" class="my-auto">
-                                <i class="fas fa-user fa-2x"></i>
-                            </a>
+                            <div class="d-flex m-3 me-0">
+                                <!-- Login button triggers modal -->
+                                <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authModal">Log
+                                    In</button> -->
+                            </div>
                         </div>
                     </div>
                 </nav>
             </div>
-        </div> -->
+        </div>
+    
+           <!-- Login/Register Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content auth-container">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authModalLabel">User Authentication</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <section id="auth_section">
+                    <div class="auth-wrapper">
+                        <!-- Login Form -->
+                        <div class="auth-box signinBx active" id="loginBox">
+                            <div class="formBx">
+                                <form id="login-form">
+                                    <h2>Log In</h2>
+                                    <input type="email" id="login-email" placeholder="Email" required />
+                                    <input type="password" id="login-password" placeholder="Password" required />
+                                    <input type="submit" value="Login" class="btn-auth"  style="background-color:#81C408;"/>
+                                    <p class="toggle-link">
+                                        Don't have an account? <a href="#" onclick="showRegisterForm();">Register</a>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Register Form -->
+                        <div class="auth-box signupBx" id="registerBox">
+                            <div class="formBx">
+                                <form id="register-form">
+                                    <h2>Create an account</h2>
+                                    <input type="text" id="register-name" placeholder="Full Name" required />
+                                    <input type="email" id="register-email" placeholder="Email" required />
+                                    <input type="text" id="register-mobile" placeholder="Phone Number" required />
+                                    <input type="password" id="register-password" placeholder="Password" required />
+                                    <input type="password" id="register-confirm-password" placeholder="Confirm Password" required />
+                                    <input type="submit" value="Sign Up" class="btn-auth" style="background-color:#81C408;" />
+                                    <p class="toggle-link">
+                                        Already have an account? <a href="#" onclick="showLoginForm();">Log In</a>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to Toggle Forms -->
+<script>
+    function showRegisterForm() {
+        document.getElementById("loginBox").classList.remove("active");
+        document.getElementById("registerBox").classList.add("active");
+    }
+
+    function showLoginForm() {
+        document.getElementById("registerBox").classList.remove("active");
+        document.getElementById("loginBox").classList.add("active");
+    }
+</script>
+
+<!-- Modern CSS Design -->
+<style>
+    /* Modal Styling */
+    .auth-container {
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Wrapper */
+    .auth-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* Forms Box */
+    .auth-box {
+        width: 100%;
+        max-width: 350px;
+        display: none;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .auth-box.active {
+        display: block;
+    }
+
+    /* Form Design */
+    .formBx h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .formBx input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .btn-auth {
+        width: 100%;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .btn-auth:hover {
+        background: #0056b3;
+    }
+
+    /* Toggle Links */
+    .toggle-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .toggle-link a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .toggle-link a:hover {
+        text-decoration: underline;
+    }
+  </style>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/login.js"></script>
+        <script>
+        //      function showRegisterForm() {
+        //     document.querySelector('.signinBx').classList.remove('active');
+        //     document.querySelector('.signupBx').classList.add('active');
+        // }
+
+        // function showLoginForm() {
+        //     document.querySelector('.signupBx').classList.remove('active');
+        //     document.querySelector('.signinBx').classList.add('active');
+        // }
+        </script>
         <!-- Navbar End -->
 
 
@@ -115,18 +277,265 @@
 
         <!-- Single Page Header start -->
         <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Testimonial</h1>
+            <h1 class="text-center text-white display-6">Orders</h1>
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active text-white">Testimonial</li>
+                <li class="breadcrumb-item active text-white">Orders</li>
             </ol>
         </div>
         <!-- Single Page Header End -->
         
 
         <!-- Tastimonial Start -->
+        <div class="c">
+            <h2>Order Details</h2>
+            
+            <div class="section" id="billing-details">
+                <h3>Billing Details</h3>
+                <p><strong>Name:</strong> <span id="billing-name"></span></p>
+                <p><strong>Address:</strong> <span id="billing-address"></span></p>
+                <p><strong>Email:</strong> <span id="billing-email"></span></p>
+                <p><strong>Phone:</strong> <span id="billing-phone"></span></p>
+            </div>
+    
+            <div class="section" id="order-details">
+                <h3>Order Information</h3>
+                <p><strong>Order ID:</strong> <span id="order-id"></span></p>
+                <p><strong>Total Amount:</strong> $<span id="order-total"></span></p>
+                <p><strong>Status:</strong> <span id="order-status"></span></p>
+            </div>
+    
+            <div class="section" id="items">
+                <h3>Items Ordered</h3>
+                <div id="order-items"></div>
+            </div>
+    
+            <div class="section" id="payment-details">
+                <h3>Payment Information</h3>
+                <p><strong>Method:</strong> <span id="payment-method"></span></p>
+                <p><strong>Status:</strong> <span id="payment-status"></span></p>
+                <p><strong>Transaction ID:</strong> <span id="transaction-id"></span></p>
+            </div>
+        </div>
 
+        <style>
+            body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fdf4;
+    margin: 0;
+    padding: 0;
+}
+
+.c {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    border: 2px solid #81c40833;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 30px;
+    border-left: 6px solid #81c408;
+    padding-left: 15px;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section h3 {
+    color: #81c408;
+    border-bottom: 2px solid #81c40855;
+    padding-bottom: 6px;
+    margin-bottom: 15px;
+}
+
+.section p {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #444;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f3fbe9;
+    border-left: 4px solid #81c408;
+    border-radius: 8px;
+}
+
+.order-item img {
+    width: 80px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.order-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    background-color: #81c408;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: #6cab06;
+}
+
+button:disabled {
+    background-color: #b1e77c;
+    cursor: not-allowed;
+}
+@media (max-width: 600px) {
+    .c {
+        padding: 20px;
+    }
+
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-item img {
+        margin-bottom: 10px;
+    }
+}
+
+        </style>
+        <script>
+            //const API_BASE_URL = "your-api-base-url"; // Replace with your actual API base URL
+            async function getUserId() {
+    try {
+        const response = await fetch(`${API_URL}/user/status`, {
+            method: "GET",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (data.username) {
+            sessionStorage.setItem("user_id", data.username);
+            return data.username;
+        } else {
+            alert("Session expired. Please log in again.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching user status:", error);
+        alert("Failed to check user authentication. Please try again.");
+        return null;
+    }
+}
+
+async function fetchOrderDetails() {
+    try {
+        const userId = await getUserId();
+        if (!userId) return;
+
+        const refreshButton = document.querySelector("button");
+        refreshButton.disabled = true;
+        refreshButton.textContent = "Refreshing...";
+
+        const response = await fetch(`${API_URL}/users/checkout`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.error || "Failed to fetch order details.");
+            return;
+        }
+
+        // Billing Details
+        if (data.billing_details) {
+            document.getElementById("billing-name").textContent =
+                `${data.billing_details.first_name || ''} ${data.billing_details.last_name || ''}`;
+            document.getElementById("billing-address").textContent =
+                `${data.billing_details.address || ''}, ${data.billing_details.city || ''}, ${data.billing_details.country || ''}`;
+            document.getElementById("billing-email").textContent = data.billing_details.email || 'N/A';
+            document.getElementById("billing-phone").textContent = data.billing_details.mobile || 'N/A';
+        }
+
+        // Order Details
+        if (data.order) {
+            document.getElementById("order-id").textContent = data.order_id || 'N/A';
+            document.getElementById("order-total").textContent = data.order.total_amount || '0.00';
+            document.getElementById("order-status").textContent = data.order.status || 'Pending';
+        }
+
+        // Items Ordered with Image Support
+        const itemsContainer = document.getElementById("order-items");
+        itemsContainer.innerHTML = "";
+
+        if (Array.isArray(data.items)) {
+            data.items.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("order-item");
+                itemDiv.style.display = "flex";
+                itemDiv.style.alignItems = "center";
+                itemDiv.style.marginBottom = "10px";
+
+                // Ensure the image URL is correct and has a fallback image
+                const productImage = item.product_image ? item.product_image : "http://localhost:1000/static/uploads/default.jpg";
+
+                itemDiv.innerHTML = `
+                    <img src="${productImage}" alt="${item.product_name || 'Unknown'}" width="80" style="margin-right: 10px;" onerror="this.onerror=null; this.src='http://localhost:1000/static/uploads/default.jpg';"/>
+                    <div>
+                        <span><strong>${item.product_name || 'Unknown'}</strong> (x${item.quantity || 1})</span><br>
+                        <span>Price: $${item.price_at_purchase || '0.00'}</span>
+                    </div>
+                `;
+                itemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        // Payment Details
+        if (data.payment) {
+            document.getElementById("payment-method").textContent = data.payment.payment_method || 'N/A';
+            document.getElementById("payment-status").textContent = data.payment.status || 'Pending';
+            document.getElementById("transaction-id").textContent = data.payment.transaction_id || 'N/A';
+        }
+
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        alert("An error occurred while fetching order details.");
+    } finally {
+        const refreshButton = document.querySelector("button");
+        refreshButton.disabled = false;
+        refreshButton.textContent = "Refresh Order";
+    }
+}
+
+// Call the function to fetch order details on page load
+document.addEventListener("DOMContentLoaded", fetchOrderDetails);
+
+        </script>
         <!-- <div class="container-fluid testimonial py-5">
             <div class="container py-5">
                 <div class="testimonial-header text-center">
@@ -143,7 +552,7 @@
                             </div>
                             <div class="d-flex align-items-center flex-nowrap">
                                 <div class="bg-secondary rounded">
-                                    <img src="img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                    <img src="assets/img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
                                 </div>
                                 <div class="ms-4 d-block">
                                     <h4 class="text-dark">Client Name</h4>
@@ -168,7 +577,7 @@
                             </div>
                             <div class="d-flex align-items-center flex-nowrap">
                                 <div class="bg-secondary rounded">
-                                    <img src="img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                    <img src="assets/img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
                                 </div>
                                 <div class="ms-4 d-block">
                                     <h4 class="text-dark">Client Name</h4>
@@ -193,7 +602,7 @@
                             </div>
                             <div class="d-flex align-items-center flex-nowrap">
                                 <div class="bg-secondary rounded">
-                                    <img src="img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                    <img src="assets/img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
                                 </div>
                                 <div class="ms-4 d-block">
                                     <h4 class="text-dark">Client Name</h4>
@@ -281,7 +690,7 @@
                             <p>Email: Example@gmail.com</p>
                             <p>Phone: +0123 4567 8910</p>
                             <p>Payment Accepted</p>
-                            <img src="img/payment.png" class="img-fluid" alt="">
+                            <img src="assets/img/payment.png" class="img-fluid" alt="">
                         </div>
                     </div>
                 </div>

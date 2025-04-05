@@ -285,3 +285,103 @@
 //     document.querySelector('.signinBx').classList.add('active');
 // }
 
+const API_URL = "http://127.0.0.1:1000";
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const authContainer = document.querySelector(".d-flex.m-3.me-0");
+
+    try {
+        const response = await fetch(`${API_URL}/user/status`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+        });
+
+        const data = await response.json();
+        if (response.ok && data.username) {
+            authContainer.innerHTML = `
+                <button class="btn btn-primary me-2">Hi, ${data.username}</button>
+                <button onclick="logout()" class="btn btn-danger">Logout</button>
+            `;
+        } else {
+            authContainer.innerHTML = `
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authModal">Log In</button>
+            `;
+        }
+    } catch (error) {
+        console.error("Error fetching user status:", error);
+    }
+
+    // Login Form Submission
+    document.querySelector("#login-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const email = document.querySelector("#login-email").value;
+        const password = document.querySelector("#login-password").value;
+    
+        try {
+            const response = await fetch(`${API_URL}/user/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ email, password })
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                alert("Login successful");
+                console.log("Login Response:", data);
+                location.reload();
+            } else {
+                console.error("Login error:", data.error);
+                alert(data.error); // Shows proper error message
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+            alert("Network error, try again!");
+        }
+    });
+
+    // Registration Form Submission
+    document.querySelector("#register-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const name = document.querySelector("#register-name").value;
+        const email = document.querySelector("#register-email").value;
+        const mobile_no = document.querySelector("#register-mobile").value;
+        const password = document.querySelector("#register-password").value;
+        const confirmPassword = document.querySelector("#register-confirm-password").value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        const response = await fetch(`${API_URL}/user/signup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, mobile_no, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Registration successful");
+            location.reload();
+        } else {
+            alert(data.error);
+        }
+    });
+});
+
+// Logout Function
+async function logout() {
+    const response = await fetch(`${API_URL}/user/logout`, {
+        method: "POST",
+        credentials: "include"
+    });
+
+    if (response.ok) {
+        alert("Logged out successfully");
+        location.reload();
+    } else {
+        alert("Logout failed");
+    }
+}

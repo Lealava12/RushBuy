@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <!-- <link rel="stylesheet" href="./order&delivery.css"> -->
+    <link rel="stylesheet" href="user.css">
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="form-container">
+        <h1>User Management</h1>
+
+        <!-- View Users Section -->
+        <section class="form-section">
+            <h2>Users List</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example of a User Row -->
+                    <!-- More user records will go here -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <script src ="include.js"></script>
+    <script>
+     document.addEventListener("DOMContentLoaded", function () {
+    fetchUsers();
+});
+
+const API_BASE_URL = "http://127.0.0.1:1000"; // Backend API URL
+
+// Function to fetch users from the backend
+function fetchUsers() {
+    fetch(`${API_BASE_URL}/get-users`)
+        .then(response => response.json())
+        .then(users => {
+            const tbody = document.querySelector(".user-table tbody");
+            tbody.innerHTML = ""; // Clear existing rows
+
+            users.forEach(user => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${user.user_id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.status}</td>
+                    <td>
+                        <button class="${user.status === 'Active' ? 'block-btn' : 'unblock-btn'}"
+                                data-user-id="${user.user_id}"
+                                onclick="toggleUserStatus(this)">
+                            ${user.status === 'Active' ? 'Block' : 'Unblock'}
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        })
+        .catch(error => console.error("Error fetching users:", error));
+}
+
+// Function to toggle user status
+function toggleUserStatus(button) {
+    const userId = button.getAttribute("data-user-id");
+    const userStatusCell = button.closest("tr").querySelector("td:nth-child(4)");
+    const currentStatus = userStatusCell.textContent;
+    const newStatus = currentStatus === "Active" ? "Blocked" : "Active";
+
+    fetch(`${API_BASE_URL}/update-user-status`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_id: userId, status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            userStatusCell.textContent = newStatus;
+            button.textContent = newStatus === "Active" ? "Block" : "Unblock";
+            button.classList.toggle("block-btn", newStatus === "Active");
+            button.classList.toggle("unblock-btn", newStatus === "Blocked");
+        } else {
+            console.error("Failed to update status:", data.error);
+        }
+    })
+    .catch(error => console.error("Error updating user status:", error));
+}
+
+    </script>
+    
+
+</body>
+</html>

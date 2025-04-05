@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category, Sub-Category & Product Management</title>
+    <link rel="stylesheet" href="order&delivery.css">
+    <!-- <link rel="stylesheet" href="./sidebar.css"> -->
+     
+</head>
+
+<body>
+    <div id="sidebar-container"></div>
+    <div>
+        <div class="form-container">
+            <h1>Order & Delivery </h1>
+
+            <!-- View Orders Section -->
+            <section class="form-section" >
+                <h2>View Orders</h2>
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User ID</th>
+                            <th>Products</th>
+                            <th>product Image</th>
+                            <th>Quantity</th>
+                            <th>Price at Purchase</th>
+                            <th>Total Amount</th>
+                            <th>Payment Status</th>
+                            <th>Order Status</th>
+                            <th>Delivery Address</th>
+                            <th>Contact Info</th>
+                            <th>Delivery Time Preference</th>
+                            <th>Billing Details</th>
+                            <!-- <th>Actions</th> -->
+                        </tr>
+                    </thead>
+                    <tbody id="order-list">
+                        <!-- Orders will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </section>            
+            <!-- Update Order Status -->
+            <!-- <section class="form-section">
+                <h2>Update Order Status</h2>
+                <form>
+                    <label for="order-id">Order ID:</label>
+                    <input type="text" id="order-id" name="order-id" placeholder="Order ID" disabled>
+
+                    <label for="order-status">Order Status:</label>
+                    <select id="order-status" name="order-status">
+                        <option value="pending">Pending</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="canceled">Canceled</option>
+                    </select>
+
+                    <button type="submit">Update Status</button>
+                </form>
+            </section> -->
+
+            <!-- Assign Delivery Task -->
+            <!-- <section class="form-section">
+                <h2>Assign Delivery Task</h2>
+                <form>
+                    <label for="delivery-partner">Delivery Partner:</label>
+                    <select id="delivery-partner" name="delivery-partner">
+                        <option value="partner1">Delivery Partner 1</option>
+                        <option value="partner2">Delivery Partner 2</option>
+                        <option value="partner3">Delivery Partner 3</option>
+                    </select>
+
+                    <label for="delivery-address">Delivery Address:</label>
+                    <input type="text" id="delivery-address" name="delivery-address" placeholder="Delivery address"
+                        disabled>
+
+                    <label for="estimated-delivery-date">Estimated Delivery Date:</label>
+                    <input type="date" id="estimated-delivery-date" name="estimated-delivery-date" required>
+
+                    <label for="delivery-notes">Delivery Notes (optional):</label>
+                    <textarea id="delivery-notes" name="delivery-notes" rows="4"
+                        placeholder="Special delivery instructions"></textarea>
+
+                    <button type="submit">Assign Delivery</button>
+                </form>
+            </section> -->
+        </div>
+    </div>
+
+
+    <script src ="include.js"></script>
+
+<script>
+   const API_URL = 'http://127.0.0.1:1000';
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchOrders();
+});
+
+function fetchOrders() {
+    fetch(`${API_URL}/admin/checkout`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            renderOrders(data);
+        })
+        .catch(error => {
+            console.error("Error loading orders:", error);
+            document.getElementById("order-list").innerHTML = `
+                <tr><td colspan="13" class="error">Failed to load orders. Please try again later.</td></tr>
+            `;
+        });
+}
+
+function renderOrders(orders) {
+    const orderList = document.getElementById("order-list");
+    orderList.innerHTML = ""; // Clear existing rows
+
+    if (!orders.length) {
+        orderList.innerHTML = `<tr><td colspan="13">No orders found.</td></tr>`;
+        return;
+    }
+
+    orders.forEach(order => {
+        const productDetails = order.products.map(p => `
+            <div>
+                <strong>${p.product_name}</strong><br>
+                Quantity: ${p.quantity}<br>
+                Price: ₹${p.price_at_purchase}
+            </div>
+        `).join("<hr>");
+
+        const billingDetails = `
+            ${order.billing_details.first_name} ${order.billing_details.last_name}<br>
+            ${order.billing_details.address}, ${order.billing_details.city}, ${order.billing_details.country}, ${order.billing_details.postcode}<br>
+            <strong>Mobile:</strong> ${order.billing_details.mobile}<br>
+            <strong>Email:</strong> ${order.billing_details.email}<br>
+            <strong>Notes:</strong> ${order.billing_details.order_notes || "N/A"}
+        `;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${order.order_id}</td>
+            <td>${order.user_id}</td>
+            <td>${productDetails}</td>
+            <td>${order.products.map(p => p.quantity).join("<br>")}</td>
+            <td>${order.products.map(p => `₹${p.price_at_purchase}`).join("<br>")}</td>
+            <td>₹${order.total_amount}</td>
+            <td>${order.payment_status || "Paid"}</td> <!-- Dynamic Payment Status -->
+            <td>${order.order_status}</td>
+            <td>${order.delivery_address || "N/A"}</td>
+            <td>${order.contact_info || "N/A"}</td>
+            <td>${order.delivery_time_preference || "N/A"}</td>
+            <td>${billingDetails}</td>
+            <td>
+                <button onclick="viewOrderDetails(${order.order_id})">View</button>
+            </td>
+        `;
+
+        orderList.appendChild(row);
+    });
+}
+
+function viewOrderDetails(orderId) {
+    alert(`View details for Order ID: ${orderId}`);
+}
+</script>
+
+</body>
+
+</html>

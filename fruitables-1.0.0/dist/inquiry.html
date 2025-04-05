@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inquiry & Support Management</title>
+    <link rel="stylesheet" href="inquiry.css">
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="form-container">
+        <h1>Inquiry & Support Management</h1>
+
+        <!-- View Inquiries Section -->
+        <section class="form-section">
+            <h2>Customer Inquiries</h2>
+            <table class="inquiry-table">
+                <thead>
+                    <tr>
+                        <th>Inquiry ID</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Inquiry</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example of an Inquiry -->
+                    <tr>
+                        <td>#I12345</td>
+                        <td>John Doe</td>
+                        <td>john.doe@example.com</td>
+                        <td>How do I track my order?</td>
+                        <td>Pending</td>
+                        <td>
+                            <button class="reply-btn" data-inquiry-id="I12345" onclick="openReplyModal(this)">Reply</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#I12346</td>
+                        <td>Jane Smith</td>
+                        <td>jane.smith@example.com</td>
+                        <td>Can I change my shipping address?</td>
+                        <td>Responded</td>
+                        <td>
+                            <button class="view-reply-btn" disabled>View Reply</button>
+                        </td>
+                    </tr>
+                    <!-- More inquiry records will go here -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Reply Modal Section (Hidden by default) -->
+        <div class="modal" id="replyModal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeReplyModal()">&times;</span>
+                <h2>Reply to Inquiry</h2>
+                <form action="#">
+                    <!-- Inquiry ID (Hidden) -->
+                    <input type="hidden" id="inquiry-id" name="inquiry-id">
+
+                    <!-- Reply Message -->
+                    <label for="reply-message">Reply:</label>
+                    <textarea id="reply-message" name="reply-message" rows="5" placeholder="Write your reply here..."></textarea>
+
+                    <!-- Submit Button -->
+                    <button type="submit">Send Reply</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src ="include.js"></script>
+    <script>
+        // Open Reply Modal
+        function openReplyModal(button) {
+            const inquiryId = button.getAttribute('data-inquiry-id');
+            document.getElementById('inquiry-id').value = inquiryId;
+            document.getElementById('replyModal').style.display = "block";
+        }
+
+        // Close Reply Modal
+        function closeReplyModal() {
+            document.getElementById('replyModal').style.display = "none";
+        }
+    </script>
+      
+</body>
+</html>

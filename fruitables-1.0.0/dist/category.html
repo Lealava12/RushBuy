@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./category.css">
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
+  <link rel="stylesheet" href="./style.css">
+  
+</head>
+
+<body>
+  <div id="sidebar-container"></div>
+  <div class="form-container">
+    <h1>Category</h1>
+    <!-- Category Management Form -->
+    <section class="form-section">
+      <h2>Category Management</h2>
+      <form action="/save-category" method="POST">
+        <label for="category-name">Category Name:</label>
+        <input type="text" id="category-name" name="category-name" placeholder="Fruits, Grocery" required>
+
+        <label for="category-description">Category Description:</label>
+        <textarea id="category-description" name="category-description" placeholder="Brief description of the category"
+          rows="4"></textarea>
+        <br>
+        <label for="category-status">Category Status:</label>
+        <select id="category-status" name="category-status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <br>
+        <button type="submit">Submit Category</button>
+      </form>
+    </section>
+    <!-- <h1>Sub-Category Management Form</h1>
+    <section class="form-section">
+      <h2>Sub-Category Management</h2>
+      <form action="/save-subcategory" method="POST">
+        <label for="sub-category-name">Sub-Category Name:</label>
+        <input type="text" id="sub-category-name" name="sub-category-name" placeholder="Apple, Atta" required>
+        <label for="parent-category">Parent Category:</label>
+        <input type="text" id="parent-category" name="parent-category" placeholder="Fruits, Grocery" required>
+        <label for="sub-category-description">Sub-Category Description:</label>
+        <textarea id="sub-category-description" name="sub-category-description"
+          placeholder="Brief description of the sub-category" rows="4"></textarea>
+        <label for="sub-category-status">Sub-Category Status:</label>
+        <select id="sub-category-status" name="sub-category-status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <label for="sub-category-priority">Sub-Category Priority/Order:</label>
+        <input type="number" id="sub-category-priority" name="sub-category-priority" placeholder="1" min="1">
+        <button type="submit">Submit Sub-Category</button>
+      </form>
+    </section> -->
+    <!-- Product Management Form -->
+    <!-- <section class="form-section">
+      <h2>Product Management</h2>
+      <form action="/save-product" method="POST" enctype="multipart/form-data">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" name="product-name" placeholder="Red Apple, Wheat Flour" required>
+        <label for="product-description">Product Description:</label>
+        <textarea id="product-description" name="product-description" placeholder="Detailed description of the product"
+          rows="4"></textarea>
+        <label for="product-category">Category:</label>
+        <select id="product-category" name="product-category">
+          <option value="fruits">Fruits</option>
+          <option value="grocery">Grocery</option>
+        </select>
+        <label for="product-sub-category">Sub-Category:</label>
+        <select id="product-sub-category" name="product-sub-category">
+          <option value="apple">Apple</option>
+          <option value="atta">Atta</option>
+        </select>
+        <label for="product-price">Product Price:</label>
+        <input type="number" id="product-price" name="product-price" placeholder="Price" required>
+        <label for="product-discount">Product Discount:</label>
+        <input type="number" id="product-discount" name="product-discount" placeholder="Discount percentage">
+        <label for="product-stock">Product Stock Quantity:</label>
+        <input type="number" id="product-stock" name="product-stock" placeholder="Available stock" required>
+        <label for="product-image">Product Image:</label>
+        <input type="file" id="product-image" name="product-image">
+        <label for="product-weight">Product Weight:</label>
+        <input type="number" id="product-weight" name="product-weight" placeholder="Weight of product (kg)">
+        <label for="product-status">Product Status:</label>
+        <select id="product-status" name="product-status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <label for="product-tags">Product Tags:</label>
+        <input type="text" id="product-tags" name="product-tags" placeholder="Organic, Fresh, Imported">
+        <label for="product-dimensions">Product Dimensions (LxWxH):</label>
+        <input type="text" id="product-dimensions" name="product-dimensions" placeholder="Length x Width x Height">
+        <label for="product-specifications">Product Specifications:</label>
+        <textarea id="product-specifications" name="product-specifications"
+          placeholder="Detailed product specifications" rows="4"></textarea>
+        <button type="submit">Submit Product</button>
+      </form>
+    </section> -->
+  </div>
+  <script src ="include.js"></script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryForm = document.querySelector("form[action='/save-category']");
+  const apiBaseUrl = "http://127.0.0.1:1000"; // Backend URL
+
+  // Add event listener for the form submission
+  categoryForm.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Retrieve input values from the form
+    const categoryName = document.getElementById("category-name").value.trim();
+    const categoryDescription = document.getElementById("category-description").value.trim();
+    const categoryStatus = document.getElementById("category-status").value;
+
+    if (!categoryName) {
+      alert("Category Name is required.");
+      return;
+    }
+
+    try {
+      // Send a POST request to the backend
+      const response = await fetch(`${apiBaseUrl}/save-category`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          "category-name": categoryName,
+          "category-description": categoryDescription,
+          "category-status": categoryStatus,
+        }),
+      });
+
+      // Parse the response
+      const result = await response.json();
+
+      if (response.ok) {
+        // Show success message and reset the form
+        alert(`Category added successfully! ID: ${result.category_id}`);
+        categoryForm.reset();
+      } else {
+        // Display an error message for unsuccessful requests
+        alert(result.error || "Failed to save category. Please try again.");
+      }
+    } catch (error) {
+      // Handle network or unexpected server errors
+      alert("An error occurred: " + error.message);
+    }
+  });
+});
+
+
+
+  </script>
+</body>
+
+</html>

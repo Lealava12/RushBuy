@@ -1,0 +1,230 @@
+@import 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap';
+
+:root {
+    --dk-darker-bg: #0f172a;
+    --dk-dark-bg: #1e293b;
+    --dk-gray-100: #f1f5f9;
+    --dk-gray-200: #e2e8f0;
+    --dk-gray-300: #cbd5e1;
+    --dk-gray-400: #94a3b8;
+    --dk-gray-600: #475569;
+    --dk-gray-700: #334155;
+    --navbar-bg-color: #6366f1;
+    --status-pending: #f59e0b;
+    --status-complete: #10b981;
+    --status-shipped: #3b82f6;
+    --status-canceled: #ef4444;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    /* padding: 20px 20px 20px 270px; */
+    background-color: var(--dk-darker-bg);
+    color: var(--dk-gray-300);
+    font-size: 0.925rem;
+    min-height: 100vh;
+}
+
+.form-container {
+    max-width: 884px;
+    margin: 0 auto;
+    background-color: var(--dk-dark-bg);
+    padding: 0rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: var(--dk-gray-100);
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: var(--navbar-bg-color);
+    border-radius: 2px;
+}
+
+h2 {
+    color: var(--dk-gray-200);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    font-size: 1.4rem;
+    border-bottom: 1px solid var(--dk-gray-700);
+    padding-bottom: 0.75rem;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    background-color: var(--dk-darker-bg);
+    border-radius: 8px;
+    border: 1px solid var(--dk-gray-700);
+}
+
+.edit-btn:hover {
+    background-color: #4f46e5;
+    transform: translateY(-1px);
+}
+
+.delete-btn:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+.payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background-color: var(--dk-dark-bg);
+}
+
+.payment-table th,
+.payment-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--dk-gray-700);
+    color: var(--dk-gray-100);
+}
+
+.payment-table th {
+    background-color: var(--dk-gray-700);
+    color: var(--dk-gray-200);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.payment-table tr:hover {
+    background-color: var(--dk-gray-700);
+}
+
+.payment-table tr:nth-child(even) {
+    background-color: var(--dk-darker-bg);
+}
+
+/* Payment Status Indicators */
+td[data-status] {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+td[data-status]::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+}
+
+td[data-status="Successful"] { color: var(--status-complete); }
+td[data-status="Successful"]::before { background: var(--status-complete); }
+
+td[data-status="Failed"] { color: var(--status-canceled); }
+td[data-status="Failed"]::before { background: var(--status-canceled); }
+
+td[data-status="Pending"] { color: var(--status-pending); }
+td[data-status="Pending"]::before { background: var(--status-pending); }
+
+/* Form Styling */
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+label {
+    font-weight: 500;
+    color: var(--dk-gray-200);
+    font-size: 0.875rem;
+    margin-bottom: -0.5rem;
+}
+
+input[type="text"],
+select {
+    padding: 0.75rem;
+    background-color: var(--dk-darker-bg);
+    border: 1px solid var(--dk-gray-600);
+    border-radius: 6px;
+    color: var(--dk-gray-200);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--navbar-bg-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+button {
+    grid-column: span 2;
+    background-color: var(--navbar-bg-color);
+    color: var(--dk-gray-100);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background-color: #4f46e5;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .form-container {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        grid-column: span 1;
+    }
+
+    .payment-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+}

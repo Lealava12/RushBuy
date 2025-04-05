@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./category.css">
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
+  <link rel="stylesheet" href="./style.css">
+  <script src ="include.js"></script>
+</head>
+
+<body>
+
+  <div id="sidebar-container"></div>
+  <!-- <div id="sidebar-container"></div> -->
+  <!-- <aside class="sidebar position-fixed top-0 left-0 overflow-auto h-100 float-left" id="show-side-navigation1">
+    <i class="uil-bars close-aside d-md-none d-lg-none" data-close="show-side-navigation1"></i>
+    <div class="sidebar-header d-flex justify-content-center align-items-center px-3 py-4">
+      <img class="rounded-pill img-fluid" width="65"
+        src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907008/medium/1501685726/enhance"
+        alt="">
+      <div class="ms-2">
+
+
+      </div>
+    </div>
+
+
+    <ul class="categories list-unstyled">
+      <li>
+        <i class="uil-estate fa-fw"></i><a href="#"> Dashboard</a>
+
+      </li>
+      <li class="">
+        <i class="uil-folder"></i><a href="./manage/category.html"> Category</a>
+      </li>
+      <li>
+        <i class="uil-calendar-alt"></i><a href="./manage/inventory.html"> Inventory </a>
+
+      </li>
+      <li>
+        <i class="uil-envelope-download fa-fw"></i>
+        <a href="./manage/">Product Images </a>
+      </li>
+
+      </li>
+      <li>
+        <i class="uil-shopping-cart-alt"></i><a href="./manage/order&delivery.html"> Order & Delivery </a>
+
+      </li>
+      <li>
+        <i class="uil-bag"></i><a href="./manage/payment.html"> Payment </a>
+
+      </li>
+      <li>
+        <i class="uil-setting"></i><a href="./manage/user.html"> User </a>
+
+      </li>
+
+      <li>
+        <i class="uil-panel-add"></i><a href="./manage/inquiry.html"> Inquiry & Support </a>
+
+      </li>
+      <li class="">
+        <i class="uil-map-marker"></i><a href="#"> Logout</a>
+      </li>
+    </ul>
+  </aside> -->
+
+  <div>
+      <div class="form-container">
+          <h1>Inventory Management</h1>
+          
+          <!-- Inventory Management Form -->
+          <section class="form-section">
+              <h2>Monitor Stock Levels & Set Low-stock Alerts</h2>
+              <form>
+                  <label for="sub-category">Sub-Category:</label>
+                  <select id="sub-category" name="sub-category">
+                      <option value="apple">Apple</option>
+                      <option value="atta">Atta</option>
+                      <option value="wheat">Wheat Flour</option>
+                  </select>
+  
+                  <label for="current-stock">Current Stock Quantity:</label>
+                  <input type="number" id="current-stock" name="current-stock" placeholder="Current stock quantity" min="0" required>
+  
+                  <label for="restock-threshold">Restocking Threshold:</label>
+                  <input type="number" id="restock-threshold" name="restock-threshold" placeholder="Minimum stock level" min="0" required>
+  
+                  <label for="low-stock-alert">Low-stock Alert:</label>
+                  <input type="checkbox" id="low-stock-alert" name="low-stock-alert">
+  
+                  <label for="alert-method">Alert Notification Method:</label>
+                  <select id="alert-method" name="alert-method">
+                      <option value="email">Email</option>
+                      <option value="sms">SMS</option>
+                      <option value="dashboard">Dashboard Notification</option>
+                  </select>
+  
+                  <label for="supplier-contact">Supplier Contact Info:</label>
+                  <textarea id="supplier-contact" name="supplier-contact" placeholder="Contact information of supplier" rows="3"></textarea>
+  
+                  <label for="update-stock">Update Stock Quantity:</label>
+                  <input type="number" id="update-stock" name="update-stock" placeholder="Quantity to update" min="0">
+  
+                  <label for="last-restock-date">Last Restock Date:</label>
+                  <input type="date" id="last-restock-date" name="last-restock-date">
+  
+                  <label for="next-restock-date">Next Restock Date (Optional):</label>
+                  <input type="date" id="next-restock-date" name="next-restock-date">
+  
+                  <label for="stock-adjustment-notes">Stock Adjustment Notes:</label>
+                  <textarea id="stock-adjustment-notes" name="stock-adjustment-notes" placeholder="Notes about stock adjustments" rows="4"></textarea>
+  
+                  <button type="submit">Update Inventory</button>
+              </form>
+          </section>
+      </div>
+  </div>
+
+  <script src ="include.js"></script>
+
+
+</body>
+
+</html>

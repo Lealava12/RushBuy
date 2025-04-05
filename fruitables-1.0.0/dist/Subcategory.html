@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./category.css">
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div id="sidebar-container"></div>
+  <div class="form-container">
+    <h1>Sub-Category</h1>
+    <section class="form-section">
+      <h2>Sub-Category Management</h2>
+      <form action="/save-subcategory" method="POST">
+        <label for="sub-category-name">Sub-Category Name:</label>
+        <input type="text" id="sub-category-name" name="sub-category-name" placeholder="Apple, Atta" required>
+
+        <label for="parent-category">Parent Category:</label>
+        <select id="parent-category" name="parent-category" required>
+          <!-- Options will be dynamically populated -->
+        </select>
+
+        <label for="sub-category-description">Sub-Category Description:</label>
+        <textarea id="sub-category-description" name="sub-category-description"
+          placeholder="Brief description of the sub-category" rows="4"></textarea>
+
+        <label for="sub-category-status">Sub-Category Status:</label>
+        <select id="sub-category-status" name="sub-category-status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+
+        <label for="sub-category-priority">Sub-Category Priority/Order:</label>
+        <input type="number" id="sub-category-priority" name="sub-category-priority" placeholder="1" min="1">
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    // document.addEventListener("DOMContentLoaded", async () => {
+    //   const parentCategorySelect = document.getElementById("parent-category");
+    //   const apiBaseUrl = "http://localhost:1000"; // Replace with your backend base URL if different
+
+    //   try {
+    //     // Fetch categories from the backend
+    //     const response = await fetch(`${apiBaseUrl}/get-categories`, { method: "GET" });
+
+    //     if (!response.ok) {
+    //       throw new Error("Failed to fetch categories.");
+    //     }
+
+    //     const data = await response.json();
+    //     const categories = data.categories;
+
+    //     // Populate the Parent Category dropdown
+    //     categories.forEach(category => {
+    //       const option = document.createElement("option");
+    //       option.value = category.category_id;
+    //       option.textContent = `${category.name}`;
+    //       parentCategorySelect.appendChild(option);
+    //     });
+    //   } catch (error) {
+    //     console.error("Error fetching categories:", error.message);
+    //     alert("Failed to load categories. Please try again later.");
+    //   }
+    // });
+    document.addEventListener("DOMContentLoaded", async () => {
+  const parentCategorySelect = document.getElementById("parent-category");
+  const form = document.querySelector("form");
+  const apiBaseUrl = "http://localhost:1000"; // Update this to match your backend base URL
+
+  // Function to fetch and populate categories in the dropdown
+  const populateCategories = async () => {
+    try {
+      // Fetch categories from the backend
+      const response = await fetch(`${apiBaseUrl}/get-categories`, { method: "GET" });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories.");
+      }
+
+      const data = await response.json();
+      const categories = data.categories;
+
+      // Populate the Parent Category dropdown with category names
+      parentCategorySelect.innerHTML = "<option value=''>Select a category</option>";
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.name;  // Send the category name
+        option.textContent = category.name;
+        parentCategorySelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error fetching categories:", error.message);
+      alert("Failed to load categories. Please try again later.");
+    }
+  };
+
+  // Call populateCategories on page load
+  await populateCategories();
+
+  // Handle form submission
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    // Collect form data
+    const subCategoryName = document.getElementById("sub-category-name").value;
+    const parentCategory = parentCategorySelect.value; // Use category name here
+    const subCategoryDescription = document.getElementById("sub-category-description").value;
+    const subCategoryStatus = document.getElementById("sub-category-status").value;
+    const subCategoryPriority = document.getElementById("sub-category-priority").value;
+
+    // Validate the parent category selection
+    if (!parentCategory) {
+      alert("Please select a valid parent category.");
+      return;
+    }
+
+    try {
+      // Send form data to the backend
+      const response = await fetch(`${apiBaseUrl}/save-subcategory`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "sub-category-name": subCategoryName,
+          "parent-category": parentCategory, // Send the category name
+          "sub-category-description": subCategoryDescription,
+          "sub-category-status": subCategoryStatus,
+          "sub-category-priority": subCategoryPriority,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        // Show the actual error message from the backend
+        throw new Error(errorData.error || "Failed to save subcategory.");
+      }
+
+      const responseData = await response.json();
+      alert(`Subcategory added successfully! ID: ${responseData.subcategory_id}`);
+      form.reset(); // Clear the form after successful submission
+      await populateCategories(); // Refresh categories in case of updates
+    } catch (error) {
+      console.error("Error saving subcategory:", error.message);
+      alert(`Failed to save subcategory: ${error.message}`);
+    }
+  });
+});
+  </script>
+   <script src ="include.js"></script>  
+</body>
+
+</html>
