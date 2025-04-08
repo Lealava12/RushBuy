@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <td>${payment.payment_method}</td>
                         <td>${payment.status}</td>
                         <td>${payment.payment_date || 'N/A'}</td>
-                        <td>
+                        <td style = "display: flex;gap: 7px;">
                             <button class="edit-btn" data-id="${payment.payment_id}">Edit</button>
                             <button class="delete-btn" data-id="${payment.payment_id}">Delete</button>
                         </td>

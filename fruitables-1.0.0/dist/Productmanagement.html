@@ -482,7 +482,7 @@ button:hover {
           <td>${product.specifications}</td>
           <td><img src="${product.image_url || 'default.jpg'}" width="50" alt="Product Image"></td>
           <td>${product.weight}</td>
-          <td>
+           <td style = "display: flex;gap: 7px;">
             <button class="edit-btn" onclick="editProduct('${product.product_id}')">Edit</button>
             <button class="delete-btn" onclick="deleteProduct('${product.product_id}')">Delete</button>
           </td>
