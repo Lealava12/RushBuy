@@ -27,8 +27,8 @@ body {
 }
 
 .form-container {
-    max-width: 884px;
-    margin: 0 auto;
+    max-width: 1200px;
+    margin-left: 17%;
     background-color: var(--dk-dark-bg);
     padding: 0rem;
     border-radius: 12px;
