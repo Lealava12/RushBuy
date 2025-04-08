@@ -10,7 +10,14 @@
   <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
   <link rel="stylesheet" href="style.css">
   <!-- <link rel="stylesheet" href="order&delivery.css"> -->
-  
+  <style>
+    .category-table th,
+    .category-table td {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -41,8 +48,12 @@
     <!-- Add a table to display categories -->
     <section class="form-section">
       <h2>Category List</h2>
-      <table class="category-table">
-        <thead>
+      <table class="category-table" style="
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 800px;
+      margin-top: 30px;">
+        <thead style=" background-color:#205781;">
           <tr>
             <th>Category ID</th>
             <th>Name</th>
@@ -57,24 +68,24 @@
       </table>
     </section>
   </div>
-  <script src ="include.js"></script>
+  <script src="include.js"></script>
   <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const apiBaseUrl = "http://127.0.0.1:1000"; // Backend URL
-  const categoryForm = document.querySelector("form[action='/save-category']");
-  const categoryList = document.getElementById("category-list");
+    document.addEventListener("DOMContentLoaded", () => {
+      const apiBaseUrl = "http://127.0.0.1:1000"; // Backend URL
+      const categoryForm = document.querySelector("form[action='/save-category']");
+      const categoryList = document.getElementById("category-list");
 
-  // Fetch and display categories
-  async function fetchCategories() {
-    try {
-      const response = await fetch(`${apiBaseUrl}/get-categories`);
-      const result = await response.json();
+      // Fetch and display categories
+      async function fetchCategories() {
+        try {
+          const response = await fetch(`${apiBaseUrl}/get-categories`);
+          const result = await response.json();
 
-      if (response.ok) {
-        categoryList.innerHTML = ""; // Clear the list
-        result.categories.forEach((category) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
+          if (response.ok) {
+            categoryList.innerHTML = ""; // Clear the list
+            result.categories.forEach((category) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
             <td>${category.category_id}</td>
             <td>${category.name}</td>
             <td>${category.description}</td>
@@ -84,118 +95,118 @@ document.addEventListener("DOMContentLoaded", () => {
               <button class="delete-btn" data-id="${category.category_id}">Delete</button>
             </td>
           `;
-          categoryList.appendChild(row);
-        });
-      } else {
-        alert(result.error || "Failed to fetch categories.");
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      alert("An error occurred while fetching categories.");
-    }
-  }
-
-  // Add event listener for the form submission (POST or PUT)
-  categoryForm.addEventListener("submit", async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-
-    const categoryId = categoryForm.getAttribute("data-edit-id");
-    const categoryName = document.getElementById("category-name").value.trim();
-    const categoryDescription = document.getElementById("category-description").value.trim();
-    const categoryStatus = document.getElementById("category-status").value;
-
-    if (!categoryName) {
-      alert("Category Name is required.");
-      return;
-    }
-
-    try {
-      const url = categoryId
-        ? `${apiBaseUrl}/update-category/${categoryId}` // PUT endpoint
-        : `${apiBaseUrl}/save-category`; // POST endpoint
-      const method = categoryId ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          "category-name": categoryName,
-          "category-description": categoryDescription,
-          "category-status": categoryStatus,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert(result.message || "Category saved successfully!");
-        categoryForm.reset();
-        categoryForm.removeAttribute("data-edit-id"); // Clear edit mode
-        fetchCategories(); // Refresh the category list
-      } else {
-        alert(result.error || "Failed to save category. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error saving category:", error);
-      alert("An error occurred while saving the category.");
-    }
-  });
-
-  // Handle Edit and Delete button clicks
-  categoryList.addEventListener("click", async (event) => {
-    const target = event.target;
-    const categoryId = target.getAttribute("data-id");
-
-    if (target.classList.contains("edit-btn")) {
-      // Edit category
-      try {
-        const response = await fetch(`${apiBaseUrl}/get-categories`);
-        const result = await response.json();
-
-        if (response.ok) {
-          const category = result.categories.find((cat) => cat.category_id === categoryId);
-          if (category) {
-            document.getElementById("category-name").value = category.name;
-            document.getElementById("category-description").value = category.description;
-            document.getElementById("category-status").value = category.status;
-            categoryForm.setAttribute("data-edit-id", categoryId); // Set edit mode
+              categoryList.appendChild(row);
+            });
           } else {
-            alert("Category not found.");
+            alert(result.error || "Failed to fetch categories.");
           }
-        } else {
-          alert(result.error || "Failed to fetch category details.");
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+          alert("An error occurred while fetching categories.");
         }
-      } catch (error) {
-        console.error("Error fetching category details:", error);
-        alert("An error occurred while fetching category details.");
       }
-    } else if (target.classList.contains("delete-btn")) {
-      // Delete category
-      if (confirm("Are you sure you want to delete this category?")) {
+
+      // Add event listener for the form submission (POST or PUT)
+      categoryForm.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        const categoryId = categoryForm.getAttribute("data-edit-id");
+        const categoryName = document.getElementById("category-name").value.trim();
+        const categoryDescription = document.getElementById("category-description").value.trim();
+        const categoryStatus = document.getElementById("category-status").value;
+
+        if (!categoryName) {
+          alert("Category Name is required.");
+          return;
+        }
+
         try {
-          const response = await fetch(`${apiBaseUrl}/delete-category/${categoryId}`, {
-            method: "DELETE",
+          const url = categoryId
+            ? `${apiBaseUrl}/update-category/${categoryId}` // PUT endpoint
+            : `${apiBaseUrl}/save-category`; // POST endpoint
+          const method = categoryId ? "PUT" : "POST";
+
+          const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              "category-name": categoryName,
+              "category-description": categoryDescription,
+              "category-status": categoryStatus,
+            }),
           });
 
           const result = await response.json();
 
           if (response.ok) {
-            alert(result.message || "Category deleted successfully!");
+            alert(result.message || "Category saved successfully!");
+            categoryForm.reset();
+            categoryForm.removeAttribute("data-edit-id"); // Clear edit mode
             fetchCategories(); // Refresh the category list
           } else {
-            alert(result.error || "Failed to delete category.");
+            alert(result.error || "Failed to save category. Please try again.");
           }
         } catch (error) {
-          console.error("Error deleting category:", error);
-          alert("An error occurred while deleting the category.");
+          console.error("Error saving category:", error);
+          alert("An error occurred while saving the category.");
         }
-      }
-    }
-  });
+      });
 
-  // Initial fetch of categories
-  fetchCategories();
-});
+      // Handle Edit and Delete button clicks
+      categoryList.addEventListener("click", async (event) => {
+        const target = event.target;
+        const categoryId = target.getAttribute("data-id");
+
+        if (target.classList.contains("edit-btn")) {
+          // Edit category
+          try {
+            const response = await fetch(`${apiBaseUrl}/get-categories`);
+            const result = await response.json();
+
+            if (response.ok) {
+              const category = result.categories.find((cat) => cat.category_id === categoryId);
+              if (category) {
+                document.getElementById("category-name").value = category.name;
+                document.getElementById("category-description").value = category.description;
+                document.getElementById("category-status").value = category.status;
+                categoryForm.setAttribute("data-edit-id", categoryId); // Set edit mode
+              } else {
+                alert("Category not found.");
+              }
+            } else {
+              alert(result.error || "Failed to fetch category details.");
+            }
+          } catch (error) {
+            console.error("Error fetching category details:", error);
+            alert("An error occurred while fetching category details.");
+          }
+        } else if (target.classList.contains("delete-btn")) {
+          // Delete category
+          if (confirm("Are you sure you want to delete this category?")) {
+            try {
+              const response = await fetch(`${apiBaseUrl}/delete-category/${categoryId}`, {
+                method: "DELETE",
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert(result.message || "Category deleted successfully!");
+                fetchCategories(); // Refresh the category list
+              } else {
+                alert(result.error || "Failed to delete category.");
+              }
+            } catch (error) {
+              console.error("Error deleting category:", error);
+              alert("An error occurred while deleting the category.");
+            }
+          }
+        }
+      });
+
+      // Initial fetch of categories
+      fetchCategories();
+    });
   </script>
 </body>
 
