@@ -218,6 +218,74 @@ def get_categories():
         conn.close()
 
 
+@app.route('/update-category/<category_id>', methods=['PUT'])
+def update_category(category_id):
+    """
+    Update an existing category in the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    category_name = request.form.get('category-name')
+    category_description = request.form.get('category-description')
+    category_status = request.form.get('category-status')
+
+    if not category_name:
+        return jsonify({"error": "Category name is required"}), 400
+
+    try:
+        # Update the category in the database
+        sql = """
+            UPDATE Categories
+            SET name = %s, description = %s, status = %s
+            WHERE category_id = %s
+        """
+        values = (category_name, category_description, category_status, category_id)
+        cursor.execute(sql, values)
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Category not found"}), 404
+
+        return jsonify({"message": "Category updated successfully"}), 200
+
+    except mysql.connector.Error as db_err:
+        return jsonify({"error": f"Database error: {db_err}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Internal error: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/delete-category/<category_id>', methods=['DELETE'])
+def delete_category(category_id):
+    """
+    Delete a category from the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Delete the category from the database
+        sql = "DELETE FROM Categories WHERE category_id = %s"
+        cursor.execute(sql, (category_id,))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Category not found"}), 404
+
+        return jsonify({"message": "Category deleted successfully"}), 200
+
+    except mysql.connector.Error as db_err:
+        return jsonify({"error": f"Database error: {db_err}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Internal error: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
 @app.route('/save-subcategory', methods=['POST'])
 def save_subcategory():
     """
@@ -350,6 +418,79 @@ def get_subcategories():
     finally:
         cursor.close()
         conn.close()
+
+
+@app.route('/update-subcategory/<subcategory_id>', methods=['PUT'])
+def update_subcategory(subcategory_id):
+    """
+    Update an existing subcategory in the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Parse JSON data from the request body
+    data = request.json
+    subcategory_name = data.get('sub-category-name')
+    category_id = data.get('parent-category')
+    subcategory_description = data.get('sub-category-description')
+    subcategory_status = data.get('sub-category-status')
+    subcategory_priority = data.get('sub-category-priority')
+
+    if not subcategory_name or not category_id:
+        return jsonify({"error": "Subcategory name and parent category are required"}), 400
+
+    try:
+        # Update the subcategory in the database
+        sql = """
+            UPDATE SubCategories
+            SET name = %s, category_id = %s, description = %s, status = %s, priority_order = %s
+            WHERE subcategory_id = %s
+        """
+        values = (subcategory_name, category_id, subcategory_description, subcategory_status, subcategory_priority, subcategory_id)
+        cursor.execute(sql, values)
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Subcategory not found"}), 404
+
+        return jsonify({"message": "Subcategory updated successfully"}), 200
+
+    except mysql.connector.Error as db_err:
+        return jsonify({"error": f"Database error: {db_err}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Internal error: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/delete-subcategory/<subcategory_id>', methods=['DELETE'])
+def delete_subcategory(subcategory_id):
+    """
+    Delete a subcategory from the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Delete the subcategory from the database
+        sql = "DELETE FROM SubCategories WHERE subcategory_id = %s"
+        cursor.execute(sql, (subcategory_id,))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Subcategory not found"}), 404
+
+        return jsonify({"message": "Subcategory deleted successfully"}), 200
+
+    except mysql.connector.Error as db_err:
+        return jsonify({"error": f"Database error: {db_err}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Internal error: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
 
 # Get the next product ID (p01, p02, ..., p10, ...)
 def get_next_product_id(cursor):
@@ -789,7 +930,7 @@ def get_product_tags():
 #             return jsonify({"error": "Database connection failed"}), 500
 
 #         cursor = conn.cursor(dictionary=True)
-#         cursor.execute("SELECT user_id, name, password_hash FROM Users WHERE email = %s", (email,))
+#         cursor.execute("SELECT user_id, name, email, password_hash FROM Users WHERE email = %s", (email,))
 #         user = cursor.fetchone()
 
 #         if not user or not bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
@@ -1355,7 +1496,7 @@ def delete_contact(id):
 #             INSERT INTO BillingDetails (
 #                 user_id, first_name, last_name, company_name, address, city, country,
 #                 postcode, mobile, email, order_notes
-#             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+#             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 #         """
 #         values = (
 #             user_id, first_name, last_name, company_name, address, city, country,
@@ -2003,4 +2144,4 @@ def delete_payment(payment_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=1000)
+    app.run(host="0.0.0.0",debug=True, port=1000)

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:1000';
+const API_BASE_URL = 'http://192.168.29.252:1000';
 document.addEventListener("DOMContentLoaded", function () {
     if (window.location.pathname.includes("chackout.html")) {
         loadCheckoutItems();

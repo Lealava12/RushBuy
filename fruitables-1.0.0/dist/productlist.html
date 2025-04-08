@@ -207,7 +207,7 @@
           <th>Specifications</th>
           <th>Image</th>
           <th>Weight</th>
-          <th>Action</th>
+          <!-- <th>Action</th> -->
         </tr>
       </thead>
       <tbody id="product-list">
@@ -248,7 +248,7 @@
   </body>
    <script src ="include.js"></script> 
    <script>
-    const apiBaseUrl = "http://localhost:1000"; // Backend base URL
+    const apiBaseUrl = "http://192.168.29.252:1000"; // Backend base URL
 
 document.addEventListener("DOMContentLoaded", async () => {
   const parentCategorySelect = document.getElementById("parent-category");
@@ -326,10 +326,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${product.specifications}</td>
         <td><img src="${product.image_url || 'default.jpg'}" width="50" alt="Product Image"></td>
         <td>${product.weight}</td>
-        <td>
-          <button class="edit-btn" onclick="editProduct('${product.product_id}')">Edit</button>
-          <button class="delete-btn" onclick="deleteProduct('${product.product_id}')">Delete</button>
-        </td>
       `;
       productList.appendChild(row);
     });

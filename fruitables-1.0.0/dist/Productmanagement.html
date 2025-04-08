@@ -404,7 +404,7 @@ button:hover {
 </div>
 <script src ="include.js"></script>
 <script>
-  const apiBaseUrl = "http://localhost:1000"; // Backend base URL
+  const apiBaseUrl = "http://192.168.29.252:1000"; // Backend base URL
 
   document.addEventListener("DOMContentLoaded", async () => {
     const parentCategorySelect = document.getElementById("parent-category");
@@ -516,20 +516,26 @@ button:hover {
         const response = await fetch(`${apiBaseUrl}/products?product_id=${productId}`);
         if (!response.ok) throw new Error("Failed to fetch product details");
 
-        const product = await response.json();
-        document.getElementById("product-name").value = product.name;
-        document.getElementById("product-description").value = product.description;
-        document.getElementById("parent-category").value = product.category_id;
-        document.getElementById("product-sub-category").value = product.subcategory_id;
-        document.getElementById("product-price").value = product.price;
-        document.getElementById("product-discount").value = product.discount_percentage;
-        document.getElementById("product-stock").value = product.stock_quantity;
-        document.getElementById("product-status").value = product.status;
-        document.getElementById("product-tags").value = product.tags;
-        document.getElementById("product-dimensions").value = product.dimensions;
-        document.getElementById("product-specifications").value = product.specifications;
-        document.getElementById("product-weight").value = product.weight;
+        const productData = await response.json();
+        const product = productData.products.find(p => p.product_id === productId);
 
+        if (!product) throw new Error("Product not found");
+
+        // Map the fetched product details to the form fields
+        document.getElementById("product-name").value = product.name || "";
+        document.getElementById("product-description").value = product.description || "";
+        document.getElementById("parent-category").value = product.category_id || "";
+        document.getElementById("product-sub-category").value = product.subcategory_id || "";
+        document.getElementById("product-price").value = product.price || "";
+        document.getElementById("product-discount").value = product.discount_percentage || "";
+        document.getElementById("product-stock").value = product.stock_quantity || "";
+        document.getElementById("product-status").value = product.status || "";
+        document.getElementById("product-tags").value = product.tags || "";
+        document.getElementById("product-dimensions").value = product.dimensions || "";
+        document.getElementById("product-specifications").value = product.specifications || "";
+        document.getElementById("product-weight").value = product.weight || "";
+
+        // Set the form's data-edit-id attribute to the product ID for updating
         document.querySelector("form").setAttribute("data-edit-id", productId);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -561,255 +567,6 @@ button:hover {
     });
   });
 </script>
-<!-- <script>
-  // Define apiBaseUrl in the global scope
-  const apiBaseUrl = "http://localhost:1000"; // Replace with your backend base URL
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    const parentCategorySelect = document.getElementById("parent-category");
-    const subCategorySelect = document.getElementById("product-sub-category");
-
-    try
-     {
-      // Fetch categories from the backend
-      const response = await fetch(`${apiBaseUrl}/get-categories`, { method: "GET" });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories.");
-      }
-
-      const data = await response.json();
-      const categories = data.categories;
-
-      // Populate the Parent Category dropdown
-      categories.forEach(category => {
-        const option = document.createElement("option");
-        option.value = category.category_id;
-        option.textContent = category.name;
-        parentCategorySelect.appendChild(option);
-      });
-
-    } 
-    catch (error) {
-      console.error("Error fetching categories:", error.message);
-      alert("Failed to load categories. Please try again later.");
-    }
-
-    // Fetch all subcategories once and store them
-    let allSubcategories = [];
-
-    async function fetchSubcategories() {
-      try {
-        const response = await fetch(`${apiBaseUrl}/get-subcategories`, { method: "GET" });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch sub-categories.");
-        }
-
-        const data = await response.json();
-        allSubcategories = data.subcategories; // Store all subcategories
-      } 
-      catch (error) {
-        // console.error("Error fetching sub-categories:", error.message);
-        alert("Failed to load sub-categories. Please try again later.");
-      }
-    }
-
-    await fetchSubcategories(); // Fetch subcategories initially
-
-    // Filter and display subcategories when parent category changes
-    parentCategorySelect.addEventListener("change", () => {
-      const parentCategoryId = parentCategorySelect.value;
-      subCategorySelect.innerHTML = ''; // Reset sub-category options
-
-      if (!parentCategoryId) return;
-
-      // Filter subcategories by selected parent category
-      const filteredSubcategories = allSubcategories.filter(subCat => subCat.category_id == parentCategoryId);
-
-      // Ensure subcategories are displayed correctly
-      if (filteredSubcategories.length === 0) {
-        const noOption = document.createElement("option");
-        noOption.value = "";
-        noOption.textContent = "No subcategories available";
-        subCategorySelect.appendChild(noOption);
-      } else {
-        filteredSubcategories.forEach(subCategory => {
-          const option = document.createElement("option");
-          option.value = subCategory.subcategory_id; // Assign subcategory_id as value
-          option.textContent = subCategory.name; // Display correct subcategory name
-          subCategorySelect.appendChild(option);
-        });
-      }
-    });
-  });
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const parentCategorySelect = document.getElementById("parent-category");
-  const subCategorySelect = document.getElementById("product-sub-category");
-  const apiBaseUrl = "http://localhost:1000"; // Backend base URL
-
-  try {
-    // Fetch categories from the backend
-    const categoryResponse = await fetch(`${apiBaseUrl}/get-categories`);
-    if (!categoryResponse.ok) throw new Error("Failed to fetch categories.");
-    const categoryData = await categoryResponse.json();
-
-    // Populate the Parent Category dropdown
-    categoryData.categories.forEach(category => {
-      const option = document.createElement("option");
-      option.value = category.category_id;
-      option.textContent = category.name;
-      parentCategorySelect.appendChild(option);
-    });
-
-    // Fetch all subcategories
-    const subCategoryResponse = await fetch(`${apiBaseUrl}/get-subcategories`);
-    if (!subCategoryResponse.ok) throw new Error("Failed to fetch subcategories.");
-    const subCategoryData = await subCategoryResponse.json();
-
-    // Filter and populate subcategories based on selected parent category
-    parentCategorySelect.addEventListener("change", () => {
-      const selectedCategoryId = parentCategorySelect.value;
-      subCategorySelect.innerHTML = ""; // Clear existing options
-
-      const filteredSubcategories = subCategoryData.subcategories.filter(
-        subcategory => subcategory.category_id === selectedCategoryId
-      );
-
-      if (filteredSubcategories.length === 0) {
-        const noOption = document.createElement("option");
-        noOption.value = "";
-        noOption.textContent = "No subcategories available";
-        subCategorySelect.appendChild(noOption);
-      } else {
-        filteredSubcategories.forEach(subcategory => {
-          const option = document.createElement("option");
-          option.value = subcategory.subcategory_id; // Use subcategory_id as the value
-          option.textContent = subcategory.name;
-          subCategorySelect.appendChild(option);
-        });
-      }
-    });
-  } catch (error) {
-    console.error("Error initializing categories and subcategories:", error.message);
-    alert("Failed to load categories or subcategories. Please try again later.");
-  }
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const productList = document.getElementById("product-list");
-  const apiBaseUrl = "http://localhost:1000"; // Backend base URL
-
-  // Fetch and display products
-  async function fetchProducts() {
-    try {
-      const response = await fetch(`${apiBaseUrl}/products`, { method: "GET" });
-      if (!response.ok) throw new Error("Failed to fetch products");
-
-      const data = await response.json();
-      productList.innerHTML = ""; // Clear existing rows
-
-      data.products.forEach(product => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${product.product_id}</td>
-          <td>${product.name}</td>
-          <td>${product.category_name}</td>
-          <td>${product.subcategory_name}</td>
-          <td>${product.price} ₹</td>
-          <td>${product.discount_percentage}%</td>
-          <td>${product.stock_quantity}</td>
-          <td>${product.status}</td>
-          <td>${product.tags}</td>
-          <td>${product.dimensions}</td>
-          <td>${product.specifications}</td>
-          <td><img src="${product.image_url || ''}" width="50" alt="Product Image"></td>
-          <td>${product.weight}</td>
-          <td>
-            <button class="edit-btn" onclick="editProduct('${product.product_id}')">Edit</button>
-            <button class="delete-btn" onclick="deleteProduct('${product.product_id}')">Delete</button>
-          </td>
-        `;
-        productList.appendChild(row);
-      });
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      alert("Failed to load products. Please try again later.");
-    }
-  }
-
-  fetchProducts();
-
-  // Delete product
-  window.deleteProduct = async (productId) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
-    try {
-      const response = await fetch(`${apiBaseUrl}/delete-product/${productId}`, { method: "DELETE" });
-      if (!response.ok) throw new Error("Failed to delete product");
-      fetchProducts();
-    } catch (error) {
-      console.error("Error deleting product:", error);
-      alert("Failed to delete product. Please try again later.");
-    }
-  };
-
-  // Edit product (fetch product details)
-  window.editProduct = async (productId) => {
-    try {
-      const response = await fetch(`${apiBaseUrl}/products?product_id=${productId}`, { method: "GET" });
-      if (!response.ok) throw new Error("Failed to fetch product details");
-
-      const product = await response.json();
-      document.getElementById("product-name").value = product.name;
-      document.getElementById("product-description").value = product.description;
-      document.getElementById("parent-category").value = product.category_id;
-      document.getElementById("product-sub-category").value = product.subcategory_id;
-      document.getElementById("product-price").value = product.price;
-      document.getElementById("product-discount").value = product.discount_percentage;
-      document.getElementById("product-stock").value = product.stock_quantity;
-      document.getElementById("product-status").value = product.status;
-      document.getElementById("product-tags").value = product.tags;
-      document.getElementById("product-dimensions").value = product.dimensions;
-      document.getElementById("product-specifications").value = product.specifications;
-      document.getElementById("product-weight").value = product.weight;
-
-      document.querySelector("form").setAttribute("data-edit-id", productId);
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-      alert("Failed to fetch product details. Please try again later.");
-    }
-  };
-
-  // Handle form submission (add/update product)
-  document.querySelector("form").addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const editId = event.target.getAttribute("data-edit-id");
-    const url = editId ? `${apiBaseUrl}/update-product/${editId}` : `${apiBaseUrl}/save-product`;
-    const method = editId ? "PUT" : "POST";
-
-    try {
-      const response = await fetch(url, { method, body: formData });
-      const result = await response.json();
-
-      if (!response.ok) {
-        console.error("Error response from server:", result);
-        throw new Error(result.error || "Failed to save product");
-      }
-
-      alert(result.message || "Product saved successfully!");
-      event.target.reset();
-      fetchProducts();
-    } catch (error) {
-      console.error("Error saving product:", error);
-      alert("An error occurred: " + error.message);
-    }
-  });
-});
-</script> -->
 </body>
 
 </html>
