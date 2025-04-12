@@ -18,14 +18,15 @@
         <section class="form-section">
             <h2>Contact Information</h2>
             <table class="user-table">
-                <thead style="  ">
+                <thead>
                     <tr>
-                        <th style="text-align: center;">ID</th>
-                        <th style="text-align: center;">Name</th>
-                        <th style="text-align: center;">Email</th>
-                        <th style="text-align: center;">Phone</th>
-                        <th style="text-align: center;">Message</th>
-                        <th style="text-align: center;">Action</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Message</th>
+                        <th>Action</th>
+                        
                     </tr>
                 </thead>
                 <tbody id="all_contact">
@@ -72,7 +73,7 @@
         }
         // Function to delete a contact 
         function deleteContact(id) {
-            if (confirm('Are you sure you want to delete this contact?')) {
+            if (showConfirm('Are you sure you want to delete this contact?')) {
                 // Delete the contact using DELETE method
                 fetch(`${apiBaseUrl}/contacts/${id}`, {
                     method: 'DELETE'
@@ -80,16 +81,16 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
-                            alert('Contact deleted successfully!');
+                            showAlert('Contact deleted successfully!');
                             loadContacts(); // Reload the contact list after deleting
                         } else if (data.error && data.error === 'Contact not found!') {
-                            alert('Error: The contact you are trying to delete does not exist.');
+                            showAlert('Error: The contact you are trying to delete does not exist.');
                         } else {
-                            alert(`Error: ${data.error}`);
+                            showAlert(`Error: ${data.error}`);
                         }
                     })
                     .catch(error => {
-                        alert('Error: Unable to connect to the server.');
+                        showAlert('Error: Unable to connect to the server.');
                         console.error(error);
                     });
             }

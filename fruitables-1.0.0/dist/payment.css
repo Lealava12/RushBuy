@@ -28,9 +28,9 @@ body {
 
 .form-container {
     max-width: 1200px;
-    margin-left: 17%;
+    margin: 0 auto;
     background-color: var(--dk-dark-bg);
-    padding: 0rem;
+    padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
@@ -211,20 +211,45 @@ button:hover {
 
     button {
         grid-column: span 1;
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
     }
 
     .payment-table {
         display: block;
         overflow-x: auto;
     }
+
+    .payment-table th,
+    .payment-table td {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     h1 {
         font-size: 1.6rem;
     }
 
     h2 {
         font-size: 1.25rem;
+    }
+
+    .payment-table th,
+    .payment-table td {
+        font-size: 0.75rem;
+        padding: 0.4rem;
+    }
+
+    input[type="text"],
+    select {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+    }
+
+    button {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
     }
 }

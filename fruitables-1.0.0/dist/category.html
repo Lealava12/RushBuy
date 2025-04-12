@@ -9,13 +9,96 @@
   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
   <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="category.css">
+  <script src="include.js"></script>
   <!-- <link rel="stylesheet" href="order&delivery.css"> -->
   <style>
+    .category-table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 800px;
+    margin-top: 30px;
+  }
     .category-table th,
     .category-table td {
       padding: 0.75rem;
       font-size: 0.85rem;
     }
+
+    @media (max-width: 600px){
+    .category-table {
+      width: 100%;
+      min-width: 0; /* Remove minimum width for smaller screens */
+      display: block; /* Make the table scrollable */
+      overflow-x: auto;
+      white-space: nowrap; /* Prevent table content from wrapping */
+    }
+    .category-table th,
+    .category-table td {
+      padding: 0.5rem; /* Reduce padding for smaller screens */
+      font-size: 0.75rem; /* Reduce font size for better readability */
+    }
+    td button {
+      width: 100%; /* Make buttons full-width for better usability */
+      margin-bottom: 5px; /* Add spacing between buttons */
+    }
+  }
+  @media (max-width: 767px) {
+    .category-table {
+        width: 100%;
+        min-width: 0; /* Remove minimum width for smaller screens */
+        display: block; /* Make the table scrollable */
+        overflow-x: auto;
+        white-space: nowrap; /* Prevent table content from wrapping */
+    }
+    .category-table th,
+    .category-table td {
+        padding: 0.6rem; /* Slightly reduce padding for medium screens */
+        font-size: 0.8rem; /* Adjust font size for better readability */
+    }
+    td button {
+        width: 100%; /* Make buttons full-width for better usability */
+        margin-bottom: 6px; /* Add spacing between buttons */
+    }
+}
+
+@media (max-width: 500px) {
+    .category-table {
+        width: 100%;
+        min-width: 0; /* Remove minimum width for smaller screens */
+        display: block; /* Make the table scrollable */
+        overflow-x: auto;
+        white-space: nowrap; /* Prevent table content from wrapping */
+    }
+    .category-table th,
+    .category-table td {
+        padding: 0.4rem; /* Further reduce padding for smaller screens */
+        font-size: 0.7rem; /* Reduce font size for better readability */
+    }
+    td button {
+        width: 100%; /* Make buttons full-width for better usability */
+        margin-bottom: 4px; /* Add spacing between buttons */
+    }
+}
+
+@media (max-width: 400px) {
+    .category-table {
+        width: 100%;
+        min-width: 0; /* Remove minimum width for smaller screens */
+        display: block; /* Make the table scrollable */
+        overflow-x: auto;
+        white-space: nowrap; /* Prevent table content from wrapping */
+    }
+    .category-table th,
+    .category-table td {
+        padding: 0.3rem; /* Minimize padding for very small screens */
+        font-size: 0.65rem; /* Reduce font size for better readability */
+    }
+    td button {
+        width: 100%; /* Make buttons full-width for better usability */
+        margin-bottom: 3px; /* Add spacing between buttons */
+    }
+}
   </style>
 
 </head>
@@ -48,11 +131,7 @@
     <!-- Add a table to display categories -->
     <section class="form-section">
       <h2>Category List</h2>
-      <table class="category-table" style="
-      border-collapse: collapse;
-      width: 100%;
-      min-width: 800px;
-      margin-top: 30px;">
+      <table class="category-table" >
         <thead style=" background-color:#205781;">
           <tr>
             <th>Category ID</th>
@@ -68,8 +147,158 @@
       </table>
     </section>
   </div>
-  <script src="include.js"></script>
+  
   <script>
+    function showAlert(message) {
+        const alertOverlay = document.createElement("div");
+        const alertBox = document.createElement("div");
+        const alertMessage = document.createElement("p");
+        const closeButton = document.createElement("button");
+
+        // Overlay styles
+        alertOverlay.style.position = "fixed";
+        alertOverlay.style.top = 0;
+        alertOverlay.style.left = 0;
+        alertOverlay.style.width = "100%";
+        alertOverlay.style.height = "100%";
+        alertOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        alertOverlay.style.display = "flex";
+        alertOverlay.style.alignItems = "center";
+        alertOverlay.style.justifyContent = "center";
+        alertOverlay.style.zIndex = 1000;
+
+        // Alert box styles
+        alertBox.style.backgroundColor = "#fff";
+        alertBox.style.padding = "20px";
+        alertBox.style.borderRadius = "8px";
+        alertBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+        alertBox.style.textAlign = "center";
+        alertBox.style.width = "400px"; // Default width for larger screens
+        alertBox.style.maxWidth = "90%"; // Ensure it fits smaller screens
+
+        // Alert message styles
+        alertMessage.textContent = message;
+        alertMessage.style.marginBottom = "20px";
+        alertMessage.style.fontSize = "1rem"; // Default font size
+
+        // Close button styles
+        closeButton.textContent = "OK";
+        closeButton.style.padding = "10px 20px";
+        closeButton.style.backgroundColor = "#007bff";
+        closeButton.style.color = "#fff";
+        closeButton.style.border = "none";
+        closeButton.style.borderRadius = "5px";
+        closeButton.style.cursor = "pointer";
+        closeButton.style.fontSize = "1rem"; // Default font size
+
+        // Adjust styles for smaller screens using JavaScript
+        if (window.innerWidth <= 576) {
+            alertBox.style.padding = "15px";
+            alertMessage.style.fontSize = "0.9rem"; // Smaller font size for mobile
+            closeButton.style.padding = "8px 16px"; // Smaller button size
+            closeButton.style.fontSize = "0.9rem"; // Smaller font size for button
+        }
+
+        closeButton.addEventListener("click", () => {
+            document.body.removeChild(alertOverlay);
+        });
+
+        alertBox.appendChild(alertMessage);
+        alertBox.appendChild(closeButton);
+        alertOverlay.appendChild(alertBox);
+
+        document.body.appendChild(alertOverlay);
+    }
+
+    function showConfirm(message, onConfirm) {
+        const confirmOverlay = document.createElement("div");
+        const confirmBox = document.createElement("div");
+        const confirmMessage = document.createElement("p");
+        const confirmButtons = document.createElement("div");
+        const confirmButton = document.createElement("button");
+        const cancelButton = document.createElement("button");
+
+        // Overlay styles
+        confirmOverlay.style.position = "fixed";
+        confirmOverlay.style.top = 0;
+        confirmOverlay.style.left = 0;
+        confirmOverlay.style.width = "100%";
+        confirmOverlay.style.height = "100%";
+        confirmOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        confirmOverlay.style.display = "flex";
+        confirmOverlay.style.alignItems = "center";
+        confirmOverlay.style.justifyContent = "center";
+        confirmOverlay.style.zIndex = 1000;
+
+        // Confirm box styles
+        confirmBox.style.backgroundColor = "#fff";
+        confirmBox.style.padding = "20px";
+        confirmBox.style.borderRadius = "8px";
+        confirmBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+        confirmBox.style.textAlign = "center";
+        confirmBox.style.width = "400px"; // Default width for larger screens
+        confirmBox.style.maxWidth = "90%"; // Ensure it fits smaller screens
+
+        // Confirm message styles
+        confirmMessage.textContent = message;
+        confirmMessage.style.marginBottom = "20px";
+        confirmMessage.style.fontSize = "1rem"; // Default font size
+
+        // Confirm buttons container styles
+        confirmButtons.style.display = "flex";
+        confirmButtons.style.justifyContent = "space-between";
+        confirmButtons.style.gap = "10px";
+
+        // Confirm button styles
+        confirmButton.textContent = "Yes";
+        confirmButton.style.padding = "10px 20px";
+        confirmButton.style.backgroundColor = "#007bff";
+        confirmButton.style.color = "#fff";
+        confirmButton.style.border = "none";
+        confirmButton.style.borderRadius = "5px";
+        confirmButton.style.cursor = "pointer";
+        confirmButton.style.fontSize = "1rem";
+
+        // Cancel button styles
+        cancelButton.textContent = "No";
+        cancelButton.style.padding = "10px 20px";
+        cancelButton.style.backgroundColor = "#dc3545";
+        cancelButton.style.color = "#fff";
+        cancelButton.style.border = "none";
+        cancelButton.style.borderRadius = "5px";
+        cancelButton.style.cursor = "pointer";
+        cancelButton.style.fontSize = "1rem";
+
+        // Adjust styles for smaller screens using JavaScript
+        if (window.innerWidth <= 576) {
+            confirmBox.style.padding = "15px";
+            confirmMessage.style.fontSize = "0.9rem"; // Smaller font size for mobile
+            confirmButton.style.padding = "8px 16px"; // Smaller button size
+            confirmButton.style.fontSize = "0.9rem"; // Smaller font size for button
+            cancelButton.style.padding = "8px 16px"; // Smaller button size
+            cancelButton.style.fontSize = "0.9rem"; // Smaller font size for button
+        }
+
+        // Event listeners for buttons
+        confirmButton.addEventListener("click", () => {
+            document.body.removeChild(confirmOverlay);
+            if (onConfirm) onConfirm(); // Call the confirmation callback
+        });
+
+        cancelButton.addEventListener("click", () => {
+            document.body.removeChild(confirmOverlay);
+        });
+
+        // Append elements
+        confirmButtons.appendChild(confirmButton);
+        confirmButtons.appendChild(cancelButton);
+        confirmBox.appendChild(confirmMessage);
+        confirmBox.appendChild(confirmButtons);
+        confirmOverlay.appendChild(confirmBox);
+
+        document.body.appendChild(confirmOverlay);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       const apiBaseUrl = "http://127.0.0.1:1000"; // Backend URL
       const categoryForm = document.querySelector("form[action='/save-category']");
@@ -90,7 +319,7 @@
             <td>${category.name}</td>
             <td>${category.description}</td>
             <td>${category.status}</td>
-            <td style = "display: flex;gap: 7px;">
+            <td style = "display: flex;gap: 7px; ">
               <button class="edit-btn" data-id="${category.category_id}">Edit</button>
               <button class="delete-btn" data-id="${category.category_id}">Delete</button>
             </td>
@@ -98,11 +327,11 @@
               categoryList.appendChild(row);
             });
           } else {
-            alert(result.error || "Failed to fetch categories.");
+            showAlert(result.error || "Failed to fetch categories.");
           }
         } catch (error) {
           console.error("Error fetching categories:", error);
-          alert("An error occurred while fetching categories.");
+          showAlert("An error occurred while fetching categories.");
         }
       }
 
@@ -116,7 +345,7 @@
         const categoryStatus = document.getElementById("category-status").value;
 
         if (!categoryName) {
-          alert("Category Name is required.");
+          showAlert("Category Name is required.");
           return;
         }
 
@@ -139,16 +368,16 @@
           const result = await response.json();
 
           if (response.ok) {
-            alert(result.message || "Category saved successfully!");
+            showAlert(result.message || "Category saved successfully!");
             categoryForm.reset();
             categoryForm.removeAttribute("data-edit-id"); // Clear edit mode
             fetchCategories(); // Refresh the category list
           } else {
-            alert(result.error || "Failed to save category. Please try again.");
+            showAlert(result.error || "Failed to save category. Please try again.");
           }
         } catch (error) {
           console.error("Error saving category:", error);
-          alert("An error occurred while saving the category.");
+          showAlert("An error occurred while saving the category.");
         }
       });
 
@@ -171,18 +400,18 @@
                 document.getElementById("category-status").value = category.status;
                 categoryForm.setAttribute("data-edit-id", categoryId); // Set edit mode
               } else {
-                alert("Category not found.");
+                showAlert("Category not found.");
               }
             } else {
-              alert(result.error || "Failed to fetch category details.");
+              showAlert(result.error || "Failed to fetch category details.");
             }
           } catch (error) {
             console.error("Error fetching category details:", error);
-            alert("An error occurred while fetching category details.");
+            showAlert("An error occurred while fetching category details.");
           }
         } else if (target.classList.contains("delete-btn")) {
           // Delete category
-          if (confirm("Are you sure you want to delete this category?")) {
+          showConfirm("Are you sure you want to delete this category?", async () => {
             try {
               const response = await fetch(`${apiBaseUrl}/delete-category/${categoryId}`, {
                 method: "DELETE",
@@ -191,16 +420,16 @@
               const result = await response.json();
 
               if (response.ok) {
-                alert(result.message || "Category deleted successfully!");
+                showAlert(result.message || "Category deleted successfully!");
                 fetchCategories(); // Refresh the category list
               } else {
-                alert(result.error || "Failed to delete category.");
+                showAlert(result.error || "Failed to delete category.");
               }
             } catch (error) {
               console.error("Error deleting category:", error);
-              alert("An error occurred while deleting the category.");
+              showAlert("An error occurred while deleting the category.");
             }
-          }
+          });
         }
       });
 

@@ -63,6 +63,27 @@
         a:hover {
             text-decoration: underline;
         }
+          /* Mobile Responsive Styles */
+          @media (max-width: 576px) {
+            .signin-container {
+                width: 90%; /* Adjust width for smaller screens */
+                padding: 20px;
+            }
+            .profile-img {
+                width: 80px; /* Reduce profile image size */
+                height: 80px;
+            }
+            .btn-primary {
+                font-size: 14px; /* Adjust button font size */
+                padding: 10px;
+            }
+            .form-label {
+                font-size: 14px; /* Adjust label font size */
+            }
+            .form-control {
+                font-size: 14px; /* Adjust input font size */
+            }
+        }
     </style>
 </head>
 <body>
@@ -122,6 +143,7 @@
             const alertMessage = document.createElement("p");
             const closeButton = document.createElement("button");
 
+            // Overlay styles
             alertOverlay.style.position = "fixed";
             alertOverlay.style.top = 0;
             alertOverlay.style.left = 0;
@@ -133,15 +155,21 @@
             alertOverlay.style.justifyContent = "center";
             alertOverlay.style.zIndex = 1000;
 
+            // Alert box styles
             alertBox.style.backgroundColor = "#fff";
             alertBox.style.padding = "20px";
             alertBox.style.borderRadius = "8px";
             alertBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
             alertBox.style.textAlign = "center";
+            alertBox.style.width = "400px"; // Default width for larger screens
+            alertBox.style.maxWidth = "90%"; // Ensure it fits smaller screens
 
+            // Alert message styles
             alertMessage.textContent = message;
             alertMessage.style.marginBottom = "20px";
+            alertMessage.style.fontSize = "1rem"; // Default font size
 
+            // Close button styles
             closeButton.textContent = "OK";
             closeButton.style.padding = "10px 20px";
             closeButton.style.backgroundColor = "#007bff";
@@ -149,6 +177,15 @@
             closeButton.style.border = "none";
             closeButton.style.borderRadius = "5px";
             closeButton.style.cursor = "pointer";
+            closeButton.style.fontSize = "1rem"; // Default font size
+
+            // Adjust styles for smaller screens using JavaScript
+            if (window.innerWidth <= 576) {
+                alertBox.style.padding = "15px";
+                alertMessage.style.fontSize = "0.9rem"; // Smaller font size for mobile
+                closeButton.style.padding = "8px 16px"; // Smaller button size
+                closeButton.style.fontSize = "0.9rem"; // Smaller font size for button
+            }
 
             closeButton.addEventListener("click", () => {
                 document.body.removeChild(alertOverlay);

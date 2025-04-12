@@ -12,54 +12,6 @@
 <body>
   <div id="sidebar-container"></div>
 
-<!-- <div class="sidebar"> -->
-    <!-- <h2>Hotel Management</h2> -->
-    <!-- <img src="../manage/360_F_200948189_QW7IVZCWlW0DJ0OBpKFln7TxO3j20CtG-removebg-preview (1).png"
-        style="  height: 80px; width: 180px;" class="carousel-image"> -->
-
-        <!-- <ul>
-            <li>Category
-              <ul>
-                <li>Sub-Category
-                  <ul>
-                    <li>Product Management</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul> -->
-    <!-- <nav>
-        <ul>
-            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-       
-            
-                <ul>
-                    <li><a href="category.html"><i class="fas fa-calendar-check"></i> Category</a> -->
-                      <!-- <ul>
-                        <li> <i class="fas fa-calendar-check"></i> Sub-Category
-                          <ul>
-                            <li> <i class="fas fa-calendar-check"></i> Product Management</li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul> -->
-                <!-- </li>
-                <li><a href="inventory.html"><i class="fas fa-calendar-check"></i> Inventory Management</a></li>
-            <li><a href="guests.html"><i class="fas fa-users"></i>  Product Images </a></li>
-            <li><a href="rooms.html"><i class="fas fa-bed"></i> Order & Delivery Management</a></li>
-            <li><a href="housekeeping.html"><i class="fas fa-broom"></i> Payment Management</a></li>
-            <li><a href="food.html"><i class="fas fa-utensils"></i> User Management</a></li>
-            <li><a href="events.html"><i class="fas fa-calendar-alt"></i>  Inquiry & Support Management</a></li>
-            <li><a href="staff.html"><i class="fas fa-user-tie"></i>  Inquiry & Support Management</a></li>
-          
-            <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </nav>
-
-
-</div> -->
-
 <div>
     <div class="form-container" >
         <!-- <h1>Payment Management</h1> -->
@@ -189,13 +141,13 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", function () {
                 const id = this.getAttribute("data-id");
 
-                if (confirm("Are you sure you want to delete this payment?")) {
+                if (showConfirm("Are you sure you want to delete this payment?")) {
                     fetch(`${API_URL}/payment_list/${id}`, {
                         method: 'DELETE'
                     })
                     .then(res => res.json())
                     .then(response => {
-                        alert(response.message || "Payment deleted");
+                        showAlert(response.message || "Payment deleted");
                         fetchPayments();
                     })
                     .catch(err => console.error("Error deleting payment:", err));
@@ -207,29 +159,133 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".edit-btn").forEach(button => {
             button.addEventListener("click", function () {
                 const id = this.getAttribute("data-id");
-                const newStatus = prompt("Enter new status (Pending, Completed, Failed):");
-
-                if (newStatus) {
-                    fetch(`${API_URL}/payment_list/${id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ status: newStatus })
-                    })
-                    .then(res => res.json())
-                    .then(response => {
-                        alert(response.message || "Payment updated");
-                        fetchPayments();
-                    })
-                    .catch(err => console.error("Error updating payment:", err));
-                }
+                showPrompt("Enter new status (Pending, Completed, Failed):", "", function(newStatus) {
+                    if (newStatus) {
+                        fetch(`${API_URL}/payment_list/${id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status: newStatus })
+                        })
+                        .then(res => res.json())
+                        .then(response => {
+                            showAlert(response.message || "Payment updated");
+                            fetchPayments();
+                        })
+                        .catch(err => console.error("Error updating payment:", err));
+                    }
+                });
             });
         });
     }
 });
-  </script>
+
+function showPrompt(message, defaultValue = "", onConfirm) {
+    const promptOverlay = document.createElement("div");
+    const promptBox = document.createElement("div");
+    const promptMessage = document.createElement("p");
+    const inputField = document.createElement("input");
+    const promptButtons = document.createElement("div");
+    const confirmButton = document.createElement("button");
+    const cancelButton = document.createElement("button");
+
+    // Overlay styles
+    promptOverlay.style.position = "fixed";
+    promptOverlay.style.top = 0;
+    promptOverlay.style.left = 0;
+    promptOverlay.style.width = "100%";
+    promptOverlay.style.height = "100%";
+    promptOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    promptOverlay.style.display = "flex";
+    promptOverlay.style.alignItems = "center";
+    promptOverlay.style.justifyContent = "center";
+    promptOverlay.style.zIndex = 1000;
+
+    // Prompt box styles
+    promptBox.style.backgroundColor = "#fff";
+    promptBox.style.padding = "20px";
+    promptBox.style.borderRadius = "8px";
+    promptBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    promptBox.style.textAlign = "center";
+    promptBox.style.width = "400px"; // Default width for larger screens
+    promptBox.style.maxWidth = "90%"; // Ensure it fits smaller screens
+
+    // Prompt message styles
+    promptMessage.textContent = message;
+    promptMessage.style.marginBottom = "20px";
+    promptMessage.style.fontSize = "1rem";
+
+    // Input field styles
+    inputField.type = "text";
+    inputField.value = defaultValue;
+    inputField.style.width = "100%";
+    inputField.style.padding = "10px";
+    inputField.style.marginBottom = "20px";
+    inputField.style.border = "1px solid #ccc";
+    inputField.style.borderRadius = "5px";
+    inputField.style.fontSize = "1rem";
+
+    // Prompt buttons container styles
+    promptButtons.style.display = "flex";
+    promptButtons.style.justifyContent = "space-between";
+    promptButtons.style.gap = "10px";
+
+    // Confirm button styles
+    confirmButton.textContent = "OK";
+    confirmButton.style.padding = "10px 20px";
+    confirmButton.style.backgroundColor = "#007bff";
+    confirmButton.style.color = "#fff";
+    confirmButton.style.border = "none";
+    confirmButton.style.borderRadius = "5px";
+    confirmButton.style.cursor = "pointer";
+    confirmButton.style.fontSize = "1rem";
+
+    // Cancel button styles
+    cancelButton.textContent = "Cancel";
+    cancelButton.style.padding = "10px 20px";
+    cancelButton.style.backgroundColor = "#dc3545";
+    cancelButton.style.color = "#fff";
+    cancelButton.style.border = "none";
+    cancelButton.style.borderRadius = "5px";
+    cancelButton.style.cursor = "pointer";
+    cancelButton.style.fontSize = "1rem";
+
+    // Adjust styles for smaller screens
+    if (window.innerWidth <= 576) {
+        promptBox.style.padding = "15px";
+        promptMessage.style.fontSize = "0.9rem";
+        inputField.style.fontSize = "0.9rem";
+        confirmButton.style.padding = "8px 16px";
+        confirmButton.style.fontSize = "0.9rem";
+        cancelButton.style.padding = "8px 16px";
+        cancelButton.style.fontSize = "0.9rem";
+    }
+
+    // Event listeners for buttons
+    confirmButton.addEventListener("click", () => {
+        const inputValue = inputField.value.trim();
+        document.body.removeChild(promptOverlay);
+        if (onConfirm) onConfirm(inputValue); // Call the confirmation callback with the input value
+    });
+
+    cancelButton.addEventListener("click", () => {
+        document.body.removeChild(promptOverlay);
+    });
+
+    // Append elements
+    promptButtons.appendChild(confirmButton);
+    promptButtons.appendChild(cancelButton);
+    promptBox.appendChild(promptMessage);
+    promptBox.appendChild(inputField);
+    promptBox.appendChild(promptButtons);
+    promptOverlay.appendChild(promptBox);
+
+    document.body.appendChild(promptOverlay);
+}
+</script>
 </body>
 
 
 </html>
+``` 

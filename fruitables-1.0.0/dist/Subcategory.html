@@ -7,13 +7,61 @@
   <link rel="stylesheet" href="./category.css">
   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
   <link rel='stylesheet' href='https://unicons.iconscout.com/release/v3.0.6/css/line.css'>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="style.css">
   <style>
+     .subcategory-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 30px;
+  }
     .subcategory-table th,
     .subcategory-table td {
       padding: 0.75rem;
       font-size: 0.85rem;
+      text-align: left;
     }
+     /* Mobile Responsive Styles */
+  @media (max-width: 767px) {
+    .subcategory-table {
+      display: block; /* Make the table scrollable */
+      overflow-x: auto;
+      white-space: nowrap; /* Prevent table content from wrapping */
+    }
+
+    .subcategory-table th,
+    .subcategory-table td {
+      padding: 0.6rem; /* Slightly reduce padding for medium screens */
+      font-size: 0.8rem; /* Adjust font size for better readability */
+    }
+  }
+
+  @media (max-width: 500px) {
+    .subcategory-table {
+      display: block; /* Make the table scrollable */
+      overflow-x: auto;
+      white-space: nowrap; /* Prevent table content from wrapping */
+    }
+
+    .subcategory-table th,
+    .subcategory-table td {
+      padding: 0.5rem; /* Further reduce padding for smaller screens */
+      font-size: 0.75rem; /* Reduce font size for better readability */
+    }
+  }
+
+  @media (max-width: 400px) {
+    .subcategory-table {
+      display: block; /* Make the table scrollable */
+      overflow-x: auto;
+      white-space: nowrap; /* Prevent table content from wrapping */
+    }
+
+    .subcategory-table th,
+    .subcategory-table td {
+      padding: 0.4rem; /* Minimize padding for very small screens */
+      font-size: 0.7rem; /* Reduce font size for better readability */
+    }
+  }
   </style>
 </head>
 
@@ -52,11 +100,7 @@
     <!-- Add a table to display subcategories -->
     <section class="form-section">
       <h2>Sub-Category List</h2>
-      <table class="subcategory-table" style="
-    border-collapse: collapse;
-    width: 100%;
-    min-width: 800px;
-    margin-top: 30px;">
+      <table class="subcategory-table">
         <thead style=" background-color:#205781;">
           <tr>
             <th>Sub-Category ID</th>
@@ -98,11 +142,11 @@
               parentCategorySelect.appendChild(option);
             });
           } else {
-            alert(result.error || "Failed to fetch parent categories.");
+            showAlert(result.error || "Failed to fetch parent categories.");
           }
         } catch (error) {
           console.error("Error fetching parent categories:", error);
-          alert("An error occurred while fetching parent categories.");
+          showAlert("An error occurred while fetching parent categories.");
         }
       }
 
@@ -131,11 +175,11 @@
               subCategoryList.appendChild(row);
             });
           } else {
-            alert(result.error || "Failed to fetch subcategories.");
+            showAlert(result.error || "Failed to fetch subcategories.");
           }
         } catch (error) {
           console.error("Error fetching subcategories:", error);
-          alert("An error occurred while fetching subcategories.");
+          showAlert("An error occurred while fetching subcategories.");
         }
       }
 
@@ -151,7 +195,7 @@
         const subCategoryPriority = document.getElementById("sub-category-priority").value;
 
         if (!subCategoryName || !parentCategory) {
-          alert("Subcategory Name and Parent Category are required.");
+          showAlert("Subcategory Name and Parent Category are required.");
           return;
         }
 
@@ -176,16 +220,16 @@
           const result = await response.json();
 
           if (response.ok) {
-            alert(result.message || "Subcategory saved successfully!");
+            showAlert(result.message || "Subcategory saved successfully!");
             subCategoryForm.reset();
             subCategoryForm.removeAttribute("data-edit-id"); // Clear edit mode
             fetchSubCategories(); // Refresh the subcategory list
           } else {
-            alert(result.error || "Failed to save subcategory. Please try again.");
+            showAlert(result.error || "Failed to save subcategory. Please try again.");
           }
         } catch (error) {
           console.error("Error saving subcategory:", error);
-          alert("An error occurred while saving the subcategory.");
+          showAlert("An error occurred while saving the subcategory.");
         }
       });
 
@@ -210,18 +254,18 @@
                 document.getElementById("sub-category-priority").value = subcategory.priority_order;
                 subCategoryForm.setAttribute("data-edit-id", subCategoryId); // Set edit mode
               } else {
-                alert("Subcategory not found.");
+                showAlert("Subcategory not found.");
               }
             } else {
-              alert(result.error || "Failed to fetch subcategory details.");
+              showAlert(result.error || "Failed to fetch subcategory details.");
             }
           } catch (error) {
             console.error("Error fetching subcategory details:", error);
-            alert("An error occurred while fetching subcategory details.");
+            showAlert("An error occurred while fetching subcategory details.");
           }
         } else if (target.classList.contains("delete-btn")) {
           // Delete subcategory
-          if (confirm("Are you sure you want to delete this subcategory?")) {
+          if (showConfirm("Are you sure you want to delete this subcategory?")) {
             try {
               const response = await fetch(`${apiBaseUrl}/delete-subcategory/${subCategoryId}`, {
                 method: "DELETE",
@@ -230,14 +274,14 @@
               const result = await response.json();
 
               if (response.ok) {
-                alert(result.message || "Subcategory deleted successfully!");
+                showAlert(result.message || "Subcategory deleted successfully!");
                 fetchSubCategories(); // Refresh the subcategory list
               } else {
-                alert(result.error || "Failed to delete subcategory.");
+                showAlert(result.error || "Failed to delete subcategory.");
               }
             } catch (error) {
               console.error("Error deleting subcategory:", error);
-              alert("An error occurred while deleting the subcategory.");
+              showAlert("An error occurred while deleting the subcategory.");
             }
           }
         }

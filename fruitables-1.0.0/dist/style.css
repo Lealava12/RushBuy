@@ -44,12 +44,30 @@ body {
  -- Sidebar
 -------------------------------- */
 .sidebar {
-	background-color: var(--sidebar-bg-color);
-	width: var(--sidebar-width);
-	transition: all .3s ease-in-out;
-	transform: translateX(0);
-	z-index: 9999999;
-width:360;
+	width: 250px;
+	background: #343a40;
+	color: #fff;
+	position: fixed;
+	top: 0;
+	left: -250px; /* Hidden by default */
+	height: 100%;
+	overflow-y: auto;
+	transition: all 0.3s ease;
+	z-index: 1000;
+}
+
+.sidebar.open {
+	left: 0; /* Show sidebar when open */
+}
+
+.close-aside {
+	display: none;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	font-size: 20px;
+	cursor: pointer;
+	color: #fff;
 }
 
 .sidebar .close-aside {
@@ -145,6 +163,12 @@ width:360;
 
 	.sidebar .search {
 		padding: 10px 0 10px 30px
+	}
+}
+
+@media (max-width: 768px) {
+	.close-aside {
+		display: block;
 	}
 }
 
@@ -377,4 +401,225 @@ width:360;
 
 ::-webkit-scrollbar-thumb:hover {
 	background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    /* Sidebar */
+    .sidebar {
+        width: 0;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .sidebar.open {
+        width: var(--sidebar-width);
+    }
+
+    .sidebar .close-aside {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #fff;
+    }
+
+    .sidebar ul > li {
+        padding: 10px 15px;
+    }
+
+    .sidebar ul > li > a {
+        font-size: 0.9rem;
+    }
+
+    /* Navbar */
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .navbar .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .navbar .navbar-nav > li > a {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    /* Statistics Section */
+    .statistics .box {
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+
+    .statistics .box i {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .statistics .box h3 {
+        font-size: 1rem;
+    }
+
+    .statistics .box p {
+        font-size: 0.85rem;
+    }
+
+    /* Charts Section */
+    .charts .chart-container {
+        padding: 15px;
+    }
+
+    .charts .chart-container h3 {
+        font-size: 1rem;
+    }
+
+    /* Admins Section */
+    .admins .box .admin {
+        padding: 15px;
+    }
+
+    .admins .box h3 {
+        font-size: 1rem;
+    }
+
+    .admins .box p {
+        font-size: 0.85rem;
+    }
+
+    /* Welcome Section */
+    .welcome .content {
+        padding: 15px;
+    }
+
+    .welcome h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome p {
+        font-size: 0.9rem;
+    }
+
+    /* Cart Page */
+    .cart-container {
+        padding: 15px;
+    }
+
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cart-item img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .cart-item-details {
+        width: 100%;
+    }
+
+    .cart-item-details h5 {
+        font-size: 1rem;
+    }
+
+    .cart-item-details p {
+        font-size: 0.9rem;
+    }
+
+    .cart-item-details .d-flex {
+        justify-content: space-between;
+    }
+
+    /* Checkout Section */
+    .checkout-section {
+        padding: 15px;
+    }
+
+    .cart-total {
+        font-size: 1rem;
+    }
+
+    #checkout-button {
+        width: 100%;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Sidebar */
+    .sidebar ul > li {
+        padding: 8px 10px;
+    }
+
+    .sidebar ul > li > a {
+        font-size: 0.8rem;
+    }
+
+    /* Navbar */
+    .navbar .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .navbar .navbar-nav > li > a {
+        font-size: 0.8rem;
+        padding: 5px 8px;
+    }
+
+    /* Statistics Section */
+    .statistics .box {
+        padding: 10px;
+    }
+
+    .statistics .box i {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .statistics .box h3 {
+        font-size: 0.9rem;
+    }
+
+    .statistics .box p {
+        font-size: 0.75rem;
+    }
+
+    /* Welcome Section */
+    .welcome h1 {
+        font-size: 1.2rem;
+    }
+
+    .welcome p {
+        font-size: 0.8rem;
+    }
+
+    /* Cart Page */
+    .cart-item img {
+        width: 100%;
+        height: auto;
+    }
+
+    .cart-item-details h5 {
+        font-size: 0.9rem;
+    }
+
+    .cart-item-details p {
+        font-size: 0.8rem;
+    }
+
+    /* Checkout Section */
+    .cart-total {
+        font-size: 0.9rem;
+    }
+
+    #checkout-button {
+        font-size: 0.9rem;
+    }
 }
