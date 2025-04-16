@@ -30,7 +30,8 @@ app.secret_key = "126945c1bdc73d55bb3d364aed2611f8"  # Secret key for session ma
 # Session(app)# Initialize Flask-Session
 
 # Configure CORS to allow credentials and specific origins
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://localhost:5500"]}})
+# CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://localhost:5500"]}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.before_request
 def log_session_data():
@@ -577,7 +578,8 @@ def get_products():
             image = cursor.fetchone()
             if image and image["image_url"]:
                 # Ensure the image URL is constructed correctly
-                product["image_url"] = f"http://localhost:1000/static/uploads/{image['image_url'].split('/')[-1]}"
+                #product["image_url"] = f"http://localhost:1000/static/uploads/{image['image_url'].split('/')[-1]}"
+                product["image_url"] = f"http://lealavaecommerce.com/api/static/uploads/{image['image_url'].split('/')[-1]}"
             else:
                 product["image_url"] = None
 
@@ -1086,7 +1088,8 @@ def get_cart():
 
         for item in cart_items:
             if item['image_url']:
-                item['image_url'] = f"http://localhost:1000/static/uploads/{item['image_url']}"
+                # item['image_url'] = f"http://localhost:1000/static/uploads/{item['image_url']}"
+                item['image_url'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}"
 
         return jsonify({"cartItems": cart_items}), 200
 
@@ -1903,7 +1906,8 @@ def get_checkout_details():
 
         # Modify image URLs to include full path
         for item in items:
-            item['product_image'] = f"http://localhost:1000/static/uploads/{item['image_url']}" if item['image_url'] else "http://localhost:1000/static/uploads/default.jpg"
+            # item['product_image'] = f"http://localhost:1000/static/uploads/{item['image_url']}" if item['image_url'] else "http://localhost:1000/static/uploads/default.jpg"
+            item['product_image'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}" if item['image_url'] else "http://lealavaecommerce.com/api/static/uploads/default.jpg"
 
         # Step 4: Get payment info
         cursor.execute("""
@@ -2143,5 +2147,5 @@ def delete_payment(payment_id):
         conn.close()
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0",debug=True, port=1000)
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0",debug=True, port=1000)

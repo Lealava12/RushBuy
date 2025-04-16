@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-// const API_BASE_URL = 'http://127.0.0.1:1000';
+// const API_BASE_URL = 'http://lealavaecommerce.com/api';
 console.log("Logout script loaded");
 
 function initializeLogout() {

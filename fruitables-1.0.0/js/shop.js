@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_BASE_URL = "http://127.0.0.1:1000"; // Backend API URL
+    const API_BASE_URL = "http://lealavaecommerce.com/api"; // Backend API URL
     const productContainer = document.querySelector(".row.g-4.justify-content-center");
     const categoryList = document.querySelector(".fruite-categorie");
     const searchInput = document.querySelector("input[type='search']");
