@@ -30,11 +30,11 @@ app.secret_key = "126945c1bdc73d55bb3d364aed2611f8"  # Secret key for session ma
 # Session(app)# Initialize Flask-Session
 
 # Configure CORS to allow credentials and specific origins
-# CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://lealavaecommerce.com", "http://lealavaecommerce.com/api"]}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://lealavaecommerce.com", "http://lealavaecommerce.com/api"]}})
 # CORS(app, resources={r"/*": {"origins": "*"}})
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow CORS for all origins
-# Enforce HTTPS in Flask
-app.config["PREFERRED_URL_SCHEME"] = "https"
+# CORS(app, resources={r"/*": {"origins": "*"}})  # Allow CORS for all origins
+# # Enforce HTTPS in Flask
+# app.config["PREFERRED_URL_SCHEME"] = "https"
 
 @app.before_request
 def log_session_data():
@@ -62,7 +62,7 @@ def get_connection():
         print(f"Error connecting to the database: {err}")
         return None
 
-UPLOAD_FOLDER = "fruitables-1.0.0/Blink it/dashboard/dist/static/uploads"  # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads      
+UPLOAD_FOLDER = "/var/www/html/BLINKIT/fruitables-1.0.0/dist/static/uploads"  # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads      
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -315,7 +315,7 @@ def save_subcategory():
 
     try:
         # Validate and retrieve the corresponding category_id for the given category_name
-        cursor.execute("SELECT category_id FROM Categories WHERE name = %s", (category_name,))
+        cursor.execute("SELECT category_id FROM Categories WHERE category_id = %s", (category_name,))
         category = cursor.fetchone()
 
         if not category:
