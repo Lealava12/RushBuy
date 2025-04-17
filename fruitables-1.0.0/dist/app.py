@@ -30,8 +30,8 @@ app.secret_key = "126945c1bdc73d55bb3d364aed2611f8"  # Secret key for session ma
 # Session(app)# Initialize Flask-Session
 
 # Configure CORS to allow credentials and specific origins
-# CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://localhost:5500"]}})
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://lealavaecommerce.com", "http://lealavaecommerce.com/api"]}})
+# CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.before_request
 def log_session_data():
@@ -2145,7 +2145,6 @@ def delete_payment(payment_id):
     finally:
         cursor.close()
         conn.close()
-
 
 # if __name__ == "__main__":
 #     app.run(host="0.0.0.0",debug=True, port=1000)
