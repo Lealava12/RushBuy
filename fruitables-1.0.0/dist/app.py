@@ -30,8 +30,11 @@ app.secret_key = "126945c1bdc73d55bb3d364aed2611f8"  # Secret key for session ma
 # Session(app)# Initialize Flask-Session
 
 # Configure CORS to allow credentials and specific origins
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://lealavaecommerce.com", "http://lealavaecommerce.com/api"]}})
+# CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://lealavaecommerce.com", "http://lealavaecommerce.com/api"]}})
 # CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allow CORS for all origins
+# Enforce HTTPS in Flask
+app.config["PREFERRED_URL_SCHEME"] = "https"
 
 @app.before_request
 def log_session_data():
