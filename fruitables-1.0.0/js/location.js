@@ -3,7 +3,7 @@ function requestLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
-                const latitude = position.coords.ltitude;
+                const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
 
                 // Save location in localStorage
@@ -18,16 +18,16 @@ function requestLocation() {
                 // Handle specific error cases
                 switch (error.code) {
                     case error.PERMISSION_DENIED:
-                        alert("Location access denied. Please enable location services in your browser settings.");
+                        console.log("Location access denied by the user.");
                         break;
                     case error.POSITION_UNAVAILABLE:
-                        alert("Location information is unavailable. Please try again later.");
+                        console.log("Location information is unavailable.");
                         break;
                     case error.TIMEOUT:
-                        alert("The request to get your location timed out. Please try again.");
+                        console.log("The request to get the user's location timed out.");
                         break;
                     default:
-                        alert("An unknown error occurred while accessing your location.");
+                        console.log("An unknown error occurred while accessing the location.");
                         break;
                 }
 
@@ -36,7 +36,7 @@ function requestLocation() {
             }
         );
     } else {
-        alert("Geolocation is not supported by this browser.");
+        console.log("Geolocation is not supported by this browser.");
     }
 }
 
@@ -55,14 +55,11 @@ function loadSavedLocation() {
         const { latitude, longitude } = JSON.parse(savedLocation);
         updateLocationDisplay(latitude, longitude);
     } else {
-        alert("No saved location found. Please enable location services to get your current location.");
+        console.log("No saved location found. Please enable location services to get your current location.");
     }
 }
 
-// Trigger location request on index.html page load
+// Trigger location request on page load
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('index.html')) {
-        requestLocation();
-    }
-    loadSavedLocation();
+    requestLocation();
 });
