@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.querySelector("#login-form");
     const registerForm = document.querySelector("#register-form");
-    const API_URL = "http://127.0.0.1:1000";
+    const API_URL = "http://lealavaecommerce.com/api";
     let isCheckingLoginStatus = false;
 
     async function checkLoginStatus() {
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // document.addEventListener("DOMContentLoaded", () => {
 //     const loginForm = document.querySelector("#login-form");
 //     const registerForm = document.querySelector("#register-form");
-//     const API_URL = "http://127.0.0.1:1000"; // Updated API URL
+//     const API_URL = "http://lealavaecommerce.com/api"; // Updated API URL
 
 //     function getAuthToken() {
 //         return localStorage.getItem("authToken");

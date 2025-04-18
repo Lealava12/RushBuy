@@ -502,10 +502,10 @@ async function fetchOrderDetails() {
                 itemDiv.style.marginBottom = "10px";
 
                 // Ensure the image URL is correct and has a fallback image
-                const productImage = item.product_image ? item.product_image : "http://127.0.0.1:1000/static/uploads/default.jpg";
+                const productImage = item.product_image ? item.product_image : "http://lealavaecommerce.com/api/static/uploads/default.jpg";
 
                 itemDiv.innerHTML = `
-                    <img src="${productImage}" alt="${item.product_name || 'Unknown'}" width="80" style="margin-right: 10px;" onerror="this.onerror=null; this.src='http://127.0.0.1:1000/static/uploads/default.jpg';"/>
+                    <img src="${productImage}" alt="${item.product_name || 'Unknown'}" width="80" style="margin-right: 10px;" onerror="this.onerror=null; this.src='http://lealavaecommerce.com/api/static/uploads/default.jpg';"/>
                     <div>
                         <span><strong>${item.product_name || 'Unknown'}</strong> (x${item.quantity || 1})</span><br>
                         <span>Price: ₹ ${item.price_at_purchase || '0.00'}</span>
