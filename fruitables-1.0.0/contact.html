@@ -298,7 +298,7 @@
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <form action="" class="">
+                            <form id="contactForm">
                                 <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Name">
                                 <input type="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Email">
                                 <input type="number" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Phone no.">
@@ -436,7 +436,7 @@
 
         
     <!-- JavaScript Libraries -->
-
+    <script src = "js/location.js"></script>
     <script src ="js/include.js"></script>   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -451,28 +451,24 @@
       // const apiBaseUrl = "http://127.0.0.1:5000"; // Adjust the port if necessary
 
 // Function to handle form submission
-const apiBaseUrl = "http://lealavaecommerce.com/api"; // Adjust the port if necessary
+const apiBaseUrl = "http://localhost:1000"; // Update this if hosted elsewhere
 
-// Function to handle form submission
 document.addEventListener("DOMContentLoaded", function () {
-    const contactForm = document.querySelector("form");
+    const contactForm = document.getElementById("contactForm");
 
     contactForm.addEventListener("submit", async function (event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
 
-        // Get input values using name attributes
         const name = document.querySelector("input[placeholder='Your Name']").value.trim();
         const email = document.querySelector("input[placeholder='Enter Your Email']").value.trim();
         const phone = document.querySelector("input[placeholder='Enter Your Phone no.']").value.trim();
         const message = document.querySelector("textarea[placeholder='Your Message']").value.trim();
 
-        // Ensure required fields are filled
         if (!name || !email || !phone) {
             alert("Please fill in all required fields: Name, Email, and Phone.");
             return;
         }
 
-        // Prepare the contact data
         const contactData = { name, email, phone, message };
 
         try {
@@ -488,7 +484,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 alert("Contact added successfully!");
-                contactForm.reset(); // Reset form fields after successful submission
+                contactForm.reset();
             } else {
                 alert(`Error: ${result.error}`);
             }

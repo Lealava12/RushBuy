@@ -67,7 +67,7 @@
 </div>
 <script src ="include.js"></script>
 <script>
-  const API_URL = 'http://lealavaecommerce.com/api';
+  const API_URL = 'http://127.0.0.1:1000';
 document.addEventListener("DOMContentLoaded", function () {
     const paymentList = document.getElementById("payment-list");
     const form = document.querySelector("form");
@@ -122,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         <td>${payment.payment_date || 'N/A'}</td>
                         <td style = "display: flex;gap: 7px;">
                             <button class="edit-btn" data-id="${payment.payment_id}">Edit</button>
-                            <button class="delete-btn" data-id="${payment.payment_id}">Delete</button>
                         </td>
                     `;
                     paymentList.appendChild(row);

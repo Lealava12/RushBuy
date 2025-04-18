@@ -395,11 +395,11 @@
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-     
+     <script src="js/location.js"></script>
     <script src ="js/include.js"></script> 
     <script src="js/checkout.js"></script> 
     <script>
-        //const API_BASE_URL = 'http://lealavaecommerce.com/api'; // Ensure this matches your backend API URL
+        //const API_BASE_URL = 'http://127.0.0.1:1000'; // Ensure this matches your backend API URL
 
         document.addEventListener("DOMContentLoaded", function () {
     fetchCartItems();
@@ -468,16 +468,16 @@ function renderCartItems(cartItems) {
         total += itemTotal;
 
         const cartItemHTML = `
-            <div class="cart-item d-flex align-items-center border-bottom py-3">
+            <div class="cart-item d-flex align-items-center border-bottom py-3" data-id="${item.product_id}">
                 <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}" class="cart-item-image me-3">
                 <div class="cart-item-details flex-grow-1">
                     <h5>${item.name}</h5>
                     <p>Price: ₹${item.price}</p>
                     <p>Subtotal: ₹${itemTotal}</p>
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('${item.product_id}', ${item.quantity - 1})">-</button>
+                    <div class="d-flex align-items-center quantity">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('${item.product_id}', -1)">-</button>
                         <span class="mx-2">${item.quantity}</span>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('${item.product_id}', ${item.quantity + 1})">+</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('${item.product_id}', 1)">+</button>
                     </div>
                 </div>
                 <button class="btn btn-sm btn-danger ms-3" onclick="removeCartItem('${item.product_id}')">Remove</button>
@@ -491,26 +491,43 @@ function renderCartItems(cartItems) {
 }
 
 // Function to add/update items in the cart
-function updateCartItem(productId, newQuantity) {
-    if (newQuantity < 0){
-        removeCartItem(productId); // Remove item if quantity is 0 or less
-        return;
-    } // Prevent negative quantity
+function updateCartItem(productId, change) {
+    const cartItemElement = document.querySelector(`[data-id="${productId}"]`);
+    const quantityElement = cartItemElement.querySelector(".quantity span");
+    const currentQuantity = parseInt(quantityElement.textContent, 10);
+    const newQuantity = currentQuantity + change;
 
-    fetch(`${API_URL}/add-to-cart`, {
+    // Ensure the quantity does not go below 1
+    if (newQuantity < 1) {
+        alert("Quantity cannot be less than 1. If you want to remove the product, use the 'Remove' button.");
+        return;
+    }
+
+    // Update the quantity in the backend
+    fetch(`${API_URL}/update-cart`, {
         method: "POST",
         credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ product_id: productId, quantity: newQuantity }) // Correct quantity update
+        body: JSON.stringify({ product_id: productId, quantity: newQuantity }) // Send updated quantity
     })
     .then(response => response.json())
     .then(data => {
         if (data.error) {
             alert(data.error);
         } else {
-            fetchCartItems(); // Refresh the cart after update
+            // Update the quantity in the UI
+            quantityElement.textContent = newQuantity;
+
+            // Update the subtotal for the product
+            const priceElement = cartItemElement.querySelector("p:nth-child(3)"); // Subtotal element
+            const pricePerUnit = parseFloat(cartItemElement.querySelector("p:nth-child(2)").textContent.replace("Price: ₹", ""));
+            const newSubtotal = (pricePerUnit * newQuantity).toFixed(2);
+            priceElement.textContent = `Subtotal: ₹${newSubtotal}`;
+
+            // Refresh the total amount
+            fetchCartItems(); // Optionally refresh the cart to update the total
         }
     })
     .catch(error => {

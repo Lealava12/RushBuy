@@ -35,13 +35,13 @@
         </section>
     </div>
     <script>
-        const apiBaseUrl = "http://lealavaecommerce.com/api";
+        // const API_BASE_URL = "http://127.0.0.1:1000";
 
         // Function to load contacts and display them in the table
         async function loadContacts() {
             try {
                 // Fetch all contacts using GET method
-                const response = await fetch(`${apiBaseUrl}/contacts`, {
+                const response = await fetch(`${API_BASE_URL}/contacts`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -72,29 +72,35 @@
             }
         }
         // Function to delete a contact 
-        function deleteContact(id) {
-            if (showConfirm('Are you sure you want to delete this contact?')) {
-                // Delete the contact using DELETE method
-                fetch(`${apiBaseUrl}/contacts/${id}`, {
-                    method: 'DELETE'
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message) {
-                            showAlert('Contact deleted successfully!');
-                            loadContacts(); // Reload the contact list after deleting
-                        } else if (data.error && data.error === 'Contact not found!') {
-                            showAlert('Error: The contact you are trying to delete does not exist.');
-                        } else {
-                            showAlert(`Error: ${data.error}`);
-                        }
-                    })
-                    .catch(error => {
-                        showAlert('Error: Unable to connect to the server.');
-                        console.error(error);
-                    });
+        // DELETE Contact Function
+function deleteContact(id) {
+    if (!id) {
+        showAlert('Invalid contact ID.');
+        return;
+    }
+
+    // Use the custom showConfirm function with a callback
+    showConfirm('Are you sure you want to delete this contact?', () => {
+        fetch(`${API_BASE_URL}/contacts/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                showAlert('Contact deleted successfully!');
+                loadContacts(); // Reload the contact list
+            } else if (data.error && data.error.includes('not found')) {
+                showAlert('Error: The contact you are trying to delete does not exist.');
+            } else {
+                showAlert(`Error: ${data.error}`);
             }
-        }
+        })
+        .catch(error => {
+            showAlert('Error: Unable to connect to the server.');
+            console.error('Delete Error:', error);
+        });
+    });
+}
 
         // When the page loads, this will automatically load the contacts
         document.addEventListener('DOMContentLoaded', function () {

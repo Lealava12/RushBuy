@@ -300,14 +300,14 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const apiBaseUrl = "http://lealavaecommerce.com/api"; // Backend URL
+      const API_BASE_URL = "http://127.0.0.1:1000"; // Backend URL
       const categoryForm = document.querySelector("form[action='/save-category']");
       const categoryList = document.getElementById("category-list");
 
       // Fetch and display categories
       async function fetchCategories() {
         try {
-          const response = await fetch(`${apiBaseUrl}/get-categories`);
+          const response = await fetch(`${API_BASE_URL}/get-categories`);
           const result = await response.json();
 
           if (response.ok) {
@@ -351,8 +351,8 @@
 
         try {
           const url = categoryId
-            ? `${apiBaseUrl}/update-category/${categoryId}` // PUT endpoint
-            : `${apiBaseUrl}/save-category`; // POST endpoint
+            ? `${API_BASE_URL}/update-category/${categoryId}` // PUT endpoint
+            : `${API_BASE_URL}/save-category`; // POST endpoint
           const method = categoryId ? "PUT" : "POST";
 
           const response = await fetch(url, {
@@ -389,7 +389,7 @@
         if (target.classList.contains("edit-btn")) {
           // Edit category
           try {
-            const response = await fetch(`${apiBaseUrl}/get-categories`);
+            const response = await fetch(`${API_BASE_URL}/get-categories`);
             const result = await response.json();
 
             if (response.ok) {
@@ -413,7 +413,7 @@
           // Delete category
           showConfirm("Are you sure you want to delete this category?", async () => {
             try {
-              const response = await fetch(`${apiBaseUrl}/delete-category/${categoryId}`, {
+              const response = await fetch(`${API_BASE_URL}/delete-category/${categoryId}`, {
                 method: "DELETE",
               });
 

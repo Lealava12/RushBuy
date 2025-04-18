@@ -108,7 +108,7 @@
  
  document.addEventListener("DOMContentLoaded", () => {
             const loginForm = document.getElementById("loginForm");
-            const apiBaseUrl = "http://lealavaecommerce.com/api"; // Ensure this matches the backend URL
+            const API_BASE_URL = "http://127.0.0.1:1000"; // Ensure this matches the backend URL
             loginForm.addEventListener("submit", async (event) => {
                 event.preventDefault();
 
@@ -116,7 +116,7 @@
                 const password = document.getElementById("password").value;
 
                 try {
-                    const response = await fetch(`${apiBaseUrl}/login`, {
+                    const response = await fetch(`${API_BASE_URL}/login`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email, password }) // Send JSON payload

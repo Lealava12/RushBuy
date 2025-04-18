@@ -30,7 +30,7 @@ app.secret_key = "126945c1bdc73d55bb3d364aed2611f8"  # Secret key for session ma
 # Session(app)# Initialize Flask-Session
 
 # Configure CORS to allow credentials and specific origins
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://lealavaecommerce.com", "http://lealavaecommerce.com/api"]}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://127.0.0.1:1000"]}})
 # CORS(app, resources={r"/*": {"origins": "*"}})
 # CORS(app, resources={r"/*": {"origins": "*"}})  # Allow CORS for all origins
 # # Enforce HTTPS in Flask
@@ -582,7 +582,7 @@ def get_products():
             if image and image["image_url"]:
                 # Ensure the image URL is constructed correctly
                 #product["image_url"] = f"http://localhost:1000/static/uploads/{image['image_url'].split('/')[-1]}"
-                product["image_url"] = f"http://lealavaecommerce.com/api/static/uploads/{image['image_url'].split('/')[-1]}"
+                product["image_url"] = f"http://127.0.0.1:1000/static/uploads/{image['image_url'].split('/')[-1]}"
             else:
                 product["image_url"] = None
 
@@ -1005,6 +1005,16 @@ def add_to_cart():
         
         cursor = conn.cursor(dictionary=True)
 
+        # Ensure the product exists in the Products table
+        cursor.execute("SELECT stock_quantity FROM Products WHERE product_id = %s", (product_id,))
+        product = cursor.fetchone()
+        if not product:
+            return jsonify({"error": "Product not found"}), 404
+
+        # Check if the requested quantity exceeds the available stock
+        if quantity > product['stock_quantity']:
+            return jsonify({"error": "Requested quantity exceeds available stock"}), 400
+
         # Ensure the user has a cart
         cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
         cart = cursor.fetchone()
@@ -1092,7 +1102,7 @@ def get_cart():
         for item in cart_items:
             if item['image_url']:
                 # item['image_url'] = f"http://localhost:1000/static/uploads/{item['image_url']}"
-                item['image_url'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}"
+                item['image_url'] = f"http://127.0.0.1:1000/static/uploads/{item['image_url']}"
 
         return jsonify({"cartItems": cart_items}), 200
 
@@ -1111,64 +1121,44 @@ def get_cart():
 #  Update Item Quantity Route (New)
 @app.route('/update-cart', methods=['POST'])
 def update_cart():
-    """
-    Updates the quantity of a product in the user's cart.
-    """
     try:
+        # Check if the user is logged in
         if not session.get('logged_in'):
-            return jsonify({"error": "You must be logged in to modify your cart."}), 403
+            return jsonify({"error": "You must be logged in to update the cart."}), 403
 
         user_id = session.get('user_id')
         data = request.json
         product_id = data.get('product_id')
-        new_quantity = data.get('quantity')
+        quantity = data.get('quantity')
 
-        if not product_id or new_quantity is None:
-            return jsonify({"error": "Product ID and quantity are required."}), 400
-
-        # if new_quantity <= 0:
-        #     return jsonify({"error": "Quantity must be greater than 0."}), 400
+        # Validate input
+        if not product_id or quantity < 1:
+            return jsonify({"error": "Invalid product ID or quantity."}), 400
 
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
-        cart = cursor.fetchone()
+        # Check if the product exists in the user's cart
+        cursor.execute("SELECT * FROM CartItems WHERE product_id = %s AND cart_id = (SELECT cart_id FROM Carts WHERE user_id = %s)", (product_id, user_id))
+        cart_item = cursor.fetchone()
 
-        if not cart:
-            return jsonify({"message": "Cart is empty"}), 200
+        if not cart_item:
+            return jsonify({"error": "Product not found in cart."}), 404
 
-        cart_id = cart['cart_id']
-
-        # Check if the product already exists in the cart
-        cursor.execute("""
-            SELECT * FROM CartItems 
-            WHERE cart_id = %s AND product_id = %s
-        """, (cart_id, product_id))
-
-        existing_item = cursor.fetchone()
-
-        if existing_item:
-            if new_quantity <= 0:
-                cursor.execute("DELETE FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
-            else:
-                cursor.execute("UPDATE CartItems SET quantity = %s WHERE cart_id = %s AND product_id = %s",
-                               (new_quantity, cart_id, product_id))
-        else:
-            if new_quantity > 0:
-                cursor.execute("INSERT INTO CartItems (cart_id, product_id, quantity) VALUES (%s, %s, %s)",
-                               (cart_id, product_id, new_quantity))
-
+        # Update the quantity in the cart
+        cursor.execute("UPDATE CartItems SET quantity = %s WHERE product_id = %s AND cart_id = (SELECT cart_id FROM Carts WHERE user_id = %s)", (quantity, product_id, user_id))
         conn.commit()
-        return jsonify({"message": "Cart updated successfully"}), 200
 
-    except mysql.connector.Error as db_err:
-        return jsonify({"error": f"Database error: {db_err}"}), 500
+        return jsonify({"message": "Cart updated successfully."}), 200
+
     except Exception as e:
-        return jsonify({"error": f"Internal error: {e}"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
-        cursor.close()
-        conn.close()
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            pass
 
 
 #  Remove Item from Cart Route (Unchanged)
@@ -1353,20 +1343,49 @@ def manage_contacts():
             cursor.close()
             connection.close()
 
+    # elif request.method == 'POST':
+    #     data = request.get_json()
+    #     name = data.get('name', '')
+    #     email = data.get('email', '')
+    #     phone = data.get('phone', '')
+    #     message = data.get('message', '')
+
+    #     if not name or not email or not phone:
+    #         return jsonify({"error": "Missing required fields: name, email, or phone"}), 400
+
+    #     connection = get_connection()
+    #     cursor = connection.cursor()
+
+    #     try:
+    #         insert_query = """
+    #             INSERT INTO contacts (name, email, phone, message)
+    #             VALUES (%s, %s, %s, %s)
+    #         """
+    #         cursor.execute(insert_query, (name, email, phone, message))
+    #         connection.commit()
+
+    #         # send_email_notification(name, email, phone, message)
+
+    #         return jsonify({"message": "Contact added successfully!"}), 201
+    #     except Exception as e:
+    #         return jsonify({"error": f"Failed to add contact: {str(e)}"}), 500
+    #     finally:
+    #         cursor.close()
+    #         connection.close()
     elif request.method == 'POST':
-        data = request.get_json()
-        name = data.get('name', '')
-        email = data.get('email', '')
-        phone = data.get('phone', '')
-        message = data.get('message', '')
-
-        if not name or not email or not phone:
-            return jsonify({"error": "Missing required fields: name, email, or phone"}), 400
-
-        connection = get_connection()
-        cursor = connection.cursor()
-
         try:
+            data = request.get_json(force=True)
+            name = data.get('name', '').strip()
+            email = data.get('email', '').strip()
+            phone = data.get('phone', '').strip()
+            message = data.get('message', '').strip()
+
+            if not name or not email or not phone:
+                return jsonify({"error": "Missing required fields: name, email, or phone"}), 400
+
+            connection = get_connection()
+            cursor = connection.cursor()
+
             insert_query = """
                 INSERT INTO contacts (name, email, phone, message)
                 VALUES (%s, %s, %s, %s)
@@ -1374,14 +1393,13 @@ def manage_contacts():
             cursor.execute(insert_query, (name, email, phone, message))
             connection.commit()
 
-            # send_email_notification(name, email, phone, message)
-
             return jsonify({"message": "Contact added successfully!"}), 201
+
         except Exception as e:
             return jsonify({"error": f"Failed to add contact: {str(e)}"}), 500
         finally:
-            cursor.close()
-            connection.close()
+            if 'cursor' in locals(): cursor.close()
+            if 'connection' in locals(): connection.close()
 
 @app.route('/contacts/<int:id>', methods=['DELETE'])
 def delete_contact(id):
@@ -1910,7 +1928,7 @@ def get_checkout_details():
         # Modify image URLs to include full path
         for item in items:
             # item['product_image'] = f"http://localhost:1000/static/uploads/{item['image_url']}" if item['image_url'] else "http://localhost:1000/static/uploads/default.jpg"
-            item['product_image'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}" if item['image_url'] else "http://lealavaecommerce.com/api/static/uploads/default.jpg"
+            item['product_image'] = f"http://127.0.0.1:1000/static/uploads/{item['image_url']}" if item['image_url'] else "http://127.0.0.1:1000/static/uploads/default.jpg"
 
         # Step 4: Get payment info
         cursor.execute("""
@@ -2149,5 +2167,5 @@ def delete_payment(payment_id):
         cursor.close()
         conn.close()
 
-# if __name__ == "__main__":
-#     app.run(host="0.0.0.0",debug=True, port=1000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0",debug=True, port=1000)

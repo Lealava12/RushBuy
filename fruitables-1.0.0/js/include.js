@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 
     // Include sidebar, header, footer, and nav
-    await loadComponent("slidebar.html", "sidebar-container");
+    // await loadComponent("slidebar.html", "sidebar-container");
     // await loadComponent("header.html", "header-container");
     await loadComponent("footer.html", "footer-container");
     // await loadComponent("nav.html", "nav-container");

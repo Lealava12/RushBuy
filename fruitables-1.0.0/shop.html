@@ -474,7 +474,7 @@
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
-
+        <script src ="js/location.js"></script>
         <script src ="js/include.js"></script>      
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -489,111 +489,65 @@
     <script src="js/cart.js"></script>
     <script src="js/shop.js"></script>
     <script>
-        const API_BASE_URL = 'http://lealavaecommerce.com/api'; // Ensure this matches your backend API URL
+        const API_BASE_URL = "http://127.0.0.1:1000"; // Ensure this matches your backend API URL
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchCategories();
+            fetchAllProducts();
+            handleSearch();
+            handleSorting();
+            handleQuantityButtons();
+        });
 
         // Fetch and display categories
         async function fetchCategories() {
             try {
                 const response = await fetch(`${API_BASE_URL}/get-categories`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch categories`);
+                if (!response.ok) throw new Error("Failed to fetch categories");
 
                 const data = await response.json();
-                const categoryList = document.querySelector('.fruite-categorie');
-                categoryList.innerHTML = ''; // Clear previous categories
+                const categoryList = document.querySelector(".fruite-categorie");
+                categoryList.innerHTML = ""; // Clear previous categories
 
-                data.categories.forEach(category => {
-                    categoryList.innerHTML += `
-                        <li>
-                            <div class="d-flex justify-content-between fruite-name">
-                                <a href="#" onclick="fetchProductsByCategory('${category.category_id}')">
-                                    <i class="fas fa-apple-alt me-2"></i>${category.name}
-                                </a>
-                                <span>(${category.status === 'active' ? 'Available' : 'Unavailable'})</span>
-                            </div>
-                        </li>
-                    `;
+                data.categories.forEach((category) => {
+                    const categoryItem = document.createElement("li");
+                    categoryItem.innerHTML = `<a href="#" data-category-id="${category.category_id}" class="category-link">${category.name}</a>`;
+                    categoryList.appendChild(categoryItem);
+                });
+
+                // Add event listeners for category filtering
+                document.querySelectorAll(".category-link").forEach((link) => {
+                    link.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        const categoryId = e.target.getAttribute("data-category-id");
+                        fetchProductsByCategory(categoryId);
+                    });
                 });
             } catch (error) {
-                console.error('Error fetching categories:', error);
+                console.error("Error fetching categories:", error);
             }
         }
 
-        // Fetch and display products by category
-        async function fetchProductsByCategory(categoryId) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/products?category_id=${categoryId}`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products`);
-
-                const data = await response.json();
-                const productContainer = document.querySelector('.row.g-4.justify-content-center');
-                productContainer.innerHTML = ''; // Clear previous products
-
-                if (data.products.length === 0) {
-                    productContainer.innerHTML = `<p class="text-center">No products found for this category.</p>`;
-                    return;
-                }
-
-                data.products.forEach(product => {
-                    productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <div class="rounded position-relative fruite-item" data-id="${product.id}">
-                                <div class="fruite-img">
-                                    <img src="${product.image_url}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                                </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                    ${product.category_name}
-                                </div>
-                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                    <h4>${product.name}</h4>
-                                    <p>${product.description}</p>
-                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
-                                        <div class="input-group quantity mb-5" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            }
-        }
-
-        // Fetch and display all products on page load
+        // Fetch and display all products
         async function fetchAllProducts() {
             try {
                 const response = await fetch(`${API_BASE_URL}/products`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products`);
+                if (!response.ok) throw new Error("Failed to fetch products");
 
                 const data = await response.json();
-                const productContainer = document.querySelector('.row.g-4.justify-content-center');
-                productContainer.innerHTML = ''; // Clear previous products
+                const productContainer = document.querySelector(".row.g-4.justify-content-center");
+                productContainer.innerHTML = ""; // Clear previous products
 
                 if (data.products.length === 0) {
                     productContainer.innerHTML = `<p class="text-center">No products available.</p>`;
                     return;
                 }
 
-                data.products.forEach(product => {
+                // Example Product Rendering Logic
+                data.products.forEach((product) => {
                     productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <div class="rounded position-relative fruite-item" data-id="${product.id}">
+                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                            <div class="rounded position-relative fruite-item">
                                 <div class="fruite-img">
                                     <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
                                 </div>
@@ -618,98 +572,9 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
+                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                handleQuantityButtons(); // Attach event listeners for quantity buttons
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            }
-        }
-
-        // Fetch and display product tags for filtering
-        async function fetchProductTags() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/get-product-tags`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch product tags`);
-
-                const data = await response.json();
-                const additionalFilterContainer = document.querySelector('.col-lg-12 .mb-3');
-
-                additionalFilterContainer.innerHTML = `
-                    <h4>Additional</h4>
-                    ${data.tags.map((tag, index) => `
-                        <div class="mb-2">
-                            <input type="radio" class="me-2" id="Tag-${index}" name="product-tags" value="${tag}">
-                            <label for="Tag-${index}">${tag}</label>
-                        </div>
-                    `).join('')}
-                `;
-
-                // Add event listener to filter products by tag
-                document.querySelectorAll('input[name="product-tags"]').forEach(radio => {
-                    radio.addEventListener('change', (e) => {
-                        fetchProductsByTag(e.target.value);
-                    });
-                });
-            } catch (error) {
-                console.error('Error fetching product tags:', error);
-            }
-        }
-
-        // Fetch and display products by tag
-        async function fetchProductsByTag(tag) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/products?tag=${tag}`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products by tag`);
-
-                const data = await response.json();
-                const productContainer = document.querySelector('.row.g-4.justify-content-center');
-                productContainer.innerHTML = ''; // Clear previous products
-
-                if (data.products.length === 0) {
-                    productContainer.innerHTML = `<p class="text-center">No products found for this tag.</p>`;
-                    return;
-                }
-
-                data.products.forEach(product => {
-                    productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <div class="rounded position-relative fruite-item" data-id="${product.id}">
-                                <div class="fruite-img">
-                                    <img src="${product.image_url}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                                </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                    ${product.category_name}
-                                </div>
-                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                    <h4>${product.name}</h4>
-                                    <p>${product.description}</p>
-                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
-                                        <div class="input-group quantity mb-5" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -717,29 +582,29 @@
                     `;
                 });
             } catch (error) {
-                console.error('Error fetching products by tag:', error);
+                console.error("Error fetching products:", error);
             }
         }
 
-        // Fetch and display products filtered by price
-        async function fetchProductsByPrice(maxPrice) {
+        // Fetch products by category
+        async function fetchProductsByCategory(categoryId) {
             try {
-                const response = await fetch(`${API_BASE_URL}/products?max_price=${maxPrice}`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products by price`);
+                const response = await fetch(`${API_BASE_URL}/products?category_id=${categoryId}`);
+                if (!response.ok) throw new Error("Failed to fetch products by category");
 
                 const data = await response.json();
-                const productContainer = document.querySelector('.row.g-4.justify-content-center');
-                productContainer.innerHTML = ''; // Clear previous products
+                const productContainer = document.querySelector(".row.g-4.justify-content-center");
+                productContainer.innerHTML = ""; // Clear previous products
 
                 if (data.products.length === 0) {
-                    productContainer.innerHTML = `<p class="text-center">No products found under ₹${maxPrice}.</p>`;
+                    productContainer.innerHTML = `<p class="text-center">No products available in this category.</p>`;
                     return;
                 }
 
-                data.products.forEach(product => {
+                data.products.forEach((product) => {
                     productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <div class="rounded position-relative fruite-item" data-id="${product.id}">
+                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                            <div class="rounded position-relative fruite-item">
                                 <div class="fruite-img">
                                     <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
                                 </div>
@@ -764,9 +629,9 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
+                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -774,29 +639,42 @@
                     `;
                 });
             } catch (error) {
-                console.error('Error fetching products by price:', error);
+                console.error("Error fetching products by category:", error);
             }
+        }
+
+        // Handle search functionality
+        function handleSearch() {
+            const searchInput = document.querySelector('input[type="search"]');
+            searchInput.addEventListener("input", (e) => {
+                const keyword = e.target.value.trim();
+                if (keyword.length > 2) {
+                    searchProducts(keyword);
+                } else if (keyword.length === 0) {
+                    fetchAllProducts(); // Reset to all products if search is cleared
+                }
+            });
         }
 
         // Search products by keyword
         async function searchProducts(keyword) {
             try {
-                const response = await fetch(`${API_BASE_URL}/products?search=${encodeURIComponent(keyword)}`);
-                if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch products`);
+                const response = await fetch(`${API_BASE_URL}/products?search=${keyword}`);
+                if (!response.ok) throw new Error("Failed to search products");
 
                 const data = await response.json();
-                const productContainer = document.querySelector('.row.g-4.justify-content-center');
-                productContainer.innerHTML = ''; // Clear previous products
+                const productContainer = document.querySelector(".row.g-4.justify-content-center");
+                productContainer.innerHTML = ""; // Clear previous products
 
                 if (data.products.length === 0) {
                     productContainer.innerHTML = `<p class="text-center">No products found for "${keyword}".</p>`;
                     return;
                 }
 
-                data.products.forEach(product => {
+                data.products.forEach((product) => {
                     productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <div class="rounded position-relative fruite-item" data-id="${product.id}">
+                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                            <div class="rounded position-relative fruite-item">
                                 <div class="fruite-img">
                                     <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
                                 </div>
@@ -821,9 +699,9 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
+                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -831,25 +709,91 @@
                     `;
                 });
             } catch (error) {
-                console.error('Error searching products:', error);
+                console.error("Error searching products:", error);
             }
         }
 
-        // Function to handle quantity increment, decrement, and price calculation
+        // Handle sorting functionality
+        function handleSorting() {
+            const sortingSelect = document.getElementById("fruits");
+            sortingSelect.addEventListener("change", (e) => {
+                const sortBy = e.target.value;
+                fetchSortedProducts(sortBy);
+            });
+        }
+
+        // Fetch sorted products
+        async function fetchSortedProducts(sortBy) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products?sort=${sortBy}`);
+                if (!response.ok) throw new Error("Failed to fetch sorted products");
+
+                const data = await response.json();
+                const productContainer = document.querySelector(".row.g-4.justify-content-center");
+                productContainer.innerHTML = ""; // Clear previous products
+
+                if (data.products.length === 0) {
+                    productContainer.innerHTML = `<p class="text-center">No products available.</p>`;
+                    return;
+                }
+
+                data.products.forEach((product) => {
+                    productContainer.innerHTML += `
+                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                            <div class="rounded position-relative fruite-item">
+                                <div class="fruite-img">
+                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                    ${product.category_name}
+                                </div>
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4>${product.name}</h4>
+                                    <p>${product.description || "No description available."}</p>
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching sorted products:", error);
+            }
+        }
+
+        // Handle quantity increment, decrement, and price calculation
         function handleQuantityButtons() {
-            document.addEventListener('click', (e) => {
-                if (e.target.closest('.btn-minus')) {
-                    const input = e.target.closest('.quantity').querySelector('input');
-                    const priceElement = e.target.closest('.fruite-item').querySelector('.product-price');
+            document.addEventListener("click", (e) => {
+                if (e.target.closest(".btn-minus")) {
+                    const input = e.target.closest(".quantity").querySelector("input");
+                    const priceElement = e.target.closest(".fruite-item").querySelector(".product-price");
                     const basePrice = parseFloat(priceElement.dataset.basePrice);
                     const currentValue = parseInt(input.value, 10);
                     if (currentValue > 1) {
                         input.value = currentValue - 1;
                         priceElement.textContent = `₹${(basePrice * (currentValue - 1)).toFixed(2)}`;
                     }
-                } else if (e.target.closest('.btn-plus')) {
-                    const input = e.target.closest('.quantity').querySelector('input');
-                    const priceElement = e.target.closest('.fruite-item').querySelector('.product-price');
+                } else if (e.target.closest(".btn-plus")) {
+                    const input = e.target.closest(".quantity").querySelector("input");
+                    const priceElement = e.target.closest(".fruite-item").querySelector(".product-price");
                     const basePrice = parseFloat(priceElement.dataset.basePrice);
                     const currentValue = parseInt(input.value, 10);
                     input.value = currentValue + 1;
@@ -861,10 +805,11 @@
         // Add to Cart Function
         async function addToCart(productId, quantity = 1) {
             try {
+                // Check if the user is logged in
                 const response = await fetch(`${API_BASE_URL}/user/status`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
-                    credentials: "include"
+                    credentials: "include",
                 });
 
                 const data = await response.json();
@@ -872,7 +817,6 @@
                 if (!response.ok || !data.username) {
                     alert("Please log in to add products to the cart.");
                     sessionStorage.setItem("redirectAfterLogin", "cart.html");
-                    // window.location.href = "login.html";
                     return;
                 }
 
@@ -881,67 +825,45 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
-                    body: JSON.stringify({ product_id: productId, quantity })
+                    body: JSON.stringify({ product_id: productId, quantity }),
                 });
 
                 const cartResult = await cartResponse.json();
+
                 if (cartResponse.ok) {
                     alert(cartResult.message || "Product added to cart!");
-                    // Optionally update cart count or UI here
+                    updateCartCount(); // Optionally update cart count in the UI
                 } else {
+                    console.error("Error adding to cart:", cartResult.error);
                     alert(cartResult.error || "Failed to add product to cart. Please try again.");
                 }
             } catch (error) {
                 console.error("Error adding product to cart:", error);
-                alert("An error occurred while adding the product to the cart. Please try again.");
+                // alert("An error occurred while adding the product to the cart. Please try again.");
             }
         }
 
+        // Event listener for "Add to Cart" buttons
         document.addEventListener("click", (e) => {
-            const addToCartButton = e.target.closest(".btn.add-to-cart");
+            const addToCartButton = e.target.closest(".add-to-cart");
             if (addToCartButton) {
-                const productElement = addToCartButton.closest(".fruite-item");
+                const productElement = addToCartButton.closest(".product-item");
                 if (!productElement) {
                     console.error("Product element not found for the clicked button.");
                     alert("An error occurred. Please try again.");
                     return;
                 }
 
-                const productId = productElement.getAttribute("data-id");
+                const productId = productElement.dataset.id;
                 const quantityInput = productElement.querySelector(".quantity input");
                 const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
 
-                if (productId && !isNaN(quantity) && quantity > 0) {
+                if (productId && quantity > 0) {
                     addToCart(productId, quantity);
                 } else {
                     alert("Invalid product or quantity.");
                 }
             }
-        });
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchCategories();
-            fetchAllProducts();
-            fetchProductTags();
-
-            // Add event listener for search input
-            const searchInput = document.querySelector('input[type="search"]');
-            searchInput.addEventListener('input', (e) => {
-                const keyword = e.target.value.trim();
-                if (keyword.length > 2) {
-                    searchProducts(keyword);
-                } else if (keyword.length === 0) {
-                    fetchAllProducts(); // Reset to all products if search is cleared
-                }
-            });
-
-            // Add event listener for price range input
-            const priceRangeInput = document.getElementById('rangeInput');
-            priceRangeInput.addEventListener('input', (e) => {
-                const maxPrice = e.target.value;
-                fetchProductsByPrice(maxPrice);
-            });
         });
     </script>
     </body>

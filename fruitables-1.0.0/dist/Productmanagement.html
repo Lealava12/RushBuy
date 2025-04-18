@@ -424,7 +424,7 @@
   </div>
   <script src="include.js"></script>
   <script>
-    const apiBaseUrl = "http://lealavaecommerce.com/api"; // Backend base URL
+    // const API_BASE_URL = "http://127.0.0.1:1000"; // Backend base URL
 
     document.addEventListener("DOMContentLoaded", async () => {
       const parentCategorySelect = document.getElementById("parent-category");
@@ -433,7 +433,7 @@
 
       try {
         // Fetch categories
-        const categoryResponse = await fetch(`${apiBaseUrl}/get-categories`);
+        const categoryResponse = await fetch(`${API_BASE_URL}/get-categories`);
         if (!categoryResponse.ok) throw new Error("Failed to fetch categories.");
         const categoryData = await categoryResponse.json();
 
@@ -445,7 +445,7 @@
         });
 
         // Fetch subcategories
-        const subCategoryResponse = await fetch(`${apiBaseUrl}/get-subcategories`);
+        const subCategoryResponse = await fetch(`${API_BASE_URL}/get-subcategories`);
         if (!subCategoryResponse.ok) throw new Error("Failed to fetch subcategories.");
         const subCategoryData = await subCategoryResponse.json();
 
@@ -480,7 +480,7 @@
       // Fetch and display products
       async function fetchProducts() {
         try {
-          const response = await fetch(`${apiBaseUrl}/products`);
+          const response = await fetch(`${API_BASE_URL}/products`);
           if (!response.ok) throw new Error("Failed to fetch products");
 
           const data = await response.json();
@@ -520,21 +520,29 @@
 
       // Delete product
       window.deleteProduct = async (productId) => {
-        if (!showConfirm("Are you sure you want to delete this product?")) return;
-        try {
-          const response = await fetch(`${apiBaseUrl}/delete-product/${productId}`, { method: "DELETE" });
-          if (!response.ok) throw new Error("Failed to delete product");
-          fetchProducts();
-        } catch (error) {
-          console.error("Error deleting product:", error);
-          showAlert("Failed to delete product. Please try again later.");
-        }
+        // Show confirmation dialog before deleting
+        showConfirm("Are you sure you want to delete this product?", async () => {
+          try {
+            const response = await fetch(`${API_BASE_URL}/delete-product/${productId}`, { method: "DELETE" });
+
+            if (!response.ok) {
+              const result = await response.json();
+              throw new Error(result.error || "Failed to delete product");
+            }
+
+            showAlert("Product deleted successfully!");
+            fetchProducts(); // Refresh the product list
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            showAlert("Failed to delete product. Please try again later.");
+          }
+        });
       };
 
       // Edit product
       window.editProduct = async (productId) => {
         try {
-          const response = await fetch(`${apiBaseUrl}/products?product_id=${productId}`);
+          const response = await fetch(`${API_BASE_URL}/products?product_id=${productId}`);
           if (!response.ok) throw new Error("Failed to fetch product details");
 
           const productData = await response.json();
@@ -569,7 +577,7 @@
         event.preventDefault();
         const formData = new FormData(event.target);
         const editId = event.target.getAttribute("data-edit-id");
-        const url = editId ? `${apiBaseUrl}/update-product/${editId}` : `${apiBaseUrl}/save-product`;
+        const url = editId ? `${API_BASE_URL}/update-product/${editId}` : `${API_BASE_URL}/save-product`;
         const method = editId ? "PUT" : "POST";
 
         try {
