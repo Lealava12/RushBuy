@@ -581,7 +581,7 @@ def get_products():
             image = cursor.fetchone()
             if image and image["image_url"]:
                 # Ensure the image URL is constructed correctly
-                #product["image_url"] = f"http://localhost:1000/static/uploads/{image['image_url'].split('/')[-1]}"
+                #product["image_url"] = f"http://lealavaecommerce.com/api/static/uploads/{image['image_url'].split('/')[-1]}"
                 product["image_url"] = f"http://lealavaecommerce.com/api/static/uploads/{image['image_url'].split('/')[-1]}"
             else:
                 product["image_url"] = None
@@ -1101,7 +1101,7 @@ def get_cart():
 
         for item in cart_items:
             if item['image_url']:
-                # item['image_url'] = f"http://localhost:1000/static/uploads/{item['image_url']}"
+                # item['image_url'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}"
                 item['image_url'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}"
 
         return jsonify({"cartItems": cart_items}), 200
@@ -1927,7 +1927,7 @@ def get_checkout_details():
 
         # Modify image URLs to include full path
         for item in items:
-            # item['product_image'] = f"http://localhost:1000/static/uploads/{item['image_url']}" if item['image_url'] else "http://localhost:1000/static/uploads/default.jpg"
+            # item['product_image'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}" if item['image_url'] else "http://lealavaecommerce.com/api/static/uploads/default.jpg"
             item['product_image'] = f"http://lealavaecommerce.com/api/static/uploads/{item['image_url']}" if item['image_url'] else "http://lealavaecommerce.com/api/static/uploads/default.jpg"
 
         # Step 4: Get payment info

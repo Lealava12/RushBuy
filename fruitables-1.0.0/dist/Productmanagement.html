@@ -543,7 +543,10 @@
       window.editProduct = async (productId) => {
         try {
           const response = await fetch(`${API_BASE_URL}/products?product_id=${productId}`);
-          if (!response.ok) throw new Error("Failed to fetch product details");
+          if (!response.ok) {
+            const errorText = await response.text(); // Capture the error response
+            throw new Error(`Failed to fetch product details: ${errorText}`);
+          }
 
           const productData = await response.json();
           const product = productData.products.find(p => p.product_id === productId);
@@ -582,11 +585,21 @@
 
         try {
           const response = await fetch(url, { method, body: formData });
-          const result = await response.json();
+          const contentType = response.headers.get("Content-Type");
 
-          if (!response.ok) throw new Error(result.error || "Failed to save product");
+          if (!response.ok) {
+            const errorText = await response.text(); // Capture the error response
+            throw new Error(`Failed to save product: ${errorText}`);
+          }
 
-          showAlert(result.message || "Product saved successfully!");
+          // Ensure the response is JSON
+          if (contentType && contentType.includes("application/json")) {
+            const result = await response.json();
+            showAlert(result.message || "Product saved successfully!");
+          } else {
+            throw new Error("Unexpected response format. Expected JSON.");
+          }
+
           event.target.reset();
           fetchProducts();
         } catch (error) {
