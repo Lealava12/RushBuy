@@ -19,24 +19,26 @@ function requestLocation() {
                 switch (error.code) {
                     case error.PERMISSION_DENIED:
                         console.log("Location access denied by the user.");
+                        showManualLocationInput();
                         break;
                     case error.POSITION_UNAVAILABLE:
                         console.log("Location information is unavailable.");
+                        showManualLocationInput();
                         break;
                     case error.TIMEOUT:
                         console.log("The request to get the user's location timed out.");
+                        showManualLocationInput();
                         break;
                     default:
                         console.log("An unknown error occurred while accessing the location.");
+                        showManualLocationInput();
                         break;
                 }
-
-                // Fallback: Load saved location if available
-                loadSavedLocation();
             }
         );
     } else {
         console.log("Geolocation is not supported by this browser.");
+        showManualLocationInput();
     }
 }
 
@@ -46,20 +48,46 @@ function updateLocationDisplay(latitude, longitude) {
     userLocationElements.forEach(element => {
         element.textContent = `Lat: ${latitude}, Lon: ${longitude}`;
     });
-}
 
-// Function to load location from localStorage if available
-function loadSavedLocation() {
-    const savedLocation = localStorage.getItem('userLocation');
-    if (savedLocation) {
-        const { latitude, longitude } = JSON.parse(savedLocation);
-        updateLocationDisplay(latitude, longitude);
-    } else {
-        console.log("No saved location found. Please enable location services to get your current location.");
+    // Optionally, update the delivery location input field
+    const deliveryLocationInput = document.getElementById('delivery-location-input');
+    if (deliveryLocationInput) {
+        deliveryLocationInput.value = `Lat: ${latitude}, Lon: ${longitude}`;
     }
 }
 
-// Trigger location request on page load
-document.addEventListener('DOMContentLoaded', () => {
+// Function to show manual location input
+function showManualLocationInput() {
+    const manualLocationContainer = document.getElementById('manual-location-container');
+    if (manualLocationContainer) {
+        manualLocationContainer.style.display = 'block'; // Show the manual input container
+    }
+}
+
+// Function to handle manual location input
+function handleManualLocationInput() {
+    const manualLocationInput = document.getElementById('manual-location-input');
+    if (manualLocationInput) {
+        const location = manualLocationInput.value.trim();
+        if (location) {
+            // Save the manually entered location in localStorage
+            localStorage.setItem('userLocation', JSON.stringify({ manualLocation: location }));
+
+            // Update the location display
+            const userLocationElements = document.querySelectorAll('.user-location');
+            userLocationElements.forEach(element => {
+                element.textContent = location;
+            });
+        }
+    }
+}
+
+// Trigger location request when "Detect my location" button is clicked
+document.getElementById('detect-location-button').addEventListener('click', () => {
     requestLocation();
+});
+
+// Trigger manual location input handling when the user submits the input
+document.getElementById('manual-location-submit').addEventListener('click', () => {
+    handleManualLocationInput();
 });
