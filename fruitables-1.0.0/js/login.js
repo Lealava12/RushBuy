@@ -1,7 +1,7 @@
 // document.addEventListener("DOMContentLoaded", () => {
 //     const loginForm = document.querySelector(".signinBx form");
 //     const registerForm = document.querySelector(".signupBx form");
-//     const API_URL = "http://lealavaecommerce.com/api"; // Ensure this matches your Flask API URL
+//     const API_URL = "http://127.0.0.1:1000"; // Ensure this matches your Flask API URL
 
 //     // Check if the user is already logged in
 //     async function checkLoginStatus() {
@@ -184,7 +184,7 @@
 //         updateSlidebarLoginUI(sessionStorage.getItem("userName"));
 //     }
 // });
-//     const API_URL = 'http://lealavaecommerce.com/api';
+//     const API_URL = 'http://127.0.0.1:1000';
 
 // document.addEventListener("DOMContentLoaded", async function () {
 //     const authContainer = document.querySelector(".d-flex.m-3.me-0");
@@ -285,7 +285,7 @@
 //     document.querySelector('.signinBx').classList.add('active');
 // }
 
-const API_URL = "http://lealavaecommerce.com/api";
+const API_URL = "http://127.0.0.1:1000";
 
 document.addEventListener("DOMContentLoaded", async function () {
     const authContainer = document.querySelector(".d-flex.m-3.me-0");

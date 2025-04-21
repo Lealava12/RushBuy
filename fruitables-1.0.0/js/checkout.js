@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://lealavaecommerce.com/api';
+const API_BASE_URL = 'http://127.0.0.1:1000';
 document.addEventListener("DOMContentLoaded", function () {
     if (window.location.pathname.includes("chackout.html")) {
         loadCheckoutItems();
@@ -87,7 +87,37 @@ function loadCheckoutItems() {
 document.addEventListener("click", function (e) {
     if (e.target.classList.contains("remove-from-cart")) {
         const productId = e.target.dataset.id;
-        removeFromCheckout(productId);
+
+        console.log("Sending request to remove product:", productId); // Debug log
+
+        fetch(`${API_BASE_URL}/remove-from-cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({ product_id: productId })
+        })
+        .then(response => {
+            console.log("Response status:", response.status); // Debug log
+            return response.json();
+        })
+        .then(data => {
+            if (response.ok) {
+                console.log(data.message || "Product removed from cart."); // Debug log
+                let cartItems = JSON.parse(sessionStorage.getItem("checkoutItems")) || [];
+                cartItems = cartItems.filter(item => item.product_id != productId);
+                sessionStorage.setItem("checkoutItems", JSON.stringify(cartItems));
+                loadCheckoutItems();
+            } else {
+                console.error("Error removing product from cart:", data.error);
+                alert(data.error || "Failed to remove product from cart. Please try again.");
+            }
+        })
+        .catch(error => {
+            console.error("Error removing product from cart:", error);
+            alert("An error occurred while removing the product. Please try again.");
+        });
     }
 });
 

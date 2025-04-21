@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://lealavaecommerce.com/api';
+const API_BASE_URL = 'http://127.0.0.1:1000';
 document.addEventListener("DOMContentLoaded", async function () {
     // Function to load external HTML components
     const loadComponent = async (url, elementId) => {
