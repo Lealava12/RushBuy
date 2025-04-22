@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Product Images</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src ="include.js"></script>
+  <!-- <link rel="stylesheet" href="order&delivery.css"> -->
+  <style>
+    /* General Body Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Form Container Styling */
+    .form-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      color: #333333;
+      margin-bottom: 20px;
+    }
+
+    /* Form Group Styling */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      color: #555555;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .form-group input[type="file"] {
+      padding: 5px;
+    }
+
+    /* Button Styling */
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    /* Alert Styling */
+    .alert {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    /* Image List Styling */
+    .image-list {
+      margin-top: 30px;
+    }
+
+    .image-list h4 {
+      font-size: 18px;
+      color: #333333;
+      margin-bottom: 15px;
+    }
+
+    .image-list img {
+      max-width: 100px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #dddddd;
+      border-radius: 5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .image-list img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Table Styling */
+    .order-table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-table th,
+    .order-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border: 1px solid #dddddd;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .order-table th {
+      background-color: #007bff;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .order-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .order-table tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Sidebar Styling (if applicable) */
+    /* #sidebar-container {
+      background-color: #007bff;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    } */
+
+    #sidebar-container h4 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    #sidebar-container ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    #sidebar-container ul li {
+      margin-bottom: 10px;
+    }
+
+    #sidebar-container ul li a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    #sidebar-container ul li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+  <div class="form-container">
+    <h2>Upload Images for a Product</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+      <!-- Product Selector -->
+      <div class="form-group">
+        <label for="product">Select Product:</label>
+        <select name="product_id" id="product" required>
+          <option value="">-- Select Product --</option>
+          <!-- Options will be dynamically populated -->
+        </select>
+      </div>
+
+      <!-- Image Upload Field -->
+      <div class="form-group">
+        <label for="images">Select Images:</label>
+        <input type="file" id="images" name="images[]" multiple accept="image/*" required>
+      </div>
+
+      <!-- Alt Text -->
+      <div class="form-group">
+        <label for="alt_text">Alt Text (optional):</label>
+        <input type="text" name="alt_text" id="alt_text" placeholder="Enter alt text for the images">
+      </div>
+
+      <!-- Image Type -->
+      <div class="form-group">
+        <label for="image_type">Image Type:</label>
+        <select name="image_type" id="image_type">
+          <option value="gallery">Gallery</option>
+          <option value="thumbnail">Thumbnail</option>
+          <option value="zoom">Zoom</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary">Upload Images</button>
+    </form>
+
+    <!-- Alert Section -->
+    <div id="alert-container"></div>
+
+    <!-- Product Images Section -->
+    <div class="image-list" id="image-list">
+      <h4>Existing Images:</h4>
+      <div id="product-images">
+        <!-- Images will be dynamically loaded here -->
+      </div>
+    </div>
+  </div>
+  <div id="alert-container">
+  <table class="order-table" style="border-collapse: collapse; width: 1100px;">
+    <thead>
+      <tr>
+        <th>Gallery ID</th>
+        <th>Product Name</th>
+        <th>Product ID</th>
+        <th>Images</th>
+        <th>Image Type</th>
+        <th>Alt Text</th>
+        <th>Created At</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="product-l">
+
+    </tbody>
+  </table>
+</div>
+  <script>
+    //const API_BASE_URL = "http://127.0.0.1:1000"; // Replace with your backend API URL
+
+    // Fetch products and populate the product dropdown
+    async function fetchProducts() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/products`);
+        if (!response.ok) throw new Error("Failed to fetch products");
+
+        const data = await response.json();
+        const productSelect = document.getElementById("product");
+
+        // Clear existing options
+        productSelect.innerHTML = '<option value="">-- Select Product --</option>';
+
+        data.products.forEach(product => {
+          const option = document.createElement("option");
+          option.value = product.product_id;
+          option.textContent = product.name;
+          productSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        showAlert("Failed to load products. Please try again later.", "danger");
+      }
+    }
+
+    // Fetch images for the selected product
+    async function fetchProductImages(productId) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/upload-images?product_id=${productId}`);
+        if (!response.ok) throw new Error("Failed to fetch product images");
+
+        const data = await response.json();
+        const imageList = document.getElementById("product-images");
+        const productTableBody = document.getElementById("product-l");
+
+        // Clear previous data
+        imageList.innerHTML = "";
+        productTableBody.innerHTML = "";
+
+        if (data.length === 0) {
+          imageList.innerHTML = "<p>No images available for this product.</p>";
+        } else {
+          data.forEach(image => {
+            // Display images in the image list
+            const imgElement = document.createElement("img");
+            imgElement.src = image.image_url;
+            imgElement.alt = image.alt_text || "Product Image";
+            imgElement.style.maxWidth = "100px";
+            imgElement.style.marginRight = "10px";
+            imgElement.style.marginBottom = "10px";
+            imgElement.style.border = "1px solid #ddd";
+            imgElement.style.borderRadius = "5px";
+            imageList.appendChild(imgElement);
+
+            // Add image details to the table
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${image.gallery_id}</td>
+              <td>${image.name}</td>
+              <td>${image.product_id}</td>
+              <td><img src="${image.image_url}" alt="${image.alt_text}" style="max-width: 50px;"></td>
+              <td>${image.image_type}</td>
+              <td>${image.alt_text || "N/A"}</td>
+              <td>${image.created_at}</td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteImage(${image.gallery_id})">Delete</button>
+              </td>
+            `;
+            productTableBody.appendChild(row);
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching product images:", error);
+        showAlert("Failed to load product images. Please try again later.", "danger");
+      }
+    }
+
+    // Upload images for the selected product
+    document.getElementById("upload-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const form = event.target;
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/upload-images`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert(data.message || "Images uploaded successfully!", "success");
+          form.reset(); // Reset the form after successful submission
+          const productId = document.getElementById("product").value;
+          if (productId) fetchProductImages(productId); // Refresh the images
+        } else {
+          showAlert(data.error || "Failed to upload images. Please try again.", "danger");
+        }
+      } catch (error) {
+        console.error("Error uploading images:", error);
+        showAlert("An error occurred while uploading images. Please try again.", "danger");
+      }
+    });
+
+    // Delete an image by gallery ID
+    async function deleteImage(galleryId) {
+      if (!confirm("Are you sure you want to delete this image?")) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/delete-image?gallery_id=${galleryId}`, {
+          method: "DELETE",
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert(data.message || "Image deleted successfully!", "success");
+          const productId = document.getElementById("product").value;
+          if (productId) fetchProductImages(productId); // Refresh the images
+        } else {
+          showAlert(data.error || "Failed to delete image. Please try again.", "danger");
+        }
+      } catch (error) {
+        console.error("Error deleting image:", error);
+        showAlert("An error occurred while deleting the image. Please try again.", "danger");
+      }
+    }
+
+    // Show alert messages
+    function showAlert(message, type) {
+      const alertContainer = document.getElementById("alert-container");
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}" role="alert">
+          ${message}
+        </div>
+      `;
+    }
+
+    // Event listener for product selection
+    document.getElementById("product").addEventListener("change", (event) => {
+      const productId = event.target.value;
+      if (productId) {
+        fetchProductImages(productId);
+      } else {
+        document.getElementById("product-images").innerHTML = "<p>Select a product to view images.</p>";
+        document.getElementById("product-l").innerHTML = ""; // Clear the table
+      }
+    });
+
+    // Load products on page load
+    document.addEventListener("DOMContentLoaded", fetchProducts);
+  </script>
+</body>
+</html>

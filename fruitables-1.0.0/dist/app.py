@@ -774,6 +774,86 @@ def get_product_tags():
         cursor.close()
         conn.close()
 
+
+@app.route('/upload-images', methods=['POST'])
+def upload_images():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        # Get form data
+        product_id = request.form.get('product_id')
+        alt_text = request.form.get('alt_text', '')
+        image_type = request.form.get('image_type', 'gallery')
+        images = request.files.getlist('images[]')
+
+        if not product_id or not images:
+            return jsonify({"error": "Product ID and images are required"}), 400
+
+        # Process each image
+        for image in images:
+            # Save the image to the upload folder
+            filename = secure_filename(image.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            image.save(filepath)
+
+            # Convert filepath to public URL
+            public_url = f"http://127.0.0.1:1000/static/uploads/{filename}"
+
+            # Insert image details into the database
+            cursor.execute("""
+                INSERT INTO product_gallery (product_id, image_url, alt_text, image_type)
+                VALUES (%s, %s, %s, %s)
+            """, (product_id, public_url, alt_text, image_type))
+
+        conn.commit()
+        return jsonify({"message": "Images uploaded successfully"}), 200
+
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            pass
+
+@app.route('/upload-images', methods=['GET'])
+def get_uploaded_images():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        product_id = request.args.get('product_id')
+        if not product_id:
+            return jsonify({"error": "Product ID is required"}), 400
+
+        cursor.execute("""
+            SELECT 
+                pg.gallery_id, 
+                pg.product_id, 
+                p.name, 
+                pg.image_url, 
+                pg.alt_text, 
+                pg.image_type, 
+                pg.created_at FROM product_gallery pg 
+                JOIN Products p ON pg.product_id = p.product_id 
+                WHERE pg.product_id = %s
+        """, (product_id,))
+
+        images = cursor.fetchall()
+        return jsonify(images), 200
+
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            pass
+
+
 # User Registration
 # User Registration
 # @app.route('/user/register', methods=['POST'])

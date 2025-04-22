@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Product Details</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="css/style.css" rel="stylesheet">
+
+        <style>
+            .vegetable-carousel .owl-nav {
+                display: flex;
+                justify-content: space-between;
+                position: absolute;
+                top: 50%;
+                width: 100%;
+                transform: translateY(-50%);
+                z-index: 10;
+            }
+
+            .vegetable-carousel .owl-nav button {
+                background-color: var(--primary-color, #007bff);
+                color: #fff;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                transition: background-color 0.3s ease;
+            }
+
+            .vegetable-carousel .owl-nav button:hover {
+                background-color: var(--secondary-color, #0056b3);
+            }
+
+            .vegetable-carousel .owl-nav button i {
+                font-size: 18px;
+            }
+
+            .product-details-container {
+                margin-top: 50px;
+            }
+            .product-image {
+                max-width: 100%;
+                border-radius: 10px;
+            }
+            .product-info {
+                padding: 20px;
+            }
+            .product-info h1 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            .product-info p {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+            .product-info .price {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #007bff;
+            }
+            .quantity-controls {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .quantity-controls input {
+                width: 50px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navbar -->
+        <div class="container-fluid fixed-top">
+            <div class="container topbar bg-primary d-none d-lg-block">
+                <div class="d-flex justify-content-between">
+                    <div class="top-info ps-2">
+                        <!-- <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <span
+                                class="user-location">Fetching location...</span></small> -->
+                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                                class="text-white">Email@Example.com</a></small>
+                    </div>
+                    <div class="top-link pe-2">
+                        <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
+                        <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
+                        <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+                    </div>
+                </div>
+            </div>
+            <div class="container px-0">
+                <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                    <a href="index.html" class="navbar-brand">
+                        <h1 class="text-primary display-6">RUSHBUY</h1>
+                    </a>
+                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars text-primary"></span>
+                    </button>
+                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                        <div class="navbar-nav mx-auto">
+                            <a href="index.html" class="nav-item nav-link">Home</a>
+                            <a href="shop.html" class="nav-item nav-link">Shop</a>
+                            <!-- <a href="chackout.html" class="nav-item nav-link">Checkout</a> -->
+                            <a href="testimonial.html" class="nav-item nav-link">Orders</a>
+                            <a href="contact.html" class="nav-item nav-link active">Contact</a>
+                        </div>
+                        <div class="d-flex m-3 me-1">
+                            <!-- <button
+                                class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
+                                data-bs-toggle="modal" data-bs-target="#searchModal"><i
+                                    class="fas fa-search text-primary"></i></button> -->
+                            <a href="cart.html" class="position-relative me-4 my-auto">
+                                <i class="fa fa-shopping-bag fa-2x"></i>
+                                <span
+                                    class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                            </a>
+                            <div class="d-flex m-3 me-0">
+                                <!-- Login button triggers modal -->
+                                <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authModal">Log
+                                    In</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content auth-container">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="authModalLabel">User Authentication</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <section id="auth_section">
+                            <div class="auth-wrapper">
+                                <!-- Login Form -->
+                                <div class="auth-box signinBx active" id="loginBox">
+                                    <div class="formBx">
+                                        <form id="login-form">
+                                            <h2>Log In</h2>
+                                            <input type="email" id="login-email" placeholder="Email" required />
+                                            <input type="password" id="login-password" placeholder="Password" required />
+                                            <input type="submit" value="Login" class="btn-auth"  style="background-color:#81C408;"/>
+                                            <p class="toggle-link">
+                                                Don't have an account? <a href="#" onclick="showRegisterForm();">Register</a>
+                                            </p>
+                                        </form>
+                                    </div>
+                                </div>
+        
+                                <!-- Register Form -->
+                                <div class="auth-box signupBx" id="registerBox">
+                                    <div class="formBx">
+                                        <form id="register-form">
+                                            <h2>Create an account</h2>
+                                            <input type="text" id="register-name" placeholder="Full Name" required />
+                                            <input type="email" id="register-email" placeholder="Email" required />
+                                            <input type="text" id="register-mobile" placeholder="Phone Number" required />
+                                            <input type="password" id="register-password" placeholder="Password" required />
+                                            <input type="password" id="register-confirm-password" placeholder="Confirm Password" required />
+                                            <input type="submit" value="Sign Up" class="btn-auth" style="background-color:#81C408;" />
+                                            <p class="toggle-link">
+                                                Already have an account? <a href="#" onclick="showLoginForm();">Log In</a>
+                                            </p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- JavaScript to Toggle Forms -->
+<script>
+    function showRegisterForm() {
+        document.getElementById("loginBox").classList.remove("active");
+        document.getElementById("registerBox").classList.add("active");
+    }
+
+    function showLoginForm() {
+        document.getElementById("registerBox").classList.remove("active");
+        document.getElementById("loginBox").classList.add("active");
+    }
+</script>
+<style>
+    /* Modal Styling */
+    .auth-container {
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Wrapper */
+    .auth-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* Forms Box */
+    .auth-box {
+        width: 100%;
+        max-width: 350px;
+        display: none;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .auth-box.active {
+        display: block;
+    }
+
+    /* Form Design */
+    .formBx h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .formBx input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .btn-auth {
+        width: 100%;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .btn-auth:hover {
+        background: #0056b3;
+    }
+
+    /* Toggle Links */
+    .toggle-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .toggle-link a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .toggle-link a:hover {
+        text-decoration: underline;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/login.js"></script>
+        <!-- Product Details Section -->
+        <div class="container product-details-container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img id="product-image" src="img/default.jpg" alt="Product Image" class="product-image">
+                </div>
+                <div class="col-md-6 product-info">
+                    <h1 id="product-name">Product Name</h1>
+                    <p id="product-description">Product description goes here...</p>
+                    <p class="price" id="product-price">₹0.00</p>
+                    <p><strong>Category:</strong> <span id="product-category">Category Name</span></p>
+                    <p><strong>Stock:</strong> <span id="product-stock">0</span></p>
+                    <div class="quantity-controls">
+                        <button class="btn btn-outline-secondary btn-sm" id="decrease-quantity">-</button>
+                        <input type="number" id="product-quantity" value="1" min="1">
+                        <button class="btn btn-outline-secondary btn-sm" id="increase-quantity">+</button>
+                    </div>
+                    <button class="btn btn-primary mt-3" id="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div id="footer-container"></div>
+        <script src="js/include.js"></script>
+
+        <script>
+            const API_BASE_URL = "http://127.0.0.1:1000"; // Replace with your backend API URL
+
+            // Fetch product details based on product_id from URL
+            async function fetchProductDetails() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get("product_id");
+
+                if (!productId) {
+                    alert("Product ID is missing in the URL.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/products?product_id=${productId}`);
+                    if (!response.ok) throw new Error("Failed to fetch product details");
+
+                    const data = await response.json();
+                    const product = data.products.find(p => p.product_id === productId);
+
+                    if (!product) {
+                        alert("Product not found.");
+                        return;
+                    }
+
+                    // Update the product details in the DOM
+                    document.getElementById("product-image").src = product.image_url || "img/default.jpg";
+                    document.getElementById("product-name").textContent = product.name;
+                    document.getElementById("product-description").textContent = product.description || "No description available.";
+                    document.getElementById("product-price").textContent = `₹${product.price}`;
+                    document.getElementById("product-category").textContent = product.category_name || "Unknown";
+                    document.getElementById("product-stock").textContent = product.stock_quantity || "Out of stock";
+
+                    // Add event listeners for quantity controls
+                    const quantityInput = document.getElementById("product-quantity");
+                    document.getElementById("decrease-quantity").addEventListener("click", () => {
+                        if (quantityInput.value > 1) quantityInput.value--;
+                    });
+                    document.getElementById("increase-quantity").addEventListener("click", () => {
+                        quantityInput.value++;
+                    });
+
+                    // Add to Cart functionality
+                    document.getElementById("add-to-cart").addEventListener("click", () => {
+                        const quantity = parseInt(quantityInput.value, 10);
+                        if (quantity > 0) {
+                            addToCart(productId, quantity);
+                        } else {
+                            alert("Please select a valid quantity.");
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error fetching product details:", error);
+                    alert("Failed to load product details. Please try again later.");
+                }
+            }
+
+            // Add to Cart Function
+            async function addToCart(productId, quantity) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/add-to-cart`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ product_id: productId, quantity })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        alert(data.message || "Product added to cart!");
+                    } else {
+                        alert(data.error || "Failed to add product to cart.");
+                    }
+                } catch (error) {
+                    console.error("Error adding product to cart:", error);
+                    alert("An error occurred while adding the product to the cart.");
+                }
+            }
+
+            // Load product details on page load
+            document.addEventListener("DOMContentLoaded", fetchProductDetails);
+        </script>
+    </body>
+</html>
