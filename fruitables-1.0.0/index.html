@@ -62,8 +62,14 @@
 
         </style>
         
+        <!-- Owl Carousel CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet">
     </head>
     <body>
+        <!-- Owl Carousel JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <!-- Spinner Start -->
         <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
             <div class="spinner-grow text-primary" role="status"></div>
@@ -408,6 +414,7 @@
                         <div class="col-lg-8 text-end">
                             <ul class="nav nav-pills d-inline-flex text-center mb-5 fruite-categorie">
                                 <!-- Categories will be dynamically loaded here -->
+
                             </ul>
                         </div>
                     </div>
@@ -421,6 +428,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>      
             </div>
         </div>
@@ -848,24 +856,19 @@
         }
 
        // Add to Cart Function
-    async function addToCart(productId, quantity = 1) {
-        try {
-            const response = await fetch(`${API_URL}/user/status`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include"
-            });
+async function addToCart(productId, quantity = 1) {
+    try {
+        // Check if the user is logged in
+        const response = await fetch(`${API_URL}/user/status`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (!response.ok || !data.username) {
-                alert("Please log in to add products to the cart.");
-                sessionStorage.setItem("redirectAfterLogin", "cart.html");
-                // window.location.href = "Login.html";
-                return;
-            }
-
-            // Proceed to add the product to the cart
+        if (response.ok && data.username) {
+            // User is logged in, proceed to add the product to the server-side cart
             const cartResponse = await fetch(`${API_URL}/add-to-cart`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -880,34 +883,50 @@
             } else {
                 alert(cartResult.error || "Failed to add product to cart. Please try again.");
             }
-        } catch (error) {
-            console.error("Error adding product to cart:", error);
-            alert("An error occurred while adding the product to the cart. Please try again.");
+        } else {
+            // User is not logged in, store the cart data locally
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingProductIndex = cart.findIndex(item => item.product_id === productId);
+
+            if (existingProductIndex > -1) {
+                // If the product already exists in the cart, update the quantity
+                cart[existingProductIndex].quantity += quantity;
+            } else {
+                // Add the new product to the cart
+                cart.push({ product_id: productId, quantity });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Product added to cart! You can view your cart later.");
+        }
+    } catch (error) {
+        console.error("Error adding product to cart:", error);
+        alert("An error occurred while adding the product to the cart. Please try again.");
+    }
+}
+
+// Event listener for "Add to Cart" buttons
+document.addEventListener("click", (e) => {
+    const addToCartButton = e.target.closest(".add-to-cart");
+    if (addToCartButton) {
+        const productElement = addToCartButton.closest(".product-item");
+        if (!productElement) {
+            console.error("Product element not found for the clicked button.");
+            alert("An error occurred. Please try again.");
+            return;
+        }
+
+        const productId = productElement.dataset.id;
+        const quantityInput = productElement.querySelector(".quantity input");
+        const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+
+        if (productId && quantity > 0) {
+            addToCart(productId, quantity);
+        } else {
+            alert("Invalid product or quantity.");
         }
     }
-
-    // Event listener for "Add to Cart" buttons
-    document.addEventListener("click", (e) => {
-        const addToCartButton = e.target.closest(".add-to-cart");
-        if (addToCartButton) {
-            const productElement = addToCartButton.closest(".product-item");
-            if (!productElement) {
-                console.error("Product element not found for the clicked button.");
-                alert("An error occurred. Please try again.");
-                return;
-            }
-
-            const productId = productElement.dataset.id;
-            const quantityInput = productElement.querySelector(".quantity input");
-            const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
-
-            if (productId && quantity > 0) {
-                addToCart(productId, quantity);
-            } else {
-                alert("Invalid product or quantity.");
-            }
-        }
-    });
+});
     </script>
     </body>
 </html>

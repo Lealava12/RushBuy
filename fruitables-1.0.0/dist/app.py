@@ -63,7 +63,7 @@ def get_connection():
         return None
 
 # UPLOAD_FOLDER = "/var/www/html/BLINKIT/fruitables-1.0.0/dist/static/uploads"  # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads      
-UPLOAD_FOLDER = "C:\Users\user\BLINKIT\fruitables-1.0.0\dist\static\uploads"
+UPLOAD_FOLDER = "C:/Users/user/BLINKIT/fruitables-1.0.0/dist/static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -834,9 +834,7 @@ def get_uploaded_images():
                 pg.product_id, 
                 p.name, 
                 pg.image_url, 
-                pg.alt_text, 
-                pg.image_type, 
-                pg.created_at FROM product_gallery pg 
+                pg.alt_text FROM product_gallery pg 
                 JOIN Products p ON pg.product_id = p.product_id 
                 WHERE pg.product_id = %s
         """, (product_id,))
@@ -847,6 +845,35 @@ def get_uploaded_images():
     except Error as e:
         return jsonify({"error": str(e)}), 500
 
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            pass
+
+
+@app.route('/images', methods=['GET'])
+def get_images():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT 
+                pg.gallery_id, 
+                pg.product_id, 
+                p.name, 
+                pg.image_url, 
+                pg.alt_text, 
+                pg.image_type, 
+                pg.created_at 
+            FROM product_gallery pg 
+            JOIN Products p ON pg.product_id = p.product_id;
+        """)
+        images = cursor.fetchall()
+        return jsonify(images), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
     finally:
         try:
             cursor.close()
@@ -1059,18 +1086,101 @@ def get_uploaded_images():
 #             conn.close()
 
 #add to cart
+# @app.route('/add-to-cart', methods=['POST'])
+# def add_to_cart():
+#     """
+#     Adds a product to the user's cart. Updates quantity if already present.
+#     Removes the item if quantity is reduced to zero.
+#     """
+#     try:
+#         # Check if the user is logged in
+#         if not session.get('logged_in'):
+#             return jsonify({"error": "You must be logged in to add items to the cart."}), 403
+
+#         user_id = session.get('user_id')  # Get the logged-in user's ID
+#         data = request.json  # Parse JSON data from the request
+#         product_id = data.get('product_id')  # Get the product ID
+#         quantity = data.get('quantity', 1)  # Default quantity is 1
+
+#         # Validate product ID and quantity
+#         if not product_id or quantity < 0:
+#             return jsonify({"error": "Valid product ID and non-negative quantity are required."}), 400
+
+#         # Establish database connection
+#         conn = get_connection()
+#         if not conn:
+#             return jsonify({"error": "Database connection error"}), 500
+        
+#         cursor = conn.cursor(dictionary=True)
+
+#         # Ensure the product exists in the Products table
+#         cursor.execute("SELECT stock_quantity FROM Products WHERE product_id = %s", (product_id,))
+#         product = cursor.fetchone()
+#         if not product:
+#             return jsonify({"error": "Product not found"}), 404
+
+#         # Check if the requested quantity exceeds the available stock
+#         if quantity > product['stock_quantity']:
+#             return jsonify({"error": "Requested quantity exceeds available stock"}), 400
+
+#         # Ensure the user has a cart
+#         cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
+#         cart = cursor.fetchone()
+
+#         if not cart:
+#             # Create a new cart for the user if it doesn't exist
+#             cursor.execute("INSERT INTO Carts (user_id) VALUES (%s)", (user_id,))
+#             conn.commit()
+#             cart_id = cursor.lastrowid
+#         else:
+#             cart_id = cart['cart_id']
+
+#         # Check if the product already exists in the cart
+#         cursor.execute("SELECT quantity FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
+#         cart_item = cursor.fetchone()
+
+#         if cart_item:
+#             # Update the quantity if the product is already in the cart
+#             new_quantity = cart_item['quantity'] + quantity
+
+#             if new_quantity <= 0:
+#                 # Remove the product from the cart if the quantity is zero or less
+#                 cursor.execute("DELETE FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
+#             else:
+#                 # Update the quantity in the cart
+#                 cursor.execute("UPDATE CartItems SET quantity = %s WHERE cart_id = %s AND product_id = %s",
+#                                (new_quantity, cart_id, product_id))
+#         else:
+#             # Add the product to the cart if it doesn't already exist
+#             if quantity > 0:
+#                 cursor.execute("INSERT INTO CartItems (cart_id, product_id, quantity) VALUES (%s, %s, %s)",
+#                                (cart_id, product_id, quantity))
+
+#         # Commit the changes to the database
+#         conn.commit()
+#         return jsonify({"message": "Cart updated successfully"}), 200
+
+#     except mysql.connector.Error as db_err:
+#         # Handle database errors
+#         return jsonify({"error": f"Database error: {db_err}"}), 500
+#     except Exception as e:
+#         # Handle other errors
+#         return jsonify({"error": f"Internal error: {e}"}), 500
+#     finally:
+#         # Close the database connection
+#         try:
+#             cursor.close()
+#             conn.close()
+#         except Exception:
+#             pass
+
 @app.route('/add-to-cart', methods=['POST'])
 def add_to_cart():
     """
-    Adds a product to the user's cart. Updates quantity if already present.
-    Removes the item if quantity is reduced to zero.
+    Adds a product to the cart. Supports both logged-in and guest users.
+    Updates quantity if already present. Removes the item if quantity is reduced to zero.
     """
     try:
-        # Check if the user is logged in
-        if not session.get('logged_in'):
-            return jsonify({"error": "You must be logged in to add items to the cart."}), 403
-
-        user_id = session.get('user_id')  # Get the logged-in user's ID
         data = request.json  # Parse JSON data from the request
         product_id = data.get('product_id')  # Get the product ID
         quantity = data.get('quantity', 1)  # Default quantity is 1
@@ -1083,7 +1193,7 @@ def add_to_cart():
         conn = get_connection()
         if not conn:
             return jsonify({"error": "Database connection error"}), 500
-        
+
         cursor = conn.cursor(dictionary=True)
 
         # Ensure the product exists in the Products table
@@ -1096,42 +1206,66 @@ def add_to_cart():
         if quantity > product['stock_quantity']:
             return jsonify({"error": "Requested quantity exceeds available stock"}), 400
 
-        # Ensure the user has a cart
-        cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
-        cart = cursor.fetchone()
+        # Check if the user is logged in
+        if session.get('logged_in'):
+            user_id = session.get('user_id')  # Get the logged-in user's ID
 
-        if not cart:
-            # Create a new cart for the user if it doesn't exist
-            cursor.execute("INSERT INTO Carts (user_id) VALUES (%s)", (user_id,))
-            conn.commit()
-            cart_id = cursor.lastrowid
-        else:
-            cart_id = cart['cart_id']
+            # Ensure the user has a cart
+            cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
+            cart = cursor.fetchone()
 
-        # Check if the product already exists in the cart
-        cursor.execute("SELECT quantity FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
-        cart_item = cursor.fetchone()
-
-        if cart_item:
-            # Update the quantity if the product is already in the cart
-            new_quantity = cart_item['quantity'] + quantity
-
-            if new_quantity <= 0:
-                # Remove the product from the cart if the quantity is zero or less
-                cursor.execute("DELETE FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
+            if not cart:
+                # Create a new cart for the user if it doesn't exist
+                cursor.execute("INSERT INTO Carts (user_id) VALUES (%s)", (user_id,))
+                conn.commit()
+                cart_id = cursor.lastrowid
             else:
-                # Update the quantity in the cart
-                cursor.execute("UPDATE CartItems SET quantity = %s WHERE cart_id = %s AND product_id = %s",
-                               (new_quantity, cart_id, product_id))
-        else:
-            # Add the product to the cart if it doesn't already exist
-            if quantity > 0:
-                cursor.execute("INSERT INTO CartItems (cart_id, product_id, quantity) VALUES (%s, %s, %s)",
-                               (cart_id, product_id, quantity))
+                cart_id = cart['cart_id']
 
-        # Commit the changes to the database
-        conn.commit()
-        return jsonify({"message": "Cart updated successfully"}), 200
+            # Check if the product already exists in the cart
+            cursor.execute("SELECT quantity FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
+            cart_item = cursor.fetchone()
+
+            if cart_item:
+                # Update the quantity if the product is already in the cart
+                new_quantity = cart_item['quantity'] + quantity
+
+                if new_quantity <= 0:
+                    # Remove the product from the cart if the quantity is zero or less
+                    cursor.execute("DELETE FROM CartItems WHERE cart_id = %s AND product_id = %s", (cart_id, product_id))
+                else:
+                    # Update the quantity in the cart
+                    cursor.execute("UPDATE CartItems SET quantity = %s WHERE cart_id = %s AND product_id = %s",
+                                   (new_quantity, cart_id, product_id))
+            else:
+                # Add the product to the cart if it doesn't already exist
+                if quantity > 0:
+                    cursor.execute("INSERT INTO CartItems (cart_id, product_id, quantity) VALUES (%s, %s, %s)",
+                                   (cart_id, product_id, quantity))
+
+            # Commit the changes to the database
+            conn.commit()
+            return jsonify({"message": "Cart updated successfully"}), 200
+
+        else:
+            # Guest user: Store cart data in the session
+            cart = session.get('cart', [])
+            existing_product = next((item for item in cart if item['product_id'] == product_id), None)
+
+            if existing_product:
+                # Update the quantity if the product is already in the cart
+                existing_product['quantity'] += quantity
+                if existing_product['quantity'] <= 0:
+                    # Remove the product if the quantity is zero or less
+                    cart = [item for item in cart if item['product_id'] != product_id]
+            else:
+                # Add the product to the cart if it doesn't already exist
+                if quantity > 0:
+                    cart.append({"product_id": product_id, "quantity": quantity})
+
+            # Update the session with the modified cart
+            session['cart'] = cart
+            return jsonify({"message": "Cart updated successfully (guest user)"}), 200
 
     except mysql.connector.Error as db_err:
         # Handle database errors
@@ -1146,6 +1280,52 @@ def add_to_cart():
             conn.close()
         except Exception:
             pass
+
+# @app.route('/get-cart', methods=['GET'])
+# def get_cart():
+#     """
+#     Fetches the cart items for the logged-in user or guest user.
+#     """
+#     try:
+#         if session.get('logged_in'):
+#             user_id = session.get('user_id')
+#             conn = get_connection()
+#             cursor = conn.cursor(dictionary=True)
+
+#             cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
+#             cart = cursor.fetchone()
+
+#             if not cart:
+#                 return jsonify({"cartItems": []}), 200
+
+#             cart_id = cart['cart_id']
+
+#             # Fetch cart items with product details
+#             cursor.execute("""
+#                 SELECT ci.product_id, p.name, p.price, ci.quantity, pi.image_url
+#                 FROM CartItems ci
+#                 JOIN Products p ON ci.product_id = p.product_id
+#                 LEFT JOIN ProductImages pi ON p.product_id = pi.product_id AND pi.is_primary = TRUE
+#                 WHERE ci.cart_id = %s
+#             """, (cart_id,))
+
+#             cart_items = cursor.fetchall()
+
+#             for item in cart_items:
+#                 if item['image_url']:
+#                     item['image_url'] = f"http://127.0.0.1:1000/static/uploads/{item['image_url']}"
+
+#             return jsonify({"cartItems": cart_items}), 200
+
+#         else:
+#             # Guest user: Fetch cart from session
+#             cart = session.get('cart', [])
+#             return jsonify({"cartItems": cart}), 200
+
+#     except mysql.connector.Error as db_err:
+#         return jsonify({"error": f"Database error: {db_err}"}), 500
+#     except Exception as e:
+#         return jsonify({"error": f"Internal error: {e}"}), 500   
 
 #  Get Cart Route (Unchanged)
 @app.route('/get-cart', methods=['GET'])
