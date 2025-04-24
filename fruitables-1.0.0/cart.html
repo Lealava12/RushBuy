@@ -141,9 +141,9 @@
                                     class="fas fa-search text-primary"></i></button> -->
                             <a href="cart.html" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span
+                                <!-- <span
                                     class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span> -->
                             </a>
                             <div class="d-flex m-3 me-0">
                                 <!-- Login button triggers modal -->
@@ -348,8 +348,8 @@
 
         <!-- Cart Page Start -->
         <div class="cart-container">
-            <h2>Your Cart</h2>
-            <div id="cart-items-container" class="mt-4">
+            <h2 class="mb-4">Shopping Cart</h2>
+            <div id="cart-items-container">
                 <!-- Cart items will be dynamically loaded here -->
             </div>
             <button id="checkout-button" class="btn btn-success btn-lg" onclick="proceedToCheckout()">
@@ -399,13 +399,13 @@
     <script src ="js/include.js"></script> 
     <script src="js/checkout.js"></script> 
     <script>
-        //const API_BASE_URL = 'http://127.0.0.1:1000'; // Ensure this matches your backend API URL
+//const API_URL = "https://your-api-url.com"; // Replace with your actual API URL
 
-        document.addEventListener("DOMContentLoaded", function () {
-    fetchCartItems();
+document.addEventListener("DOMContentLoaded", function () {
+    checkUserLoginStatus();
 });
 
-// Function to check user login status before fetching cart items
+// Check login status and display appropriate cart
 function checkUserLoginStatus() {
     fetch(`${API_URL}/user/status`, {
         method: "GET",
@@ -414,51 +414,74 @@ function checkUserLoginStatus() {
     })
     .then(response => response.json())
     .then(data => {
-        if (!data.username) {
-            alert("Please log in to view your cart.");
-            sessionStorage.setItem("redirectAfterLogin");
-            // window.location.href = "Login.html";
+        if (data.username) {
+            // User is logged in, sync local cart to server if needed
+            syncLocalCartToServer();
         } else {
-            fetchCartItems(); // Fetch cart items if user is logged in
+            // User is not logged in, show local cart
+            displayLocalCartItems();
         }
     })
     .catch(error => {
-        console.error("Error checking user login status:", error);
+        console.error("Login check error:", error);
+        displayLocalCartItems(); // fallback to local cart
     });
 }
 
-// Function to fetch cart items from the backend
-function fetchCartItems() {
+// Sync localStorage cart to server after login
+async function syncLocalCartToServer() {
+    const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (localCart.length === 0) {
+        fetchServerCartItems();
+        return;
+    }
+    try {
+        for (let item of localCart) {
+            await fetch(`${API_URL}/add-to-cart`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ product_id: item.product_id, quantity: item.quantity })
+            });
+        }
+        localStorage.removeItem("cart"); // Clear local cart after sync
+        fetchServerCartItems();
+    } catch (err) {
+        console.error("Cart sync error:", err);
+        alert("Could not sync your cart. Showing temporary items.");
+        displayLocalCartItems();
+    }
+}
+
+// Fetch cart items from server if logged in
+function fetchServerCartItems() {
     fetch(`${API_URL}/get-cart`, {
         method: "GET",
-        credentials: "include", // Ensures session data is sent with the request
-        headers: {
-            "Content-Type": "application/json"
-        }
+        credentials: "include",
+        headers: { "Content-Type": "application/json" }
     })
     .then(response => response.json())
     .then(data => {
         if (data.error) {
             document.getElementById("cart-items-container").innerHTML = `<p class="text-danger">${data.error}</p>`;
         } else {
-            renderCartItems(data.cartItems);
+            renderServerCartItems(data.cartItems);
         }
     })
     .catch(error => {
-        console.error("Error fetching cart items:", error);
+        console.error("Fetch server cart error:", error);
     });
 }
 
-// Function to render cart items dynamically
-function renderCartItems(cartItems) {
+// Render server-side cart items
+function renderServerCartItems(cartItems) {
     const cartContainer = document.getElementById("cart-items-container");
     const checkoutButton = document.getElementById("checkout-button");
     cartContainer.innerHTML = "";
 
-    if (cartItems.length === 0) {
+    if (!cartItems || cartItems.length === 0) {
         cartContainer.innerHTML = "<p class='text-center text-muted'>Your cart is empty.</p>";
-        checkoutButton.disabled = true;
-        document.getElementById("cart-total-amount").textContent = "0.00";
+        if (checkoutButton) checkoutButton.disabled = true;
         return;
     }
 
@@ -469,101 +492,164 @@ function renderCartItems(cartItems) {
 
         const cartItemHTML = `
             <div class="cart-item d-flex align-items-center border-bottom py-3" data-id="${item.product_id}">
-                <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}" class="cart-item-image me-3">
+                <img src="${item.image_url || 'default.jpg'}" class="cart-item-image me-3" alt="${item.name}">
                 <div class="cart-item-details flex-grow-1">
                     <h5>${item.name}</h5>
                     <p>Price: ₹${item.price}</p>
                     <p>Subtotal: ₹${itemTotal}</p>
                     <div class="d-flex align-items-center quantity">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('${item.product_id}', -1)">-</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateServerCartItem('${item.product_id}', -1)">-</button>
                         <span class="mx-2">${item.quantity}</span>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="updateCartItem('${item.product_id}', 1)">+</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateServerCartItem('${item.product_id}', 1)">+</button>
                     </div>
                 </div>
-                <button class="btn btn-sm btn-danger ms-3" onclick="removeCartItem('${item.product_id}')">Remove</button>
+                <button class="btn btn-sm btn-danger ms-3" onclick="removeServerCartItem('${item.product_id}')">Remove</button>
             </div>
         `;
         cartContainer.innerHTML += cartItemHTML;
     });
 
-    document.getElementById("cart-total-amount").textContent = total.toFixed(2);
-    checkoutButton.disabled = false;
+    if (document.getElementById("cart-total-amount")) {
+        document.getElementById("cart-total-amount").textContent = total.toFixed(2);
+    }
+    if (checkoutButton) checkoutButton.disabled = false;
 }
 
-// Function to add/update items in the cart
-function updateCartItem(productId, change) {
-    const cartItemElement = document.querySelector(`[data-id="${productId}"]`);
-    const quantityElement = cartItemElement.querySelector(".quantity span");
-    const currentQuantity = parseInt(quantityElement.textContent, 10);
-    const newQuantity = currentQuantity + change;
-
-    // Ensure the quantity does not go below 1
-    if (newQuantity < 1) {
-        alert("Quantity cannot be less than 1. If you want to remove the product, use the 'Remove' button.");
-        return;
-    }
-
-    // Update the quantity in the backend
+// Update server cart item quantity
+function updateServerCartItem(productId, change) {
     fetch(`${API_URL}/update-cart`, {
         method: "POST",
         credentials: "include",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ product_id: productId, quantity: newQuantity }) // Send updated quantity
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product_id: productId, quantity_change: change })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert(data.error);
-        } else {
-            // Update the quantity in the UI
-            quantityElement.textContent = newQuantity;
-
-            // Update the subtotal for the product
-            const priceElement = cartItemElement.querySelector("p:nth-child(3)"); // Subtotal element
-            const pricePerUnit = parseFloat(cartItemElement.querySelector("p:nth-child(2)").textContent.replace("Price: ₹", ""));
-            const newSubtotal = (pricePerUnit * newQuantity).toFixed(2);
-            priceElement.textContent = `Subtotal: ₹${newSubtotal}`;
-
-            // Refresh the total amount
-            fetchCartItems(); // Optionally refresh the cart to update the total
-        }
-    })
+    .then(() => fetchServerCartItems())
     .catch(error => {
-        console.error("Error updating cart:", error);
-        alert("Failed to update cart. Please try again.");
+        console.error("Error updating item:", error);
     });
 }
 
-// Function to remove an item from the cart
-async function removeCartItem(productId) {
-    try {
-        const response = await fetch(`${API_URL}/remove-from-cart`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ product_id: productId })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || "Failed to remove item.");
-        }
-
-        alert(data.message || "Product removed from cart.");
-        fetchCartItems(); // Refresh cart after successful removal
-
-    } catch (error) {
+// Remove item from server cart
+function removeServerCartItem(productId) {
+    fetch(`${API_URL}/remove-from-cart`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product_id: productId })
+    })
+    .then(() => fetchServerCartItems())
+    .catch(error => {
         console.error("Error removing item:", error);
-        alert(error.message || "Failed to remove item. Please try again.");
+    });
+}
+
+// Display guest cart from localStorage
+function displayLocalCartItems() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartContainer = document.querySelector('#cart-items-container');
+    const checkoutButton = document.getElementById("checkout-button");
+
+    if (cart.length === 0) {
+        cartContainer.innerHTML = '<p class="text-center">Your cart is empty.</p>';
+        if (checkoutButton) checkoutButton.disabled = true;
+        return;
+    }
+
+    let totalAmount = 0;
+    let cartHTML = `<div class="table-responsive"><table class="table table-bordered">
+        <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th><th>Action</th></tr></thead><tbody>`;
+
+    cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        totalAmount += subtotal;
+
+        cartHTML += `
+            <tr>
+                <td><div class="d-flex align-items-center"><img src="${item.image}" style="width: 50px; height: 50px;" class="me-2"><span>${item.name}</span></div></td>
+                <td>₹${item.price}</td>
+                <td>
+                    <div class="input-group quantity">
+                        <button class="btn btn-sm btn-minus" onclick="updateLocalCartItem(${index}, -1)"><i class="fa fa-minus"></i></button>
+                        <input type="text" class="form-control text-center" value="${item.quantity}" readonly>
+                        <button class="btn btn-sm btn-plus" onclick="updateLocalCartItem(${index}, 1)"><i class="fa fa-plus"></i></button>
+                    </div>
+                </td>
+                <td>₹${subtotal}</td>
+                <td><button class="btn btn-danger btn-sm" onclick="removeLocalCartItem(${index})"><i class="fa fa-trash"></i></button></td>
+            </tr>`;
+    });
+
+    cartHTML += `</tbody></table></div><div class="d-flex justify-content-end">
+        <div class="card" style="width: 300px;">
+            <div class="card-body">
+                <h5 class="card-title">Cart Total</h5>
+                <p class="card-text">Total Amount: ₹${totalAmount}</p>
+                <button class="btn btn-primary w-100" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>`;
+
+    cartContainer.innerHTML = cartHTML;
+    if (checkoutButton) checkoutButton.disabled = false;
+}
+
+// Update local cart item quantity
+function updateLocalCartItem(index, change) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart[index]) {
+        const newQty = cart[index].quantity + change;
+        if (newQty > 0) {
+            cart[index].quantity = newQty;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayLocalCartItems();
+        }
     }
 }
 
-    </script>
+// Remove item from local cart
+function removeLocalCartItem(index) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayLocalCartItems();
+}
+
+// Proceed to checkout
+function proceedToCheckout() {
+    fetch(`${API_URL}/user/status`, {
+        method: "GET",
+        credentials: "include"
+    })
+    .then(response => response.json())
+    .then(async data => {
+        if (data.username) {
+            // Logged in: fetch server cart and save to sessionStorage
+            const cartRes = await fetch(`${API_URL}/get-cart`, {
+                method: "GET",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" }
+            });
+            const cartData = await cartRes.json();
+            if (cartData.cartItems && cartData.cartItems.length > 0) {
+                sessionStorage.setItem("checkoutItems", JSON.stringify(cartData.cartItems));
+                window.location.href = 'chackout.html';
+            } else {
+                alert("Your cart is empty.");
+            }
+        }  else {
+            alert("Please log in to continue to checkout.");
+            // window.location.href = 'Login.html';
+        }
+    });
+}
+
+// Optional: update cart count badge
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const badge = document.querySelector("#cart-count");
+    if (badge) badge.textContent = cart.length;
+}
+</script>
     </body>
 
 </html>

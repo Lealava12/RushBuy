@@ -120,9 +120,9 @@
                                     class="fas fa-search text-primary"></i></button> -->
                             <a href="cart.html" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span
+                                <!-- <span
                                     class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span> -->
                             </a>
                             <div class="d-flex m-3 me-0">
                                 <!-- Login button triggers modal -->
@@ -855,78 +855,76 @@
             });
         }
 
-       // Add to Cart Function
-async function addToCart(productId, quantity = 1) {
-    try {
-        // Check if the user is logged in
-        const response = await fetch(`${API_URL}/user/status`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include"
+        // Main event listener for "Add to Cart"
+        document.addEventListener("click", async (e) => {
+            const addToCartButton = e.target.closest(".add-to-cart");
+            if (!addToCartButton) return;
+
+            const productElement = addToCartButton.closest(".product-item");
+            if (!productElement) {
+                console.error("Product element not found.");
+                alert("An error occurred. Please try again.");
+                return;
+            }
+
+            const productId = productElement.dataset.id;
+            const quantityInput = productElement.querySelector(".quantity input");
+            const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+
+            if (!productId || quantity <= 0) {
+                alert("Invalid product or quantity.");
+                return;
+            }
+
+            try {
+                const loginStatus = await fetch(`${API_URL}/user/status`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include"
+                });
+
+                const statusData = await loginStatus.json();
+                const isLoggedIn = loginStatus.ok && statusData.username;
+
+                if (isLoggedIn) {
+                    // Logged in: Add to server-side cart
+                    const response = await fetch(`${API_URL}/add-to-cart`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ product_id: productId, quantity })
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message || "Product added to cart!");
+                        window.location.href = "cart.html";
+                    } else {
+                        alert(result.error || "Failed to add product.");
+                    }
+                } else {
+                    // Not logged in: Add to localStorage
+                    const name = productElement.dataset.name || productElement.querySelector("h4")?.textContent.trim() || "Unknown";
+                    const price = parseFloat(productElement.dataset.price || productElement.querySelector(".product-price")?.dataset.basePrice || 0);
+                    const image = productElement.dataset.image || productElement.querySelector("img")?.src || "img/default.jpg";
+
+                    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                    const index = cart.findIndex(item => item.product_id === productId);
+
+                    if (index !== -1) {
+                        cart[index].quantity += quantity;
+                    } else {
+                        cart.push({ product_id: productId, name, price, image, quantity });
+                    }
+
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    alert("Product added to cart!");
+                }
+            } catch (error) {
+                console.error("Add to cart error:", error);
+                alert("An error occurred. Please try again.");
+            }
         });
-
-        const data = await response.json();
-
-        if (response.ok && data.username) {
-            // User is logged in, proceed to add the product to the server-side cart
-            const cartResponse = await fetch(`${API_URL}/add-to-cart`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ product_id: productId, quantity })
-            });
-
-            const cartResult = await cartResponse.json();
-            if (cartResponse.ok) {
-                alert(cartResult.message || "Product added to cart!");
-                window.location.href = "cart.html"; // Redirect to cart page
-            } else {
-                alert(cartResult.error || "Failed to add product to cart. Please try again.");
-            }
-        } else {
-            // User is not logged in, store the cart data locally
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
-            const existingProductIndex = cart.findIndex(item => item.product_id === productId);
-
-            if (existingProductIndex > -1) {
-                // If the product already exists in the cart, update the quantity
-                cart[existingProductIndex].quantity += quantity;
-            } else {
-                // Add the new product to the cart
-                cart.push({ product_id: productId, quantity });
-            }
-
-            localStorage.setItem("cart", JSON.stringify(cart));
-            alert("Product added to cart! You can view your cart later.");
-        }
-    } catch (error) {
-        console.error("Error adding product to cart:", error);
-        alert("An error occurred while adding the product to the cart. Please try again.");
-    }
-}
-
-// Event listener for "Add to Cart" buttons
-document.addEventListener("click", (e) => {
-    const addToCartButton = e.target.closest(".add-to-cart");
-    if (addToCartButton) {
-        const productElement = addToCartButton.closest(".product-item");
-        if (!productElement) {
-            console.error("Product element not found for the clicked button.");
-            alert("An error occurred. Please try again.");
-            return;
-        }
-
-        const productId = productElement.dataset.id;
-        const quantityInput = productElement.querySelector(".quantity input");
-        const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
-
-        if (productId && quantity > 0) {
-            addToCart(productId, quantity);
-        } else {
-            alert("Invalid product or quantity.");
-        }
-    }
-});
     </script>
     </body>
 </html>

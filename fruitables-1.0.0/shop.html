@@ -80,9 +80,9 @@
                                     class="fas fa-search text-primary"></i></button> -->
                             <a href="cart.html" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span
+                                <!-- <span
                                     class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span> -->
                             </a>
                             <div class="d-flex m-3 me-0">
                                 <!-- Login button triggers modal -->
@@ -386,14 +386,42 @@
                 <div class="row g-4">
                     <div class="col-lg-12">
                         <div class="row g-4">
-                            <div class="col-xl-3">
+                            <!-- <div class="col-xl-3">
                                 <div class="input-group w-100 mx-auto d-flex">
                                     <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
                                     <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                                 </div>
+                            </div> -->
+                            <div class="col-xl-3">
+                                <div class="bg-light ps-3 py-3 rounded mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <label for="categoryFilter">Category:</label>
+                                        <select id="categoryFilter" class="border-0 form-select-sm bg-light me-3">
+                                            <option value="">All Categories</option>
+                                            <!-- Categories will be populated dynamically -->
+                                        </select>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <label for="subcategoryFilter">Subcategory:</label>
+                                        <select id="subcategoryFilter" class="border-0 form-select-sm bg-light me-3" disabled>
+                                            <option value="">Select Category First</option>
+                                            <!-- Subcategories will be populated based on selected category -->
+                                        </select>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label for="sortFilter">Sort By:</label>
+                                        <select id="sortFilter" class="border-0 form-select-sm bg-light me-3">
+                                            <option value="default">Default</option>
+                                            <option value="price_asc">Price: Low to High</option>
+                                            <option value="price_desc">Price: High to Low</option>
+                                            <option value="name_asc">Name: A to Z</option>
+                                            <option value="name_desc">Name: Z to A</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-6"></div>
-                            <div class="col-xl-3">
+                            <!-- <div class="col-xl-3">
                                 <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                                     <label for="fruits">Default Sorting:</label>
                                     <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
@@ -403,25 +431,25 @@
                                         <option value="audi">Fantastic</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row g-4">
                             <div class="col-lg-3">
                                 <div class="row g-4">
                                     <div class="col-lg-12">
-                                        <div class="mb-3">
+                                        <!-- <div class="mb-3">
                                             <h4>Categories</h4>
                                             <ul class="list-unstyled fruite-categorie">
                                             </ul>
-                                        </div>
+                                        </div> -->
                                     </div>
-                                    <div class="col-lg-12">
+                                    <!-- <div class="col-lg-12">
                                         <div class="mb-3">
                                             <h4 class="mb-2">Price</h4>
                                             <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500" value="0" oninput="amount.value=rangeInput.value">
                                             <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0</output>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-lg-12">
                                         <div class="mb-3">
                                             <h4>Additional</h4>
@@ -494,9 +522,12 @@
         document.addEventListener("DOMContentLoaded", () => {
             fetchCategories();
             fetchAllProducts();
+            handleQuantityButtons();
             handleSearch();
             handleSorting();
-            handleQuantityButtons();
+
+            document.getElementById('subcategoryFilter').addEventListener('change', filterProducts);
+            document.getElementById('sortFilter').addEventListener('change', filterProducts);
         });
 
         // Fetch and display categories
@@ -506,25 +537,82 @@
                 if (!response.ok) throw new Error("Failed to fetch categories");
 
                 const data = await response.json();
-                const categoryList = document.querySelector(".fruite-categorie");
-                categoryList.innerHTML = ""; // Clear previous categories
+                const categorySelect = document.getElementById('categoryFilter');
+                categorySelect.innerHTML = '<option value="">All Categories</option>';
 
                 data.categories.forEach((category) => {
-                    const categoryItem = document.createElement("li");
-                    categoryItem.innerHTML = `<a href="#" data-category-id="${category.category_id}" class="category-link">${category.name}</a>`;
-                    categoryList.appendChild(categoryItem);
+                    categorySelect.innerHTML += `
+                        <option value="${category.category_id}">${category.name}</option>
+                    `;
                 });
 
-                // Add event listeners for category filtering
-                document.querySelectorAll(".category-link").forEach((link) => {
-                    link.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        const categoryId = e.target.getAttribute("data-category-id");
-                        fetchProductsByCategory(categoryId);
-                    });
+                // Add event listener for category change
+                categorySelect.addEventListener('change', async (e) => {
+                    const categoryId = e.target.value;
+                    await updateSubcategories(categoryId);
+                    filterProducts();
                 });
             } catch (error) {
                 console.error("Error fetching categories:", error);
+            }
+        }
+
+        // Function to fetch and update subcategories
+        async function updateSubcategories(categoryId) {
+            const subcategorySelect = document.getElementById('subcategoryFilter');
+            subcategorySelect.innerHTML = '<option value="">All Subcategories</option>';
+            
+            if (!categoryId) {
+                subcategorySelect.disabled = true;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-subcategories/${categoryId}`);
+                if (!response.ok) throw new Error("Failed to fetch subcategories");
+
+                const data = await response.json();
+                subcategorySelect.disabled = false;
+
+                data.subcategories.forEach((subcategory) => {
+                    subcategorySelect.innerHTML += `
+                        <option value="${subcategory.subcategory_id}">${subcategory.name}</option>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching subcategories:", error);
+            }
+        }
+
+        // Function to filter and sort products
+        async function filterProducts() {
+            const categoryId = document.getElementById('categoryFilter').value;
+            const subcategoryId = document.getElementById('subcategoryFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+
+            try {
+                let url = `${API_BASE_URL}/products?`;
+                if (categoryId) url += `category_id=${categoryId}&`;
+                if (subcategoryId) url += `subcategory_id=${subcategoryId}&`;
+                if (sortBy && sortBy !== 'default') url += `sort=${sortBy}`;
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Failed to fetch filtered products");
+
+                const data = await response.json();
+                const productContainer = document.querySelector(".row.g-4.justify-content-center");
+                productContainer.innerHTML = "";
+
+                if (data.products.length === 0) {
+                    productContainer.innerHTML = '<p class="text-center">No products found matching your criteria.</p>';
+                    return;
+                }
+
+                data.products.forEach((product) => {
+                    productContainer.innerHTML += renderProduct(product);
+                });
+            } catch (error) {
+                console.error("Error filtering products:", error);
             }
         }
 
@@ -545,43 +633,7 @@
 
                 // Render each product with a clickable link to Productdetails.html
                 data.products.forEach((product) => {
-                    productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
-                            <div class="rounded position-relative fruite-item">
-                                <a href="Productdetails.html?product_id=${product.product_id}" class="text-decoration-none text-dark">
-                                    <div class="fruite-img">
-                                        <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                                    </div>
-                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                        ${product.category_name}
-                                    </div>
-                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                        <h4>${product.name}</h4>
-                                        <p>${product.description || "No description available."}</p>
-                                        <p class="text-dark fs-5 fw-bold mb-0">₹${product.price}</p>
-                                    </div>
-                                </a>
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <div class="input-group quantity" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                        <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    productContainer.innerHTML += renderProduct(product);
                 });
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -604,41 +656,7 @@
                 }
 
                 data.products.forEach((product) => {
-                    productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
-                            <div class="rounded position-relative fruite-item">
-                                <div class="fruite-img">
-                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                                </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                    ${product.category_name}
-                                </div>
-                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                    <h4>${product.name}</h4>
-                                    <p>${product.description || "No description available."}</p>
-                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
-                                        <div class="input-group quantity mb-5" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    productContainer.innerHTML += renderProduct(product);
                 });
             } catch (error) {
                 console.error("Error fetching products by category:", error);
@@ -674,41 +692,7 @@
                 }
 
                 data.products.forEach((product) => {
-                    productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
-                            <div class="rounded position-relative fruite-item">
-                                <div class="fruite-img">
-                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                                </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                    ${product.category_name}
-                                </div>
-                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                    <h4>${product.name}</h4>
-                                    <p>${product.description || "No description available."}</p>
-                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
-                                        <div class="input-group quantity mb-5" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    productContainer.innerHTML += renderProduct(product);
                 });
             } catch (error) {
                 console.error("Error searching products:", error);
@@ -740,135 +724,187 @@
                 }
 
                 data.products.forEach((product) => {
-                    productContainer.innerHTML += `
-                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
-                            <div class="rounded position-relative fruite-item">
-                                <div class="fruite-img">
-                                    <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                                </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                    ${product.category_name}
-                                </div>
-                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                    <h4>${product.name}</h4>
-                                    <p>${product.description || "No description available."}</p>
-                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
-                                        <div class="input-group quantity mb-5" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    productContainer.innerHTML += renderProduct(product);
                 });
             } catch (error) {
                 console.error("Error fetching sorted products:", error);
             }
         }
 
-        // Handle quantity increment, decrement, and price calculation
+        // Quantity increment/decrement and price calculation
         function handleQuantityButtons() {
-            document.addEventListener("click", (e) => {
-                if (e.target.closest(".btn-minus")) {
-                    const input = e.target.closest(".quantity").querySelector("input");
-                    const priceElement = e.target.closest(".fruite-item").querySelector(".product-price");
-                    const basePrice = parseFloat(priceElement.dataset.basePrice);
-                    const currentValue = parseInt(input.value, 10);
-                    if (currentValue > 1) {
-                        input.value = currentValue - 1;
-                        priceElement.textContent = `₹${(basePrice * (currentValue - 1)).toFixed(2)}`;
-                    }
-                } else if (e.target.closest(".btn-plus")) {
-                    const input = e.target.closest(".quantity").querySelector("input");
-                    const priceElement = e.target.closest(".fruite-item").querySelector(".product-price");
-                    const basePrice = parseFloat(priceElement.dataset.basePrice);
-                    const currentValue = parseInt(input.value, 10);
-                    input.value = currentValue + 1;
-                    priceElement.textContent = `₹${(basePrice * (currentValue + 1)).toFixed(2)}`;
+            document.addEventListener('click', (e) => {
+                const button = e.target.closest('.btn-minus, .btn-plus');
+                if (!button) return;
+
+                const quantityContainer = button.closest('.quantity');
+                if (!quantityContainer) return;
+
+                const input = quantityContainer.querySelector('input');
+                const productItem = button.closest('.fruite-item');
+                const priceElement = productItem.querySelector('.product-price');
+                const basePrice = parseFloat(priceElement.dataset.basePrice);
+
+                let currentValue = parseInt(input.value);
+
+                if (button.classList.contains('btn-minus') && currentValue > 1) {
+                    currentValue--;
+                } else if (button.classList.contains('btn-plus')) {
+                    currentValue++;
                 }
+
+                input.value = currentValue;
+                const newTotal = (basePrice * currentValue).toFixed(2);
+                priceElement.textContent = `₹${newTotal}`;
             });
         }
 
-        // Add to Cart Function
-        async function addToCart(productId, quantity = 1) {
+        // Main event listener for "Add to Cart"
+        document.addEventListener("click", async (e) => {
+            const addToCartButton = e.target.closest(".add-to-cart");
+            if (!addToCartButton) return;
+
+            const productElement = addToCartButton.closest(".product-item");
+            if (!productElement) return;
+
+            const productId = productElement.dataset.id;
+            const quantityInput = productElement.querySelector(".quantity input");
+            const quantity = parseInt(quantityInput?.value || "1");
+            
             try {
-                // Check if the user is logged in
-                const response = await fetch(`${API_BASE_URL}/user/status`, {
+                const loginStatus = await fetch(`${API_BASE_URL}/user/status`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
-                    credentials: "include",
+                    credentials: "include"
                 });
 
-                const data = await response.json();
+                const statusData = await loginStatus.json();
+                const isLoggedIn = loginStatus.ok && statusData.username;
 
-                if (!response.ok || !data.username) {
-                    alert("Please log in to add products to the cart.");
-                    sessionStorage.setItem("redirectAfterLogin", "cart.html");
-                    return;
-                }
+                if (isLoggedIn) {
+                    // Logged in: Add to server cart
+                    const response = await fetch(`${API_BASE_URL}/add-to-cart`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ product_id: productId, quantity })
+                    });
 
-                // Proceed to add the product to the cart
-                const cartResponse = await fetch(`${API_BASE_URL}/add-to-cart`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify({ product_id: productId, quantity }),
-                });
-
-                const cartResult = await cartResponse.json();
-
-                if (cartResponse.ok) {
-                    alert(cartResult.message || "Product added to cart!");
-                    updateCartCount(); // Optionally update cart count in the UI
+                    if (response.ok) {
+                        alert("Product added to cart!");
+                        window.location.href = "cart.html";
+                    } else {
+                        throw new Error("Failed to add to cart");
+                    }
                 } else {
-                    console.error("Error adding to cart:", cartResult.error);
-                    alert(cartResult.error || "Failed to add product to cart. Please try again.");
+                    // Guest: Add to localStorage
+                    const name = productElement.querySelector("h4").textContent.trim();
+                    const priceElement = productElement.querySelector(".product-price");
+                    const basePrice = parseFloat(priceElement.dataset.basePrice);
+                    const image = productElement.querySelector("img").src;
+
+                    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                    const existingItem = cart.find(item => item.product_id === productId);
+
+                    if (existingItem) {
+                        existingItem.quantity += quantity;
+                    } else {
+                        cart.push({
+                            product_id: productId,
+                            name,
+                            price: basePrice,
+                            image,
+                            quantity
+                        });
+                    }
+
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    alert("Product added to cart!");
                 }
             } catch (error) {
-                console.error("Error adding product to cart:", error);
-                // alert("An error occurred while adding the product to the cart. Please try again.");
-            }
-        }
-
-        // Event listener for "Add to Cart" buttons
-        document.addEventListener("click", (e) => {
-            const addToCartButton = e.target.closest(".add-to-cart");
-            if (addToCartButton) {
-                const productElement = addToCartButton.closest(".product-item");
-                if (!productElement) {
-                    console.error("Product element not found for the clicked button.");
-                    alert("An error occurred. Please try again.");
-                    return;
-                }
-
-                const productId = productElement.dataset.id;
-                const quantityInput = productElement.querySelector(".quantity input");
-                const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
-
-                if (productId && quantity > 0) {
-                    addToCart(productId, quantity);
-                } else {
-                    alert("Invalid product or quantity.");
-                }
+                console.error("Add to cart error:", error);
+                alert("Error adding product to cart. Please try again.");
             }
         });
+
+        // Update the renderProduct function to make the product clickable
+        function renderProduct(product) {
+            return `
+                <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                    <div class="rounded position-relative fruite-item">
+                        <div class="fruite-img">
+                            <a href="productdetails.html?product_id=${product.product_id}" class="product-link">
+                                <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
+                            </a>
+                        </div>
+                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                            ${product.category_name}
+                        </div>
+                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                            <a href="productdetails.html?product_id=${product.product_id}" class="product-link text-decoration-none">
+                                <h4 class="text-primary">${product.name}</h4>
+                            </a>
+                            <p>${product.description || "No description available."}</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                <div class="quantity-controls d-flex align-items-center">
+                                    <div class="input-group quantity" style="width: 100px;">
+                                        <button class="btn btn-sm btn-minus"><i class="fa fa-minus"></i></button>
+                                        <input type="text" class="form-control text-center" value="1" readonly>
+                                        <button class="btn btn-sm btn-plus"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
+                                    <i class="fa fa-shopping-bag me-2"></i> Add to cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add event listener for product clicks (alternative method)
+        document.addEventListener('click', (e) => {
+            const productLink = e.target.closest('.product-link');
+            if (!productLink) return;
+
+            e.preventDefault();
+            const productItem = productLink.closest('.product-item');
+            if (!productItem) return;
+
+            const productId = productItem.dataset.id;
+            if (!productId) {
+                console.error("Product ID not found");
+                return;
+            }
+
+            window.location.href = `productdetails.html?product_id=${encodeURIComponent(productId)}`;
+        });
+
+        // Add this CSS to make product links look better
+        const style = document.createElement('style');
+        style.textContent = `
+            .product-link {
+                color: inherit;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .product-link:hover h4 {
+                color: #81C408 !important;
+            }
+            .fruite-img {
+                overflow: hidden;
+            }
+            .fruite-img img {
+                transition: transform 0.3s ease;
+            }
+            .fruite-img:hover img {
+                transform: scale(1.05);
+            }
+        `;
+        document.head.appendChild(style);
     </script>
     </body>
 
 </html>
-``` 

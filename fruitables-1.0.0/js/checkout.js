@@ -86,33 +86,36 @@ function loadCheckoutItems() {
 
 document.addEventListener("click", function (e) {
     if (e.target.classList.contains("remove-from-cart")) {
+        e.preventDefault(); // <-- Add this line!
         const productId = e.target.dataset.id;
 
-        console.log("Sending request to remove product:", productId); // Debug log
+        // Remove from sessionStorage (checkout)
+        let checkoutItems = JSON.parse(sessionStorage.getItem("checkoutItems")) || [];
+        checkoutItems = checkoutItems.filter(item => item.product_id != productId);
+        sessionStorage.setItem("checkoutItems", JSON.stringify(checkoutItems));
 
-        fetch(`${API_BASE_URL}/remove-from-cart`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({ product_id: productId })
+        // Remove from cart (localStorage for guest, server for logged-in)
+        fetch(`${API_BASE_URL}/user/status`, {
+            method: "GET",
+            credentials: "include"
         })
-        .then(response => {
-            console.log("Response status:", response.status); // Debug log
-            return response.json();
-        })
-        .then(data => {
-            if (response.ok) {
-                console.log(data.message || "Product removed from cart."); // Debug log
-                let cartItems = JSON.parse(sessionStorage.getItem("checkoutItems")) || [];
-                cartItems = cartItems.filter(item => item.product_id != productId);
-                sessionStorage.setItem("checkoutItems", JSON.stringify(cartItems));
-                loadCheckoutItems();
+        .then(response => response.json())
+        .then(async data => {
+            if (data.username) {
+                // Logged in: remove from server cart
+                await fetch(`${API_BASE_URL}/remove-from-cart`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ product_id: productId })
+                });
             } else {
-                console.error("Error removing product from cart:", data.error);
-                alert(data.error || "Failed to remove product from cart. Please try again.");
+                // Guest: remove from localStorage cart
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart = cart.filter(item => item.product_id != productId);
+                localStorage.setItem("cart", JSON.stringify(cart));
             }
+            loadCheckoutItems();
         })
         .catch(error => {
             console.error("Error removing product from cart:", error);
