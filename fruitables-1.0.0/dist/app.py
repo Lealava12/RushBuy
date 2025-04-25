@@ -63,7 +63,7 @@ def get_connection():
         return None
 
 # UPLOAD_FOLDER = "/var/www/html/BLINKIT/fruitables-1.0.0/dist/static/uploads"  # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads      
-UPLOAD_FOLDER = "C:/Users/anike/BLINKIT/fruitables-1.0.0/dist/static/uploads"
+UPLOAD_FOLDER = "C:/Users/user/BLINKIT/fruitables-1.0.0/dist/static/uploads" # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -1193,7 +1193,6 @@ def add_to_cart():
         conn = get_connection()
         if not conn:
             return jsonify({"error": "Database connection error"}), 500
-
         cursor = conn.cursor(dictionary=True)
 
         # Ensure the product exists in the Products table
@@ -1380,48 +1379,6 @@ def get_cart():
 
 
 #  Update Item Quantity Route (New)
-# @app.route('/update-cart', methods=['POST'])
-# def update_cart():
-#     try:
-#         # Check if the user is logged in
-#         if not session.get('logged_in'):
-#             return jsonify({"error": "You must be logged in to update the cart."}), 403
-
-#         user_id = session.get('user_id')
-#         data = request.json
-#         product_id = data.get('product_id')
-#         quantity = data.get('quantity')
-
-#         # Validate input
-#         if not product_id or quantity < 1:
-#             return jsonify({"error": "Invalid product ID or quantity."}), 400
-
-#         conn = get_connection()
-#         cursor = conn.cursor(dictionary=True)
-
-#         # Check if the product exists in the user's cart
-#         cursor.execute("SELECT * FROM CartItems WHERE product_id = %s AND cart_id = (SELECT cart_id FROM Carts WHERE user_id = %s)", (product_id, user_id))
-#         cart_item = cursor.fetchone()
-
-#         if not cart_item:
-#             return jsonify({"error": "Product not found in cart."}), 404
-
-#         # Update the quantity in the cart
-#         cursor.execute("UPDATE CartItems SET quantity = %s WHERE product_id = %s AND cart_id = (SELECT cart_id FROM Carts WHERE user_id = %s)", (quantity, product_id, user_id))
-#         conn.commit()
-
-#         return jsonify({"message": "Cart updated successfully."}), 200
-
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
-#     finally:
-#         try:
-#             cursor.close()
-#             conn.close()
-#         except:
-#             pass
-
-# Update Item Quantity Route (Improved)
 @app.route('/update-cart', methods=['POST'])
 def update_cart():
     try:
@@ -1432,46 +1389,30 @@ def update_cart():
         user_id = session.get('user_id')
         data = request.json
         product_id = data.get('product_id')
-        quantity_change = data.get('quantity_change')  # Can be positive or negative
+        quantity = data.get('quantity')
 
         # Validate input
-        if not product_id or quantity_change is None:
-            return jsonify({"error": "Invalid product ID or quantity change."}), 400
+        if not product_id or quantity < 1:
+            return jsonify({"error": "Invalid product ID or quantity."}), 400
 
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Get the user's cart
-        cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
-        cart = cursor.fetchone()
-
-        if not cart:
-            return jsonify({"error": "Cart not found for user."}), 404
-
-        cart_id = cart['cart_id']
-
-        # Check if the product is in the cart
-        cursor.execute("SELECT quantity FROM CartItems WHERE product_id = %s AND cart_id = %s", (product_id, cart_id))
+        # Check if the product exists in the user's cart
+        cursor.execute("SELECT * FROM CartItems WHERE product_id = %s AND cart_id = (SELECT cart_id FROM Carts WHERE user_id = %s)", (product_id, user_id))
         cart_item = cursor.fetchone()
 
         if not cart_item:
             return jsonify({"error": "Product not found in cart."}), 404
 
-        new_quantity = cart_item['quantity'] + quantity_change
-
-        if new_quantity <= 0:
-            # Remove item from cart if quantity becomes 0 or less
-            cursor.execute("DELETE FROM CartItems WHERE product_id = %s AND cart_id = %s", (product_id, cart_id))
-        else:
-            # Update with new quantity
-            cursor.execute("UPDATE CartItems SET quantity = %s WHERE product_id = %s AND cart_id = %s", 
-                           (new_quantity, product_id, cart_id))
-
+        # Update the quantity in the cart
+        cursor.execute("UPDATE CartItems SET quantity = %s WHERE product_id = %s AND cart_id = (SELECT cart_id FROM Carts WHERE user_id = %s)", (quantity, product_id, user_id))
         conn.commit()
+
         return jsonify({"message": "Cart updated successfully."}), 200
 
     except Exception as e:
-        return jsonify({"error": f"Server error: {e}"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         try:
             cursor.close()

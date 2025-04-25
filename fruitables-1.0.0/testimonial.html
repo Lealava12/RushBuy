@@ -82,7 +82,7 @@
                                 <i class="fa fa-shopping-bag fa-2x"></i>
                                 <!-- <span
                                     class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span> -->
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span> -->
                             </a>
                             <div class="d-flex m-3 me-0">
                                 <!-- Login button triggers modal -->
@@ -287,22 +287,131 @@
         <!-- Single Page Header End -->
         
 
-        <!-- Orders Section Start -->
-        <div class="c" id="orders-container">
-            <!-- Orders will be rendered here by JS -->
+        <!-- Tastimonial Start -->
+        <div class="c">
+            <h2>Order Details</h2>
+            <div id="order-summary-container">
+
+            </div>
         </div>
-        <!-- Orders Section End -->
 
+        <style>
+            body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fdf4;
+    margin: 0;
+    padding: 0;
+}
+
+.c {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    border: 2px solid #81c40833;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 30px;
+    border-left: 6px solid #81c408;
+    padding-left: 15px;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section h3 {
+    color: #81c408;
+    border-bottom: 2px solid #81c40855;
+    padding-bottom: 6px;
+    margin-bottom: 15px;
+}
+
+.section p {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #444;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f3fbe9;
+    border-left: 4px solid #81c408;
+    border-radius: 8px;
+}
+
+.order-item img {
+    width: 80px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.order-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    background-color: #81c408;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: #6cab06;
+}
+
+button:disabled {
+    background-color: #b1e77c;
+    cursor: not-allowed;
+}
+@media (max-width: 600px) {
+    .c {
+        padding: 20px;
+    }
+
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-item img {
+        margin-bottom: 10px;
+    }
+}
+
+        </style>
         <script>
-const API_URL = "http://127.0.0.1:1000"; // Use your actual API URL
-
+            //const API_URL = "http://your-api-url.com"; // Replace with actual API URL
+            
+            // Check login status and return username if logged in
 async function getUserId() {
     try {
         const response = await fetch(`${API_URL}/user/status`, {
             method: "GET",
             credentials: "include"
         });
+
         const data = await response.json();
+
         if (data.username) {
             sessionStorage.setItem("user_id", data.username);
             return data.username;
@@ -310,94 +419,230 @@ async function getUserId() {
             return null;
         }
     } catch (error) {
+        console.error("Error fetching user status:", error);
         return null;
     }
 }
 
-async function fetchOrderDetails() {
-    const container = document.getElementById("orders-container");
-    container.innerHTML = `<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>`;
+// Create frontend structure dynamically
+function createOrderUI() {
+    const container = document.getElementById("order-summary-container");
+    container.innerHTML = `
+        <div class="section" id="billing-details">
+            <h3>Billing Details</h3>
+            <p><strong>Name:</strong> <span id="billing-name"></span></p>
+            <p><strong>Address:</strong> <span id="billing-address"></span></p>
+            <p><strong>Email:</strong> <span id="billing-email"></span></p>
+            <p><strong>Phone:</strong> <span id="billing-phone"></span></p>
+        </div>
 
+        <div class="section" id="order-details">
+            <h3>Order Information</h3>
+            <p><strong>Order ID:</strong> <span id="order-id"></span></p>
+            <p><strong>Total Amount:</strong> ₹<span id="order-total"></span></p>
+            <p><strong>Status:</strong> <span id="order-status"></span></p>
+        </div>
+
+        <div class="section" id="items">
+            <h3>Items Ordered</h3>
+            <div id="order-items"></div>
+        </div>
+
+        <div class="section" id="payment-details">
+            <h3>Payment Information</h3>
+            <p><strong>Method:</strong> <span id="payment-method"></span></p>
+            <p><strong>Status:</strong> <span id="payment-status"></span></p>
+            <p><strong>Transaction ID:</strong> <span id="transaction-id"></span></p>
+        </div>
+
+        <button onclick="fetchOrderDetails()">Refresh Order</button>
+    `;
+}
+
+// Fetch and display the order details
+async function fetchOrderDetails() {
     try {
         const userId = await getUserId();
+
         if (!userId) {
-            container.innerHTML = `<div class="text-center text-danger">Please log in to view your orders.</div>`;
+            alert("Please log in first.");
             return;
         }
 
+        // Fetch order details from the backend
         const response = await fetch(`${API_URL}/users/checkout`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
         });
 
-        if (response.status === 404) {
-            container.innerHTML = `<div class="text-center text-muted">No orders found.</div>`;
-            return;
-        }
-
         const data = await response.json();
 
-        // If error or no order, show empty state
-        if (!response.ok || !data.order_id) {
-            container.innerHTML = `<div class="text-center text-muted">No orders found.</div>`;
+        if (!response.ok) {
+            alert(data.error || "Failed to fetch order details.");
             return;
         }
 
-        const billing = data.billing_details || {};
-        const order = data.order || {};
-        const items = Array.isArray(data.items) ? data.items : [];
-        const payment = data.payment || {};
+        // Check if the user has any orders
+        if (!data.order || data.items.length === 0) {
+            const container = document.getElementById("order-summary-container");
+            container.innerHTML = `
+                <div class="text-center">
+                    <h3>No Orders Found</h3>
+                    <p>You have not placed any orders yet. Start shopping now!</p>
+                    <a href="shop.html" class="btn btn-primary">Shop Now</a>
+                </div>
+            `;
+            return;
+        }
 
-        container.innerHTML = `
-            <h2>Your Most Recent Order</h2>
-            <div class="mb-5 p-3 border rounded shadow-sm">
-                <div class="section" id="order-details">
-                    <h4>Order #${data.order_id || 'N/A'}</h4>
-                    <p><strong>Total Amount:</strong> ₹${order.total_amount || '0.00'}</p>
-                    <p><strong>Status:</strong> ${order.status || 'Pending'}</p>
-                </div>
-                <div class="section" id="billing-details">
-                    <h5>Billing Details</h5>
-                    <p><strong>Name:</strong> ${billing.first_name || ''} ${billing.last_name || ''}</p>
-                    <p><strong>Address:</strong> ${billing.address || ''}, ${billing.city || ''}, ${billing.country || ''}</p>
-                    <p><strong>Email:</strong> ${billing.email || 'N/A'}</p>
-                    <p><strong>Phone:</strong> ${billing.mobile || 'N/A'}</p>
-                </div>
-                <div class="section" id="items">
-                    <h5>Items Ordered</h5>
-                    <div id="order-items">
-                        ${
-                            items.length === 0
-                            ? `<div class="text-muted">No items in this order.</div>`
-                            : items.map(item => `
-                                <div class="order-item d-flex align-items-center mb-2">
-                                    <img src="${item.product_image || 'http://127.0.0.1:1000/static/uploads/default.jpg'}" alt="${item.product_name || 'Unknown'}" width="60" class="me-2" onerror="this.onerror=null;this.src='http://127.0.0.1:1000/static/uploads/default.jpg';"/>
-                                    <div>
-                                        <span><strong>${item.product_name || 'Unknown'}</strong> (x${item.quantity || 1})</span><br>
-                                        <span>Price: ₹ ${item.price_at_purchase || '0.00'}</span>
-                                    </div>
-                                </div>
-                            `).join('')
-                        }
+        // Create UI only if orders exist
+        createOrderUI();
+
+        // Billing Details
+        if (data.billing_details) {
+            document.getElementById("billing-name").textContent =
+                `${data.billing_details.first_name || ''} ${data.billing_details.last_name || ''}`;
+            document.getElementById("billing-address").textContent =
+                `${data.billing_details.address || ''}, ${data.billing_details.city || ''}, ${data.billing_details.country || ''}`;
+            document.getElementById("billing-email").textContent = data.billing_details.email || 'N/A';
+            document.getElementById("billing-phone").textContent = data.billing_details.mobile || 'N/A';
+        }
+
+        // Order Details
+        if (data.order) {
+            document.getElementById("order-id").textContent = data.order_id || 'N/A';
+            document.getElementById("order-total").textContent = data.order.total_amount || '0.00';
+            document.getElementById("order-status").textContent = data.order.status || 'Pending';
+        }
+
+        // Items Ordered
+        const itemsContainer = document.getElementById("order-items");
+        itemsContainer.innerHTML = "";
+        if (Array.isArray(data.items)) {
+            data.items.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("order-item");
+                itemDiv.style.display = "flex";
+                itemDiv.style.alignItems = "center";
+                itemDiv.style.marginBottom = "10px";
+
+                const productImage = item.product_image || "http://127.0.0.1:1000/static/uploads/default.jpg";
+
+                itemDiv.innerHTML = `
+                    <img src="${productImage}" alt="${item.product_name || 'Unknown'}" width="80" style="margin-right: 10px;" onerror="this.onerror=null; this.src='http://127.0.0.1:1000/static/uploads/default.jpg';"/>
+                    <div>
+                        <span><strong>${item.product_name || 'Unknown'}</strong> (x${item.quantity || 1})</span><br>
+                        <span>Price: ₹ ${item.price_at_purchase || '0.00'}</span>
                     </div>
-                </div>
-                <div class="section" id="payment-details">
-                    <h5>Payment Information</h5>
-                    <p><strong>Method:</strong> ${payment.payment_method || 'N/A'}</p>
-                    <p><strong>Status:</strong> ${payment.status || 'Pending'}</p>
-                    <p><strong>Transaction ID:</strong> ${payment.transaction_id || 'N/A'}</p>
-                </div>
-            </div>
-        `;
+                `;
+                itemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        // Payment Details
+        if (data.payment) {
+            document.getElementById("payment-method").textContent = data.payment.payment_method || 'N/A';
+            document.getElementById("payment-status").textContent = data.payment.status || 'Pending';
+            document.getElementById("transaction-id").textContent = data.payment.transaction_id || 'N/A';
+        }
+
     } catch (error) {
-        container.innerHTML =
-            `<div class="text-center text-danger">Error loading orders. Please try again later.</div>`;
+        console.error("Error fetching order:", error);
+        alert("An error occurred while fetching order details.");
     }
 }
 
+// On page load, check login and fetch order if logged in
 document.addEventListener("DOMContentLoaded", fetchOrderDetails);
-</script>
+            </script>
+        <!-- <div class="container-fluid testimonial py-5">
+            <div class="container py-5">
+                <div class="testimonial-header text-center">
+                    <h4 class="text-primary">Our Testimonial</h4>
+                    <h1 class="display-5 mb-5 text-dark">Our Client Saying!</h1>
+                </div>
+                <div class="owl-carousel testimonial-carousel">
+                    <div class="testimonial-item img-border-radius bg-light rounded p-4">
+                        <div class="position-relative">
+                            <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
+                            <div class="mb-4 pb-4 border-bottom border-secondary">
+                                <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center flex-nowrap">
+                                <div class="bg-secondary rounded">
+                                    <img src="assets/img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                </div>
+                                <div class="ms-4 d-block">
+                                    <h4 class="text-dark">Client Name</h4>
+                                    <p class="m-0 pb-3">Profession</p>
+                                    <div class="d-flex pe-5">
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item img-border-radius bg-light rounded p-4">
+                        <div class="position-relative">
+                            <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
+                            <div class="mb-4 pb-4 border-bottom border-secondary">
+                                <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center flex-nowrap">
+                                <div class="bg-secondary rounded">
+                                    <img src="assets/img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                </div>
+                                <div class="ms-4 d-block">
+                                    <h4 class="text-dark">Client Name</h4>
+                                    <p class="m-0 pb-3">Profession</p>
+                                    <div class="d-flex pe-5">
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item img-border-radius bg-light rounded p-4">
+                        <div class="position-relative">
+                            <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
+                            <div class="mb-4 pb-4 border-bottom border-secondary">
+                                <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center flex-nowrap">
+                                <div class="bg-secondary rounded">
+                                    <img src="assets/img/testimonial-1.jpg" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                </div>
+                                <div class="ms-4 d-block">
+                                    <h4 class="text-dark">Client Name</h4>
+                                    <p class="m-0 pb-3">Profession</p>
+                                    <div class="d-flex pe-5">
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                        <i class="fas fa-star text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- Tastimonial End -->
+
 
         <!-- Footer Start -->
         <div id="footer-container"></div>
@@ -511,3 +756,4 @@ document.addEventListener("DOMContentLoaded", fetchOrderDetails);
     </body>
 
 </html>
+``` 

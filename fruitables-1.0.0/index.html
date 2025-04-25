@@ -419,7 +419,7 @@
                         </div>
                     </div>
                     <div class="tab-content">
-                        <div id="tab-1" class="tab-pane fade show p-0 active">
+                        <div id="tab-1" class="tab-pane fade show p-0 active"style="@media (max-width: 576px) { display: flex; }">
                             <div class="row g-4">
                                 <!-- Products will be dynamically loaded here -->
                                 <div class="product-item" data-id="123">
@@ -749,7 +749,7 @@
                                         <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
                                         <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                             <h4><a href="Productdetails.html?product_id=${product.product_id}" class="text-dark">${product.name}</a></h4>
-                                            <p>${product.description || "No description available."}</p>
+                                            
                                             <div class="d-flex justify-content-between flex-lg-wrap">
                                                 <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
                                                 <div class="input-group quantity mb-5" style="width: 100px;">
@@ -803,7 +803,7 @@
                             <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">${product.category_name}</div>
                             <div class="p-4 rounded-bottom">
                                <h4 class="text-truncate">${product.name}</h4>
-                                <p class="text-truncate">${product.description || "No description available."}</p>
+                               
                                 <div class="d-flex justify-content-between flex-lg-wrap">
                                     <p class="text-dark fs-5 fw-bold mb-0">${product.price} ₹</p>
                                     <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</button>
