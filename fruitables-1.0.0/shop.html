@@ -1,341 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <title>Fruitables - Vegetable Website Template</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
+<head>
+    <meta charset="utf-8">
+    <title>Fruitables - Vegetable Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+        rel="stylesheet">
 
-        <!-- Icon Font Stylesheet -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-        <!-- Libraries Stylesheet -->
-        <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
-    </head>
-
-    <body>
-
-        <!-- Spinner Start -->
-        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
-        </div>
-        <!-- Spinner End -->
+    <!-- Libraries Stylesheet -->
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
 
-        <!-- Navbar start -->
-        <!-- <div id="sidebar-container"></div> -->
-        <div class="container-fluid fixed-top">
-            <div class="container topbar bg-primary d-none d-lg-block">
-                <div class="d-flex justify-content-between">
-                    <div class="top-info ps-2">
-                        <!-- <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <span
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        @media (max-width: 320px) {
+            .sss {
+                font-size: 12px !important;
+            }
+        }
+
+        @media (min-width: 426px) and (max-width: 768px) {
+            .imgee {
+                height: 600px;
+            }
+
+            .ddd {
+                right: 35px !important;
+                font-size: 25px;
+            }
+
+            .textt {
+                font-size: 50px;
+            }
+        }
+
+        @media (min-width: 376px) and (max-width: 425px) {
+            .imgee {
+                height: 380px;
+            }
+
+            .ddd {
+                right: 17px !important;
+            }
+
+            .textt {
+                font-size: 31px;
+            }
+        }
+
+        @media (min-width: 321px) and (max-width: 375px) {
+            .imgee {
+                height: 360px;
+            }
+
+            .ddd {
+                right: 13px !important;
+            }
+
+            .textt {
+                font-size: 29px;
+            }
+        }
+    </style>
+
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar start -->
+    <!-- <div id="sidebar-container"></div> -->
+    <div class="container-fluid fixed-top">
+        <div class="container topbar bg-primary d-none d-lg-block">
+            <div class="d-flex justify-content-between">
+                <div class="top-info ps-2">
+                    <!-- <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <span
                                 class="user-location">Fetching location...</span></small> -->
-                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
-                                class="text-white">Email@Example.com</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
-                        <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
-                        <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
-                    </div>
+                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                            class="text-white">Email@Example.com</a></small>
+                </div>
+                <div class="top-link pe-2">
+                    <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
+                    <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
+                    <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
                 </div>
             </div>
-            <div class="container px-0">
-                <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="index.html" class="navbar-brand">
-                        <h1 class="text-primary display-6">RUSHBUY</h1>
-                    </a>
-                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarCollapse">
-                        <span class="fa fa-bars text-primary"></span>
-                    </button>
-                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                        <div class="navbar-nav mx-auto">
-                            <a href="index.html" class="nav-item nav-link">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <!-- <a href="chackout.html" class="nav-item nav-link">Checkout</a> -->
-                            <a href="testimonial.html" class="nav-item nav-link">Orders</a>
-                            <a href="contact.html" class="nav-item nav-link active">Contact</a>
-                        </div>
-                        <div class="d-flex m-3 me-1">
-                            <!-- <button
+        </div>
+        <div class="container px-0">
+            <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                <a href="index.html" class="navbar-brand">
+                    <h1 class="text-primary display-6">RUSHBUY</h1>
+                </a>
+                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars text-primary"></span>
+                </button>
+                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a href="index.html" class="nav-item nav-link">Home</a>
+                        <a href="shop.html" class="nav-item nav-link">Shop</a>
+                        <!-- <a href="chackout.html" class="nav-item nav-link">Checkout</a> -->
+                        <a href="testimonial.html" class="nav-item nav-link">Orders</a>
+                        <a href="contact.html" class="nav-item nav-link active">Contact</a>
+                    </div>
+                    <div class="d-flex m-3 me-1">
+                        <!-- <button
                                 class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                                 data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                     class="fas fa-search text-primary"></i></button> -->
-                            <a href="cart.html" class="position-relative me-4 my-auto">
-                                <i class="fa fa-shopping-bag fa-2x"></i>
-                                <!-- <span
+                        <a href="cart.html" class="position-relative me-4 my-auto">
+                            <i class="fa fa-shopping-bag fa-2x"></i>
+                            <!-- <span
                                     class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                                     style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span> -->
-                            </a>
-                            <div class="d-flex m-3 me-0">
-                                <!-- Login button triggers modal -->
-                                <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authModal">Log
+                        </a>
+                        <div class="d-flex m-3 me-0">
+                            <!-- Login button triggers modal -->
+                            <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authModal">Log
                                     In</button> -->
-                            </div>
                         </div>
                     </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
-    
-             <!-- Login/Register Modal -->
-<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content auth-container">
-            <div class="modal-header">
-                <h5 class="modal-title" id="authModalLabel">User Authentication</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <section id="auth_section">
-                    <div class="auth-wrapper">
-                        <!-- Login Form -->
-                        <div class="auth-box signinBx active" id="loginBox">
-                            <div class="formBx">
-                                <form id="login-form">
-                                    <h2>Log In</h2>
-                                    <input type="email" id="login-email" placeholder="Email" required />
-                                    <input type="password" id="login-password" placeholder="Password" required />
-                                    <input type="submit" value="Login" class="btn-auth"  style="background-color:#81C408;"/>
-                                    <p class="toggle-link">
-                                        Don't have an account? <a href="#" onclick="showRegisterForm();">Register</a>
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
+    </div>
 
-                        <!-- Register Form -->
-                        <div class="auth-box signupBx" id="registerBox">
-                            <div class="formBx">
-                                <form id="register-form">
-                                    <h2>Create an account</h2>
-                                    <input type="text" id="register-name" placeholder="Full Name" required />
-                                    <input type="email" id="register-email" placeholder="Email" required />
-                                    <input type="text" id="register-mobile" placeholder="Phone Number" required />
-                                    <input type="password" id="register-password" placeholder="Password" required />
-                                    <input type="password" id="register-confirm-password" placeholder="Confirm Password" required />
-                                    <input type="submit" value="Sign Up" class="btn-auth" style="background-color:#81C408;" />
-                                    <p class="toggle-link">
-                                        Already have an account? <a href="#" onclick="showLoginForm();">Log In</a>
-                                    </p>
-                                </form>
+    <!-- Login/Register Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content auth-container">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalLabel">User Authentication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <section id="auth_section">
+                        <div class="auth-wrapper">
+                            <!-- Login Form -->
+                            <div class="auth-box signinBx active" id="loginBox">
+                                <div class="formBx">
+                                    <form id="login-form">
+                                        <h2>Log In</h2>
+                                        <input type="email" id="login-email" placeholder="Email" required />
+                                        <input type="password" id="login-password" placeholder="Password" required />
+                                        <input type="submit" value="Login" class="btn-auth"
+                                            style="background-color:#81C408;" />
+                                        <p class="toggle-link">
+                                            Don't have an account? <a href="#"
+                                                onclick="showRegisterForm();">Register</a>
+                                        </p>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Register Form -->
+                            <div class="auth-box signupBx" id="registerBox">
+                                <div class="formBx">
+                                    <form id="register-form">
+                                        <h2>Create an account</h2>
+                                        <input type="text" id="register-name" placeholder="Full Name" required />
+                                        <input type="email" id="register-email" placeholder="Email" required />
+                                        <input type="text" id="register-mobile" placeholder="Phone Number" required />
+                                        <input type="password" id="register-password" placeholder="Password" required />
+                                        <input type="password" id="register-confirm-password"
+                                            placeholder="Confirm Password" required />
+                                        <input type="submit" value="Sign Up" class="btn-auth"
+                                            style="background-color:#81C408;" />
+                                        <p class="toggle-link">
+                                            Already have an account? <a href="#" onclick="showLoginForm();">Log In</a>
+                                        </p>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- JavaScript to Toggle Forms -->
-<script>
-    function showRegisterForm() {
-        document.getElementById("loginBox").classList.remove("active");
-        document.getElementById("registerBox").classList.add("active");
-    }
+    <!-- JavaScript to Toggle Forms -->
+    <script>
+        function showRegisterForm() {
+            document.getElementById("loginBox").classList.remove("active");
+            document.getElementById("registerBox").classList.add("active");
+        }
 
-    function showLoginForm() {
-        document.getElementById("registerBox").classList.remove("active");
-        document.getElementById("loginBox").classList.add("active");
-    }
-</script>
+        function showLoginForm() {
+            document.getElementById("registerBox").classList.remove("active");
+            document.getElementById("loginBox").classList.add("active");
+        }
+    </script>
 
-<!-- Modern CSS Design -->
-<style>
-    /* Modal Styling */
-    .auth-container {
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    <!-- Modern CSS Design -->
+    <style>
+        /* Modal Styling */
+        .auth-container {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Wrapper */
-    .auth-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
+        /* Wrapper */
+        .auth-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    /* Forms Box */
-    .auth-box {
-        width: 100%;
-        max-width: 350px;
-        display: none;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease-in-out;
-    }
+        /* Forms Box */
+        .auth-box {
+            width: 100%;
+            max-width: 350px;
+            display: none;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
 
-    .auth-box.active {
-        display: block;
-    }
+        .auth-box.active {
+            display: block;
+        }
 
-    /* Form Design */
-    .formBx h2 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 15px;
-    }
+        /* Form Design */
+        .formBx h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+        }
 
-    .formBx input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-    }
+        .formBx input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
 
-    .btn-auth {
-        width: 100%;
-        background: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
+        .btn-auth {
+            width: 100%;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
 
-    .btn-auth:hover {
-        background: #0056b3;
-    }
+        .btn-auth:hover {
+            background: #0056b3;
+        }
 
-    /* Toggle Links */
-    .toggle-link {
-        text-align: center;
-        margin-top: 10px;
-    }
+        /* Toggle Links */
+        .toggle-link {
+            text-align: center;
+            margin-top: 10px;
+        }
 
-    .toggle-link a {
-        color: #007bff;
-        text-decoration: none;
-        font-weight: bold;
-    }
+        .toggle-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    .toggle-link a:hover {
-        text-decoration: underline;
-    }
-  </style>
-<!-- JavaScript to Toggle Forms -->
-<script>
-    // function showRegisterForm() {
-    //     document.getElementById("loginBox").classList.remove("active");
-    //     document.getElementById("registerBox").classList.add("active");
-    // }
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <!-- JavaScript to Toggle Forms -->
+    <script>
+        // function showRegisterForm() {
+        //     document.getElementById("loginBox").classList.remove("active");
+        //     document.getElementById("registerBox").classList.add("active");
+        // }
 
-    // function showLoginForm() {
-    //     document.getElementById("registerBox").classList.remove("active");
-    //     document.getElementById("loginBox").classList.add("active");
-    // }
-</script>
+        // function showLoginForm() {
+        //     document.getElementById("registerBox").classList.remove("active");
+        //     document.getElementById("loginBox").classList.add("active");
+        // }
+    </script>
 
-<!-- Modern CSS Design -->
-<style>
-    /* Modal Styling */
-    .auth-container {
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    <!-- Modern CSS Design -->
+    <style>
+        /* Modal Styling */
+        .auth-container {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Wrapper */
-    .auth-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
+        /* Wrapper */
+        .auth-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    /* Forms Box */
-    .auth-box {
-        width: 100%;
-        max-width: 350px;
-        display: none;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease-in-out;
-    }
+        /* Forms Box */
+        .auth-box {
+            width: 100%;
+            max-width: 350px;
+            display: none;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
 
-    .auth-box.active {
-        display: block;
-    }
+        .auth-box.active {
+            display: block;
+        }
 
-    /* Form Design */
-    .formBx h2 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 15px;
-    }
+        /* Form Design */
+        .formBx h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+        }
 
-    .formBx input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-    }
+        .formBx input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
 
-    .btn-auth {
-        width: 100%;
-        background: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
+        .btn-auth {
+            width: 100%;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
 
-    .btn-auth:hover {
-        background: #0056b3;
-    }
+        .btn-auth:hover {
+            background: #0056b3;
+        }
 
-    /* Toggle Links */
-    .toggle-link {
-        text-align: center;
-        margin-top: 10px;
-    }
+        /* Toggle Links */
+        .toggle-link {
+            text-align: center;
+            margin-top: 10px;
+        }
 
-    .toggle-link a {
-        color: #007bff;
-        text-decoration: none;
-        font-weight: bold;
-    }
+        .toggle-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    .toggle-link a:hover {
-        text-decoration: underline;
-    }
-  </style>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="js/login.js"></script>
-        <script>
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/login.js"></script>
+    <script>
         //      function showRegisterForm() {
         //     document.querySelector('.signinBx').classList.remove('active');
         //     document.querySelector('.signupBx').classList.add('active');
@@ -345,94 +402,95 @@
         //     document.querySelector('.signupBx').classList.remove('active');
         //     document.querySelector('.signinBx').classList.add('active');
         // }
-        </script>
+    </script>
 
-        <!-- Modal Search Start -->
-        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex align-items-center">
-                        <div class="input-group w-75 mx-auto d-flex">
-                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                        </div>
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="keywords"
+                            aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Modal Search End -->
+    </div>
+    <!-- Modal Search End -->
 
 
-        <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Shop</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <!-- <li class="breadcrumb-item"><a href="#">Pages</a></li> -->
-                <li class="breadcrumb-item active text-white">Shop</li>
-            </ol>
-        </div>
-        <!-- Single Page Header End -->
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Shop</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <!-- <li class="breadcrumb-item"><a href="#">Pages</a></li> -->
+            <li class="breadcrumb-item active text-white">Shop</li>
+        </ol>
+    </div>
+    <!-- Single Page Header End -->
 
 
-        <!-- Fruits Shop Start-->
-        <div class="container-fluid fruite py-5">
-            <div class="container py-5">
-                <h1 class="mb-4">Fresh shopping</h1>
-                <div class="row g-4">
-                    <div class="col-lg-12">
-                        <div class="row g-4">
-                            <!-- <div class="col-xl-3">
+    <!-- Fruits Shop Start-->
+    <div class="container-fluid fruite py-5">
+        <div class="container py-5">
+            <h1 class="mb-4">Fresh shopping</h1>
+            <div class="row g-4">
+                <div class="col-lg-12">
+                    <div class="row g-4">
+                        <!-- <div class="col-xl-3">
                                 <div class="input-group w-100 mx-auto d-flex">
                                     <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
                                     <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                                 </div>
                             </div> -->
-                           <!-- Filter Section -->
-                            <div class="col-xl-3">
-                                <div class="bg-light ps-3 py-3 rounded mb-4" >
-                                    <!-- Category Filter -->
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <label for="categoryFilter">Category:</label>
-                                        <select id="categoryFilter" class="border-0 form-select-sm bg-light me-3">
-                                            <option value="">All Categories</option>
-                                            <!-- Categories will be populated dynamically -->
-                                        </select>
-                                    </div>
+                        <!-- Filter Section -->
+                        <div class="col-xl-3">
+                            <div class="bg-light ps-3 py-3 rounded mb-4">
+                                <!-- Category Filter -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <label for="categoryFilter">Category:</label>
+                                    <select id="categoryFilter" class="border-0 form-select-sm bg-light me-3">
+                                        <option value="">All Categories</option>
+                                        <!-- Categories will be populated dynamically -->
+                                    </select>
+                                </div>
 
-                                    <!-- Subcategory Filter -->
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <label for="subcategoryFilter">Subcategory:</label>
-                                        <select id="subcategoryFilter" class="border-0 form-select-sm bg-light me-3">
-                                            <option value="">Select Category First</option>
-                                            <!-- Subcategories will be populated dynamically -->
-                                        </select>
-                                    </div>
+                                <!-- Subcategory Filter -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <label for="subcategoryFilter">Subcategory:</label>
+                                    <select id="subcategoryFilter" class="border-0 form-select-sm bg-light me-3 sss">
+                                        <option value="">Select Category First</option>
+                                        <!-- Subcategories will be populated dynamically -->
+                                    </select>
                                 </div>
-                                </div>
-                                <div class="col-xl-9" style="justify-content: end;display: flex;">
-                                    <!-- Sort Filter -->
-                                    <div class="bg-light ps-3 py-3 rounded mb-4" style="width: 251px; height: 68px;">
-                        
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <label for="sortFilter">Sort By:</label>
-                                        <select id="sortFilter" class="border-0 form-select-sm bg-light me-3">
-                                            <option value="default">Default</option>
-                                            <option value="price_asc">Price: Low to High</option>
-                                            <option value="price_desc">Price: High to Low</option>
-                                            <option value="name_asc">Name: A to Z</option>
-                                            <option value="name_desc">Name: Z to A</option>
-                                        </select>
-                                    </div>
-                            
-                                    </div>
                             </div>
-                                                        <div class="col-6"></div>
-                            <!-- <div class="col-xl-3">
+                        </div>
+                        <div class="col-xl-9" style="justify-content: end;display: flex;">
+                            <!-- Sort Filter -->
+                            <div class="bg-light ps-3 py-3 rounded mb-4" style="width: 251px; height: 68px;">
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label for="sortFilter">Sort By:</label>
+                                    <select id="sortFilter" class="border-0 form-select-sm bg-light me-3">
+                                        <option value="default">Default</option>
+                                        <option value="price_asc">Price: Low to High</option>
+                                        <option value="price_desc">Price: High to Low</option>
+                                        <option value="name_asc">Name: A to Z</option>
+                                        <option value="name_desc">Name: Z to A</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-6"></div>
+                        <!-- <div class="col-xl-3">
                                 <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                                     <label for="fruits">Default Sorting:</label>
                                     <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
@@ -443,78 +501,82 @@
                                     </select>
                                 </div>
                             </div> -->
-                        </div>
-                        <div class="row g-4">
-                            <div class="col-lg-3">
-                                <div class="row g-4">
-                                    <div class="col-lg-12">
-                                        <!-- <div class="mb-3">
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-3">
+                            <div class="row g-4">
+                                <div class="col-lg-12">
+                                    <!-- <div class="mb-3">
                                             <h4>Categories</h4>
                                             <ul class="list-unstyled fruite-categorie">
                                             </ul>
                                         </div> -->
-                                    </div>
-                                    <!-- <div class="col-lg-12">
+                                </div>
+                                <!-- <div class="col-lg-12">
                                         <div class="mb-3">
                                             <h4 class="mb-2">Price</h4>
                                             <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500" value="0" oninput="amount.value=rangeInput.value">
                                             <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0</output>
                                         </div>
                                     </div> -->
-                                    <div class="col-lg-12">
-                                        <div class="mb-3">
-                                            <h4>Additional</h4>
-                                        </div>
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <h4>Additional</h4>
                                     </div>
-                                    <div class="col-lg-12">
-                                        <div class="position-relative">
-                                            <img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
-                                            <div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);">
-                                                <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
-                                            </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="position-relative">
+                                        <img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded imgee" alt="">
+                                        <div class="position-absolute ddd"
+                                            style="top: 50%; right: 10px; transform: translateY(-50%);">
+                                            <h3 class="text-secondary fw-bold textt">Fresh <br> Fruits <br> Banner</h3>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-9">
-                                <div class="row g-4 justify-content-center">
-                                </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="row g-4 justify-content-center">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Fruits Shop End-->
+    </div>
+    <!-- Fruits Shop End-->
 
 
-        <!-- Footer Start -->
-        <div id="footer-container"></div>
-       
-        <!-- Copyright Start -->
-        <div class="container-fluid copyright bg-dark py-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>RUSHBUY</a>, All right reserved.</span>
-                    </div>
-                    <div class="col-md-6 my-auto text-center text-md-end text-white">
-                        <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                        <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                        <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                        Designed By <a class="border-bottom" href="https://lealavatechnologies.com/">Lealava Technologies Pvt. Ltd.</a> Distributed By <a class="border-bottom" href="https://RUSHBUY.com">RUSHBUY</a>
-                    </div>
+    <!-- Footer Start -->
+    <div id="footer-container"></div>
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright bg-dark py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>RUSHBUY</a>,
+                        All right reserved.</span>
+                </div>
+                <div class="col-md-6 my-auto text-center text-md-end text-white">
+                    <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
+                    <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                    <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
+                    Designed By <a class="border-bottom" href="https://lealavatechnologies.com/">Lealava Technologies
+                        Pvt. Ltd.</a> Distributed By <a class="border-bottom" href="https://RUSHBUY.com">RUSHBUY</a>
                 </div>
             </div>
         </div>
-        <!-- Copyright End -->
+    </div>
+    <!-- Copyright End -->
 
 
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
-        <script src ="js/location.js"></script>
-        <script src ="js/include.js"></script>      
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+            class="fa fa-arrow-up"></i></a>
+    <script src="js/location.js"></script>
+    <script src="js/include.js"></script>
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -801,7 +863,7 @@
             const productId = productElement.dataset.id;
             const quantityInput = productElement.querySelector(".quantity input");
             const quantity = parseInt(quantityInput?.value || "1");
-            
+
             try {
                 const loginStatus = await fetch(`${API_BASE_URL}/user/status`, {
                     method: "GET",
@@ -861,37 +923,37 @@
         // Update the renderProduct function to make the product clickable
         function renderProduct(product) {
             return `
-                <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
-                    <div class="rounded position-relative fruite-item">
-                        <div class="fruite-img">
-                            <a href="productdetails.html?product_id=${product.product_id}" class="product-link">
-                                <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
-                            </a>
-                        </div>
-                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                            ${product.category_name}
-                        </div>
-                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                            <a href="productdetails.html?product_id=${product.product_id}" class="product-link text-decoration-none">
-                                <h4 class="text-primary">${product.name}</h4>
-                            </a>
-                            <p>${product.description || "No description available."}</p>
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
-                                <div class="quantity-controls d-flex align-items-center">
-                                    <div class="input-group quantity" style="width: 100px;">
-                                        <button class="btn btn-sm btn-minus"><i class="fa fa-minus"></i></button>
-                                        <input type="text" class="form-control text-center" value="1" readonly>
-                                        <button class="btn btn-sm btn-plus"><i class="fa fa-plus"></i></button>
+                 <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                                    <div class="rounded position-relative fruite-item">
+                                        <div class="fruite-img">
+                                            <a href="Productdetails.html?product_id=${product.product_id}">
+                                                <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 rounded-top" alt="${product.name}">
+                                            </a>
+                                        </div>
+                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
+                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                            <h4><a href="Productdetails.html?product_id=${product.product_id}" class="text-dark">${product.name}</a></h4>
+                                            
+                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
+                                                <div class="input-group quantity mb-5" style="width: 100px;">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart">
-                                    <i class="fa fa-shopping-bag me-2"></i> Add to cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             `;
         }
 
@@ -936,6 +998,67 @@
         `;
         document.head.appendChild(style);
     </script>
-    </body>
+</body>
+<style>
+    @media (max-width: 320px) {
+        .product-item {
+            width: 17rem !important;
+            justify-content: center;
+        }
+    }
+
+    @media (min-width: 321px) and (max-width: 375px) {
+        .product-item {
+            width: 18rem !important;
+            justify-content: center;
+        }
+    }
+
+    @media (min-width: 376px) and (max-width: 425px) {
+        .product-item {
+            width: 20rem !important;
+        }
+    }
+
+    @media (min-width: 426px) and (max-width: 768px) {
+        .product-item {
+            width: 20rem !important;
+
+        }
+    }
+
+    @media (min-width: 469px) and (max-width: 1024px) {
+        .product-item {
+            width: 14rem !important;
+
+        }
+    }
+
+    @media (max-width: 425px) {
+        .jjj {
+            justify-content: flex-start;
+            /* Align items horizontally */
+            flex-wrap: nowrap;
+            /* Prevent wrapping */
+            overflow-x: auto;
+            /* Enable horizontal scrolling if needed */
+            display: flex;
+        }
+
+        .product-item {
+            flex: 0 0 auto;
+            /* Prevent shrinking and ensure items stay in a row */
+            width: 15rem !important;
+            /* Adjust width as needed */
+            margin-right: 10px;
+            /* Add spacing between items */
+        }
+
+        .ggg {
+            justify-content: center !important;
+            display: flex !important;
+        }
+    }
+</style>
 
 </html>

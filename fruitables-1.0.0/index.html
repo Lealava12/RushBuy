@@ -484,7 +484,7 @@
         <div class="container-fluid vesitable py-5">
             <div class="container py-5">
                 <h1 class="mb-0">Fresh Organic Vegetables</h1>
-                <div class="owl-carousel vegetable-carousel justify-content-center">
+                <div class="owl-carousel vegetable-carousel justify-content-center ggg" style="margin-top: 25px;">
                     <!-- <div class="border border-primary rounded position-relative vesitable-item product-item" data-id="18" data-name="Parsely" data-price="4.99" data-image="img/vegetable-item-6.jpg">
                         <div class="vesitable-img">
                             <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
@@ -721,7 +721,7 @@
                     categorySection.classList.add('category-section', 'mb-5');
                     categorySection.innerHTML = `
                         <h2 class="mb-4">${category.name}</h2>
-                        <div class="row g-4 category-products" data-category-id="${category.category_id}">
+                        <div class="row g-4 category-products jjj" data-category-id="${category.category_id}">
                             <!-- Products for this category will be dynamically loaded here -->
                         </div>
                     `;
@@ -739,7 +739,7 @@
                     } else {
                         productsData.products.forEach(product => {
                             categoryProductsContainer.innerHTML += `
-                                <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-id="${product.product_id}">
+                                <div class="col-md-6 col-lg-4 col-xl-3 product-item" style="width: 15rem;" data-id="${product.product_id}">
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
                                             <a href="Productdetails.html?product_id=${product.product_id}">
@@ -796,6 +796,7 @@
 
                 data.products.forEach(product => {
                     vegetableCarousel.innerHTML += `
+                    <div class="product-item" style="width: 15rem;">
                         <div class="border border-primary rounded position-relative vesitable-item product-item" style="width: 300px; margin: 10px;" data-id="${product.product_id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.image_url || 'img/default.jpg'}">
                             <div class="vesitable-img" style="height: 200px; overflow: hidden;">
                                 <img src="${product.image_url || 'img/default.jpg'}" class="img-fluid w-100 h-100 rounded-top" alt="${product.name}" style="object-fit: cover;">
@@ -809,6 +810,7 @@
                                     <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</button>
                                 </div>
                             </div>
+                        </div>
                         </div>
                     `;
                 });
@@ -927,4 +929,58 @@
         });
     </script>
     </body>
+    <style>
+        @media (max-width: 320px) {
+    .product-item {
+        width: 17rem !important;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 375px) {
+    .product-item {
+        width: 18rem !important;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 376px) and (max-width: 425px) {
+    .product-item {
+        width: 20rem !important;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+    .product-item {
+        width: 20rem !important;
+      
+    }
+}
+
+@media (min-width: 469px) and (max-width: 1024px) {
+    .product-item {
+        width: 14rem !important;
+
+    }
+}
+
+@media (max-width: 425px) {
+    .jjj {
+        justify-content: flex-start; /* Align items horizontally */
+            flex-wrap: nowrap; /* Prevent wrapping */
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+            display: flex;
+    }
+    .product-item {
+            flex: 0 0 auto; /* Prevent shrinking and ensure items stay in a row */
+            width: 15rem !important; /* Adjust width as needed */
+            margin-right: 10px; /* Add spacing between items */
+        }
+
+    .ggg {
+        justify-content: center !important;
+        display: flex !important;
+    }
+}
+    </style>
 </html>
