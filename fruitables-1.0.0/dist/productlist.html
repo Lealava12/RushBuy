@@ -247,6 +247,7 @@
             <th>Specifications</th>
             <th>Image</th>
             <th>Weight</th>
+            <th>Unit</th>
             <!-- <th>Action</th> -->
           </tr>
         </thead>
@@ -368,6 +369,7 @@
 
           ${product.specifications}</td>
         <td><img src="${product.image_url || 'default.jpg'}" width="50" alt="Product Image"></td>
+        <td>${product.unit || "N/A"}</td>
         <td>${product.weight}</td>
       `;
           productList.appendChild(row);
@@ -412,6 +414,7 @@
         document.getElementById("product-dimensions").value = product.dimensions;
         document.getElementById("product-specifications").value = product.specifications;
         document.getElementById("product-weight").value = product.weight;
+        document.getElementById("product-unit").value = product.unit;
 
         document.querySelector("form").setAttribute("data-edit-id", productId);
       } catch (error) {

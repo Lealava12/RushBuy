@@ -758,7 +758,7 @@
                                                             <i class="fa fa-minus"></i>
                                                         </button>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1"> 
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-sm btn-plus rounded-circle bg-light border">
                                                             <i class="fa fa-plus"></i>
@@ -766,6 +766,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <p class="text-muted mb-2">Unit: ${product.unit || 'N/A'}</p>
                                             <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</button>
                                         </div>
                                     </div>
@@ -872,6 +873,7 @@
             const productId = productElement.dataset.id;
             const quantityInput = productElement.querySelector(".quantity input");
             const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+            const unit = productElement.dataset.unit || "N/A"; // Fetch the unit from the dataset or default to "N/A"
 
             if (!productId || quantity <= 0) {
                 alert("Invalid product or quantity.");
@@ -894,7 +896,7 @@
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include",
-                        body: JSON.stringify({ product_id: productId, quantity })
+                        body: JSON.stringify({ product_id: productId, quantity, unit })
                     });
 
                     const result = await response.json();
@@ -916,7 +918,7 @@
                     if (index !== -1) {
                         cart[index].quantity += quantity;
                     } else {
-                        cart.push({ product_id: productId, name, price, image, quantity });
+                        cart.push({ product_id: productId, name, price, image, quantity, unit });
                     }
 
                     localStorage.setItem("cart", JSON.stringify(cart));

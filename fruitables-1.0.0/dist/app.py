@@ -612,6 +612,7 @@ def save_product():
         discount = request.form.get("product-discount", 0)
         stock = request.form.get("product-stock")
         weight = request.form.get("product-weight")
+        unit = request.form.get("product-unit")
         dimensions = request.form.get("product-dimensions")
         specifications = request.form.get("product-specifications")
         tags = request.form.get("product-tags")
@@ -633,11 +634,11 @@ def save_product():
         # Insert product into the database
         cursor.execute("""
             INSERT INTO Products (product_id, subcategory_id, name, description, price, 
-                                  discount_percentage, stock_quantity, weight, dimensions, 
+                                  discount_percentage, stock_quantity, weight, unit, dimensions, 
                                   specifications, tags, status) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s)
         """, (product_id, subcategory_id, name, description, price, discount, stock, 
-              weight, dimensions, specifications, tags, status))
+              weight, unit, dimensions, specifications, tags, status))
 
         # Handle product image upload
         if "product-image" in request.files:
@@ -682,7 +683,7 @@ def update_product(product_id):
         data = request.form
         update_query = """
             UPDATE Products SET name=%s, description=%s, price=%s, discount_percentage=%s, 
-                                stock_quantity=%s, weight=%s, dimensions=%s, specifications=%s, 
+                                stock_quantity=%s, weight=%s, unit=%s, dimensions=%s, specifications=%s, 
                                 tags=%s, status=%s WHERE product_id=%s
         """
         cursor.execute(update_query, (
@@ -692,6 +693,7 @@ def update_product(product_id):
             data.get("product-discount"),
             data.get("product-stock"),
             data.get("product-weight"),
+            data.get("product-unit"),
             data.get("product-dimensions"),
             data.get("product-specifications"),
             data.get("product-tags"),

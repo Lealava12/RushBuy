@@ -339,6 +339,9 @@
       <label for="product-image">Product Image:</label>
       <input type="file" id="product-image" name="product-image">
 
+      <label for="product-unit">Product Unit:</label>
+      <input type="text" id="product-unit" name="product-unit" placeholder="e.g., kg, g, pcs">
+
       <label for="product-weight">Product Weight:</label>
       <input type="text" id="product-weight" name="product-weight" placeholder="Weight of product (kg)">
 
@@ -381,6 +384,7 @@
             <th>Dimensions</th>
             <th>Specifications</th>
             <th>Image</th>
+            <th>Unit</th>
             <th>Weight</th>
             <th>Action</th>
           </tr>
@@ -502,10 +506,10 @@
             <td style="word-wrap: break-word; white-space: normal; max-width: 500px;">
             ${product.specifications}</td>
           <td><img src="${product.image_url || 'default.jpg'}" width="50" alt="Product Image"></td>
+          <td>${product.unit || "N/A"}</td>
           <td>${product.weight}</td>
            <td style = "display: flex;gap: 7px;">
             <button class="edit-btn" onclick="editProduct('${product.product_id}')">Edit</button>
-            <button class="delete-btn" onclick="deleteProduct('${product.product_id}')">Delete</button>
           </td>
         `;
             productList.appendChild(row);
@@ -561,6 +565,7 @@
           document.getElementById("product-price").value = product.price || "";
           document.getElementById("product-discount").value = product.discount_percentage || "";
           document.getElementById("product-stock").value = product.stock_quantity || "";
+          document.getElementById("product-unit").value = product.unit || ""; 
           document.getElementById("product-status").value = product.status || "";
           document.getElementById("product-tags").value = product.tags || "";
           document.getElementById("product-dimensions").value = product.dimensions || "";
