@@ -2118,6 +2118,12 @@ def save_billing_details():
 
         # Commit transaction
         conn.commit()
+        cursor.execute("SELECT cart_id FROM Carts WHERE user_id = %s", (user_id,))
+        cart = cursor.fetchone()
+        if cart:
+            cart_id = cart['cart_id']
+            cursor.execute("DELETE FROM CartItems WHERE cart_id = %s", (cart_id,))
+            conn.commit()
 
         # Step 6: Return success response with the Order ID
         return jsonify({
