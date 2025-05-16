@@ -14,23 +14,8 @@ import os
 
 app = Flask(__name__)
 app.secret_key = "126945c1bdc73d55bb3d364aed2611f8"  # Secret key for session management
-# app.config["SECRET_KEY"] = app.secret_key
-# app.config["SESSION_TYPE"] = "filesystem"
-# app.config["SESSION_PERMANENT"] = True
-# app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
-# # #Configure session management
-# # app.config["SESSION_PERMANENT"] = False     # Sessions expire when the browser is closed
-# app.config["SESSION_TYPE"] = "filesystem"
-# # app.config["SECRET_KEY"] = "your_secret_key"
-# app.config["SESSION_PERMANENT"] = False
-# app.config["SESSION_USE_SIGNER"] = True
-
-# Session(app)
-# # Initialize Flask-Session
-# Session(app)# Initialize Flask-Session
-
 # Configure CORS to allow credentials and specific origins
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://127.0.0.1:5500", "http://127.0.0.1:1000"]}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://127.0.0.1:5501", "http://127.0.0.1:1000"]}})
 # CORS(app, resources={r"/*": {"origins": "*"}})
 # CORS(app, resources={r"/*": {"origins": "*"}})  # Allow CORS for all origins
 # # Enforce HTTPS in Flask
@@ -63,7 +48,7 @@ def get_connection():
         return None
 
 # UPLOAD_FOLDER = "/var/www/html/BLINKIT/fruitables-1.0.0/dist/static/uploads"  # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads      
-UPLOAD_FOLDER = "C:/Users/user/BLINKIT/fruitables-1.0.0/dist/static/uploads" # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads
+UPLOAD_FOLDER = "C:/Users/user/RUSHBUY/fruitables-1.0.0/dist/static/uploads" # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
