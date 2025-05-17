@@ -328,6 +328,7 @@
             document.getElementById("product-category").textContent = product.category_name || "Unknown";
             document.getElementById("product-specifications").textContent = product.specifications || "No specifications available.";
             document.getElementById("product-tags").textContent = product.tags || "No tags available.";
+            document.getElementById("product-unit").textContent = product.unit || "N/A";
 
             // Add event listeners for quantity controls
             const quantityInput = document.getElementById("product-quantity");
@@ -405,6 +406,7 @@
             <p id="product-description">Product description goes here...</p>
             <p class="price" id="product-price">₹0.00</p>
             <p><strong>Category:</strong> <span id="product-category">Category Name</span></p>
+            <p><strong>Unit:</strong> <span id="product-unit">N/A</span></p>
             <p><strong>Specifications:</strong></p>
             <p id="product-specifications">Product specifications go here...</p>
             <p><strong>Tags:</strong> <span id="product-tags">No tags available</span></p>

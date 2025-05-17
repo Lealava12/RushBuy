@@ -481,10 +481,10 @@
         </div>
         <!-- Featurs End -->
         <!-- Vesitable Shop Start-->
-        <div class="container-fluid vesitable py-5">
+        <!-- <div class="container-fluid vesitable py-5">
             <div class="container py-5">
                 <h1 class="mb-0">Fresh Organic Vegetables</h1>
-                <div class="owl-carousel vegetable-carousel justify-content-center ggg" style="margin-top: 25px;">
+                <div class="owl-carousel vegetable-carousel justify-content-center ggg" style="margin-top: 25px;"> -->
                     <!-- <div class="border border-primary rounded position-relative vesitable-item product-item" data-id="18" data-name="Parsely" data-price="4.99" data-image="img/vegetable-item-6.jpg">
                         <div class="vesitable-img">
                             <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
@@ -499,9 +499,9 @@
                             </div>
                         </div>
                     </div> -->
-                </div>
+                <!-- </div>
             </div>
-        </div>
+        </div> -->
         <!-- Vesitable Shop End -->
         <!-- Banner Section Start-->
         <div class="container-fluid banner bg-secondary my-5">
@@ -721,7 +721,7 @@
                     categorySection.classList.add('category-section', 'mb-5');
                     categorySection.innerHTML = `
                         <h2 class="mb-4">${category.name}</h2>
-                        <div class="row g-4 category-products jjj" data-category-id="${category.category_id}">
+                        <div class="owl-carousel category-carousel category-products" data-category-id="${category.category_id}">
                             <!-- Products for this category will be dynamically loaded here -->
                         </div>
                     `;
@@ -739,7 +739,7 @@
                     } else {
                         productsData.products.forEach(product => {
                             categoryProductsContainer.innerHTML += `
-                                <div class="col-md-6 col-lg-4 col-xl-3 product-item" style="width: 15rem;" data-id="${product.product_id}">
+                                <div class="product-item" style="width: 15rem;" data-id="${product.product_id}">
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
                                             <a href="Productdetails.html?product_id=${product.product_id}">
@@ -749,7 +749,6 @@
                                         <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
                                         <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                             <h4><a href="Productdetails.html?product_id=${product.product_id}" class="text-dark">${product.name}</a></h4>
-                                            
                                             <div class="d-flex justify-content-between flex-lg-wrap">
                                                 <p class="text-dark fs-5 fw-bold mb-0 product-price" data-base-price="${product.price}">₹${product.price}</p>
                                                 <div class="input-group quantity mb-5" style="width: 100px;">
@@ -774,6 +773,23 @@
                             `;
                         });
                     }
+
+                    // Initialize carousel for the category
+                    $(categorySection).find('.category-carousel').owlCarousel({
+                        loop: false,
+                        margin: 16,
+                        nav: true,
+                        navText: [
+                            '<button><i class="fa fa-chevron-left"></i></button>',
+                            '<button><i class="fa fa-chevron-right"></i></button>'
+                        ],
+                        responsive: {
+                            0: { items: 1 },
+                            480: { items: 2 },
+                            768: { items: 3 },
+                            1200: { items: 4 }
+                        }
+                    });
                 }
             } catch (error) {
                 console.error('Error fetching categories or products:', error);
@@ -984,5 +1000,132 @@
         display: flex !important;
     }
 }
+
+/* Product Card Styles */
+.product-item {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08), 0 1.5px 6px 0 rgba(129,196,8,0.10);
+    transition: box-shadow 0.3s, transform 0.3s;
+    margin-bottom: 32px;
+    overflow: hidden;
+    position: relative;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+.product-item:hover {
+    box-shadow: 0 8px 32px 0 rgba(129,196,8,0.18), 0 2px 8px 0 rgba(0,0,0,0.12);
+    transform: translateY(-6px) scale(1.02);
+    z-index: 2;
+}
+
+/* Product Image */
+.fruite-img {
+    background: #f7f7f7;
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+    min-height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fruite-img img {
+    object-fit: contain;
+    max-height: 180px;
+    transition: transform 0.3s;
+}
+.fruite-img:hover img {
+    transform: scale(1.07);
+}
+
+/* Category Badge */
+.text-white.bg-secondary {
+    background: linear-gradient(90deg, #81C408 0%, #5CB85C 100%) !important;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(129,196,8,0.10);
+}
+
+/* Product Details */
+.p-4 {
+    padding: 1.5rem !important;
+}
+.p-4 h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #222;
+    transition: color 0.2s;
+}
+.p-4 h4 a {
+    color: #222;
+    text-decoration: none;
+}
+.p-4 h4 a:hover {
+    color: #81C408;
+}
+.p-4 .text-muted {
+    color: #888 !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Price and Quantity */
+.product-price {
+    color: #81C408 !important;
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+.input-group.quantity {
+    background: #f3f3f3;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+}
+.input-group-btn .btn {
+    background: #fff !important;
+    border: none !important;
+    color: #81C408 !important;
+    font-size: 1.1rem;
+    transition: background 0.2s, color 0.2s;
+}
+.input-group-btn .btn:hover {
+    background: #81C408 !important;
+    color: #fff !important;
+}
+.form-control.form-control-sm {
+    background: transparent !important;
+    border: none !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #222;
+    width: 36px;
+    text-align: center;
+    padding: 0;
+}
+
+/* Add to Cart Button */
+.add-to-cart {
+    margin-top: 1rem;
+    background: linear-gradient(90deg, #81C408 0%, #5CB85C 100%);
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 24px !important;
+    box-shadow: 0 2px 8px rgba(129,196,8,0.10);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.add-to-cart:hover {
+    background: linear-gradient(90deg, #5CB85C 0%, #81C408 100%);
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(129,196,8,0.18);
+}
+
+
     </style>
 </html>

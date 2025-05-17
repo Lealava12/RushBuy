@@ -48,7 +48,7 @@ def get_connection():
         return None
 
 # UPLOAD_FOLDER = "/var/www/html/BLINKIT/fruitables-1.0.0/dist/static/uploads"  # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads      
-UPLOAD_FOLDER = "C:/Users/user/RUSHBUY/fruitables-1.0.0/dist/static/uploads" # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads
+UPLOAD_FOLDER = "C:/Users/anike/RUSHBUY/fruitables-1.0.0/dist/static/uploads" # Updated path fruitables-1.0.0\Blink it\dashboard\dist\static\uploads
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
