@@ -28,7 +28,7 @@
                             <th>Order ID</th>
                             <th>User ID</th>
                             <th>Products</th>
-                            <th>product Image</th>
+                            <!-- <th>product Image</th> -->
                             <th>Quantity</th>
                             <th>Price at Purchase</th>
                             <th>Total Amount</th>
@@ -133,39 +133,37 @@ function renderOrders(orders) {
     }
 
     orders.forEach(order => {
-        const productDetails = order.products.map(p => `
-            <div>
-                <strong>${p.product_name}</strong><br>
-                Quantity: ${p.quantity}<br>
-                Price: ₹${p.price_at_purchase}
-            </div>
-        `).join("<hr>");
+        // For each product, show name, image, quantity, price in a single row
+        const productNames = order.products.map(p => `<div>${p.product_name}</div>`).join("");
+        const productImages = order.products.map(p =>
+            `<div><img src="${p.product_image || 'img/default.jpg'}" alt="${p.product_name}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;"></div>`
+        ).join("");
+        const productQuantities = order.products.map(p => `<div>${p.quantity}</div>`).join("");
+        const productPrices = order.products.map(p => `<div>₹${p.price_at_purchase}</div>`).join("");
 
+        const billing = order.billing_details || {};
         const billingDetails = `
-            ${order.billing_details.first_name} ${order.billing_details.last_name}<br>
-            ${order.billing_details.address}, ${order.billing_details.city}, ${order.billing_details.country}, ${order.billing_details.postcode}<br>
-            <strong>Mobile:</strong> ${order.billing_details.mobile}<br>
-            <strong>Email:</strong> ${order.billing_details.email}<br>
-            <strong>Notes:</strong> ${order.billing_details.order_notes || "N/A"}
+            ${billing.first_name || ""} ${billing.last_name || ""}<br>
+            ${billing.address || ""}, ${billing.city || ""}, ${billing.country || ""}, ${billing.postcode || ""}<br>
+            <strong>Mobile:</strong> ${billing.mobile || ""}<br>
+            <strong>Email:</strong> ${billing.email || ""}<br>
+            <strong>Notes:</strong> ${billing.order_notes || "N/A"}
         `;
 
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${order.order_id}</td>
             <td>${order.user_id}</td>
-            <td>${productDetails}</td>
-            <td>${order.products.map(p => p.quantity).join("<br>")}</td>
-            <td>${order.products.map(p => `₹${p.price_at_purchase}`).join("<br>")}</td>
+            <td>${productNames}</td>
+            <td>${productQuantities}</td>
+            <td>${productPrices}</td>
             <td>₹${order.total_amount}</td>
-            <td>${order.payment_status || "Paid"}</td> <!-- Dynamic Payment Status -->
+            <td>${order.payment_status || "Paid"}</td>
             <td>${order.order_status}</td>
             <td>${order.delivery_address || "N/A"}</td>
             <td>${order.contact_info || "N/A"}</td>
             <td>${order.delivery_time_preference || "N/A"}</td>
             <td>${billingDetails}</td>
-            <td>
-                <button onclick="viewOrderDetails(${order.order_id})">View</button>
-            </td>
         `;
 
         orderList.appendChild(row);
